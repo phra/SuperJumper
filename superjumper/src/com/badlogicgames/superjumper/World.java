@@ -38,7 +38,7 @@ public class World {
 	public static final int WORLD_STATE_RUNNING = 0;
 	public static final int WORLD_STATE_NEXT_LEVEL = 1;
 	public static final int WORLD_STATE_GAME_OVER = 2;
-	public static final Vector2 gravity = new Vector2(0, -12);
+	public static Vector2 gravity = new Vector2(0, -10);
 
 	public final Bob bob;
 	public final List<Platform> platforms;
@@ -149,6 +149,7 @@ public class World {
 
 	private void checkCollisions () {
 		checkPlatformCollisions();
+		checkDoubleJump();
 		checkSquirrelCollisions();
 		checkItemCollisions();
 		checkCastleCollisions();
@@ -167,9 +168,18 @@ public class World {
 					if (rand.nextFloat() > 0.5f) {
 						platform.pulverize();
 					}
+					gravity = new Vector2(0,6);
 					break;
 				}
 			}
+		}
+	}
+	
+	private void checkDoubleJump() {
+		if(Bob.BOB_DOUBLE_JUMP){
+			Bob.BOB_DOUBLE_JUMP=false;
+			bob.hitPlatform();
+			listener.hit();
 		}
 	}
 
@@ -181,12 +191,6 @@ public class World {
 				bob.hitSquirrel();
 				listener.hit();
 			}
-			else if(Bob.BOB_DOUBLE_JUMP){
-				Bob.BOB_DOUBLE_JUMP=false;
-				bob.hitPlatform();
-				listener.hit();
-			}
-			
 		}
 	}
 	
