@@ -38,9 +38,7 @@ public class GameScreen implements Screen {
 	static final int GAME_LEVEL_END = 3;
 	static final int GAME_OVER = 4;
 	
-
 	Game game;
-
 	int state;
 	OrthographicCamera guiCam;
 	Vector3 touchPoint;
@@ -56,7 +54,6 @@ public class GameScreen implements Screen {
 
 	public GameScreen (Game game) {
 		this.game = game;
-
 		state = GAME_READY;
 		guiCam = new OrthographicCamera(320, 480);
 		guiCam.position.set(320 / 2, 480 / 2, 0);
@@ -117,6 +114,7 @@ public class GameScreen implements Screen {
 	private void updateReady () {
 		if (Gdx.input.justTouched()) {
 			state = GAME_RUNNING;
+			//World.setGravity(0, 1);
 		}
 	}
 
@@ -135,11 +133,9 @@ public class GameScreen implements Screen {
 					Bob.jumpTime=0f;
 				}
 			}
-			
 		}
 		
 		ApplicationType appType = Gdx.app.getType();
-		
 		// should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
 		if (appType == ApplicationType.Android || appType == ApplicationType.iOS) {
 			world.update(deltaTime, Gdx.input.getAccelerometerX());
@@ -203,9 +199,7 @@ public class GameScreen implements Screen {
 	public void draw (float deltaTime) {
 		GLCommon gl = Gdx.gl;
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
 		renderer.render();
-
 		guiCam.update();
 		batcher.setProjectionMatrix(guiCam.combined);
 		batcher.enableBlending();

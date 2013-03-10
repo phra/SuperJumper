@@ -19,17 +19,13 @@ package com.badlogicgames.superjumper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import com.badlogic.gdx.math.Vector2;
 
 public class World {
 	public interface WorldListener {
 		public void jump ();
-
 		public void highJump ();
-
 		public void hit ();
-
 		public void coin ();
 	}
 
@@ -38,8 +34,6 @@ public class World {
 	public static final int WORLD_STATE_RUNNING = 0;
 	public static final int WORLD_STATE_NEXT_LEVEL = 1;
 	public static final int WORLD_STATE_GAME_OVER = 2;
-	public static Vector2 gravity = new Vector2(0, -10);
-
 	public final Bob bob;
 	public final List<Platform> platforms;
 	public final List<Spring> springs;
@@ -48,10 +42,11 @@ public class World {
 	public Castle castle;
 	public final WorldListener listener;
 	public final Random rand;
-
 	public float heightSoFar;
 	public int score;
 	public int state;
+	
+	private Vector2 gravity = new Vector2(0,15);
 
 	public World (WorldListener listener) {
 		this.bob = new Bob(5, 1);
@@ -60,9 +55,9 @@ public class World {
 		this.squirrels = new ArrayList<Squirrel>();
 		this.coins = new ArrayList<Coin>();
 		this.listener = listener;
-		rand = new Random();
+		this.rand = new Random();
 		generateLevel();
-
+		this.setGravity(0, 1);
 		this.heightSoFar = 0;
 		this.score = 0;
 		this.state = WORLD_STATE_RUNNING;
@@ -70,39 +65,42 @@ public class World {
 
 	private void generateLevel () {
 		float y = Platform.PLATFORM_HEIGHT / 2;
-		float maxJumpHeight = Bob.BOB_JUMP_VELOCITY * Bob.BOB_JUMP_VELOCITY / (2 * -gravity.y);
+		float maxJumpHeight = Bob.BOB_JUMP_VELOCITY * Bob.BOB_JUMP_VELOCITY / (2 * this.gravity.y);
 		while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
 			int type = rand.nextFloat() > 0.8f ? Platform.PLATFORM_TYPE_MOVING : Platform.PLATFORM_TYPE_STATIC;
 			float x = rand.nextFloat() * (WORLD_WIDTH - Platform.PLATFORM_WIDTH) + Platform.PLATFORM_WIDTH / 2;
 
 			Platform platform = new Platform(type, x, y);
 			platforms.add(platform);
-
 			if (rand.nextFloat() > 0.9f && type != Platform.PLATFORM_TYPE_MOVING) {
-				Spring spring = new Spring(platform.position.x, platform.position.y + Platform.PLATFORM_HEIGHT / 2
-					+ Spring.SPRING_HEIGHT / 2);
+				Spring spring = new Spring(platform.position.x, platform.position.y + Platform.PLATFORM_HEIGHT / 2 + Spring.SPRING_HEIGHT / 2);
 				springs.add(spring);
 			}
-
 			if (y > WORLD_HEIGHT / 3 && rand.nextFloat() > 0.8f) {
 				Squirrel squirrel = new Squirrel(platform.position.x + rand.nextFloat(), platform.position.y
 					+ Squirrel.SQUIRREL_HEIGHT + rand.nextFloat() * 2);
 				squirrels.add(squirrel);
 			}
-
 			if (rand.nextFloat() > 0.6f) {
-				Coin coin = new Coin(platform.position.x + rand.nextFloat(), platform.position.y + Coin.COIN_HEIGHT
-					+ rand.nextFloat() * 3);
+				Coin coin = new Coin(rand.nextFloat(), rand.nextFloat() * 200);
 				coins.add(coin);
 			}
-
 			y += (maxJumpHeight - 0.5f);
 			y -= rand.nextFloat() * (maxJumpHeight / 3);
 		}
-
 		castle = new Castle(WORLD_WIDTH / 2, y);
 	}
 
+	public void setGravity(float x, float y){
+		this.gravity.x = x;
+		this.gravity.y = y;
+		bob.setGravityBob(x, y);
+	}
+	
+	public Vector2 getGravity(){
+		return gravity;
+	}
+	
 	public void update (float deltaTime, float accelX) {
 		updateBob(deltaTime, accelX);
 		updatePlatforms(deltaTime);
@@ -146,18 +144,22 @@ public class World {
 			coin.update(deltaTime);
 		}
 	}
-
+	
 	private void checkCollisions () {
 		checkPlatformCollisions();
 		checkDoubleJump();
 		checkSquirrelCollisions();
 		checkItemCollisions();
 		checkCastleCollisions();
+		checkVelocity();
 	}
 
+	private void checkVelocity () {
+		
+	}
+	
 	private void checkPlatformCollisions () {
 		if (bob.velocity.y > 0) return;
-
 		int len = platforms.size();
 		for (int i = 0; i < len; i++) {
 			Platform platform = platforms.get(i);
@@ -168,7 +170,7 @@ public class World {
 					if (rand.nextFloat() > 0.5f) {
 						platform.pulverize();
 					}
-					gravity = new Vector2(0,6);
+					gravity = new Vector2(0f,1f);
 					break;
 				}
 			}
@@ -194,11 +196,6 @@ public class World {
 		}
 	}
 	
-	
-	private void checkVelocity () {
-		if (bob.velocity.y < 3) ;}
-	
-
 	private void checkItemCollisions () {
 		int len = coins.size();
 		for (int i = 0; i < len; i++) {
@@ -209,11 +206,8 @@ public class World {
 				listener.coin();
 				score += Coin.COIN_SCORE;
 			}
-
 		}
-
 		if (bob.velocity.y > 0) return;
-
 		len = springs.size();
 		for (int i = 0; i < len; i++) {
 			Spring spring = springs.get(i);
