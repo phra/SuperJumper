@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="src" exported="true" path="/superjumper" combineaccessrules="false"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/superjumper"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="/superjumper/libs/gdx.jar" sourcepath="/superjumper/libs/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="libs/gdx-backend-android.jar" sourcepath="libs/gdx-backend-android-sources.jar"/>
+	<classpathentry kind="lib" path="/superjumper/libs/bodyeditor-loader.jar" sourcepath="/superjumper/libs/bodyeditor-loader-sources.jar"/>
+	<classpathentry kind="lib" path="/superjumper/libs/tween-engine-api.jar" sourcepath="/superjumper/libs/tween-engine-api-sources.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" exported="true" path="/superjumper/libs/gdx.jar" sourcepath="/superjumper/libs/gdx-sources.jar"/>
-	<classpathentry kind="lib" exported="true" path="libs/gdx-backend-android.jar" sourcepath="libs/gdx-backend-android-sources.jar"/>
-	<classpathentry kind="lib" exported="true" path="/superjumper/libs/bodyeditor-loader.jar" sourcepath="/superjumper/libs/bodyeditor-loader-sources.jar"/>
-	<classpathentry kind="lib" exported="true" path="/superjumper/libs/tween-engine-api.jar" sourcepath="/superjumper/libs/tween-engine-api-sources.jar"/>
 </classpath>

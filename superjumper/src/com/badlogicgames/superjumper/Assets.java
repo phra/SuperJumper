@@ -26,7 +26,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Assets {
 	public static Texture background;
 	public static TextureRegion backgroundRegion;
-
 	public static Texture items;
 	public static TextureRegion mainMenu;
 	public static TextureRegion pauseMenu;
@@ -61,9 +60,8 @@ public class Assets {
 	}
 
 	public static void load () {
-		background = loadTexture("data/background.png");
+		background = loadTexture("data/background1.png");
 		backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
-
 		items = loadTexture("data/items.png");
 		mainMenu = new TextureRegion(items, 0, 224, 300, 110);
 		pauseMenu = new TextureRegion(items, 224, 128, 192, 96);
@@ -75,7 +73,6 @@ public class Assets {
 		soundOn = new TextureRegion(items, 64, 0, 64, 64);
 		arrow = new TextureRegion(items, 0, 64, 64, 64);
 		pause = new TextureRegion(items, 64, 64, 64, 64);
-
 		spring = new TextureRegion(items, 128, 0, 32, 32);
 		castle = new TextureRegion(items, 128, 64, 64, 64);
 		coinAnim = new Animation(0.2f, new TextureRegion(items, 128, 32, 32, 32), new TextureRegion(items, 160, 32, 32, 32),
@@ -87,9 +84,7 @@ public class Assets {
 		platform = new TextureRegion(items, 64, 160, 64, 16);
 		brakingPlatform = new Animation(0.2f, new TextureRegion(items, 64, 160, 64, 16), new TextureRegion(items, 64, 176, 64, 16),
 			new TextureRegion(items, 64, 192, 64, 16), new TextureRegion(items, 64, 208, 64, 16));
-
 		font = new BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
-
 		music = Gdx.audio.newMusic(Gdx.files.internal("data/music.mp3"));
 		music.setLooping(true);
 		music.setVolume(0.5f);
