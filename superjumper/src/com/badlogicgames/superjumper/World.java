@@ -34,6 +34,7 @@ public class World {
 	public static final int WORLD_STATE_RUNNING = 0;
 	public static final int WORLD_STATE_NEXT_LEVEL = 1;
 	public static final int WORLD_STATE_GAME_OVER = 2;
+	public final int PLATFORMS_DISTANCE = 10;
 	public final Bob bob;
 	public final List<Platform> platforms;
 	public final List<Spring> springs;
@@ -56,7 +57,7 @@ public class World {
 		this.coins = new ArrayList<Coin>();
 		this.listener = listener;
 		this.rand = new Random();
-		generateLevel();
+		this.generateLevel();
 		this.setGravity(0, 1);
 		this.heightSoFar = 0;
 		this.score = 0;
@@ -65,11 +66,12 @@ public class World {
 
 	private void generateLevel () {
 		float y = Platform.PLATFORM_HEIGHT / 2;
-		float maxJumpHeight = Bob.BOB_JUMP_VELOCITY * Bob.BOB_JUMP_VELOCITY / (2 * this.gravity.y);
+		//float maxJumpHeight = Bob.BOB_JUMP_VELOCITY * Bob.BOB_JUMP_VELOCITY / (2 * this.gravity.y);
+		float maxJumpHeight = this.PLATFORMS_DISTANCE;
 		while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
 			int type = rand.nextFloat() > 0.8f ? Platform.PLATFORM_TYPE_MOVING : Platform.PLATFORM_TYPE_STATIC;
-			float x = rand.nextFloat() * (WORLD_WIDTH - Platform.PLATFORM_WIDTH) + Platform.PLATFORM_WIDTH / 2;
-
+			//float x = rand.nextFloat() * (WORLD_WIDTH - Platform.PLATFORM_WIDTH) + Platform.PLATFORM_WIDTH / 2;
+			float x = rand.nextFloat() > 0.5f ? rand.nextFloat() *3 : WORLD_WIDTH - rand.nextFloat() *3;
 			Platform platform = new Platform(type, x, y);
 			platforms.add(platform);
 			if (rand.nextFloat() > 0.9f && type != Platform.PLATFORM_TYPE_MOVING) {
@@ -82,7 +84,7 @@ public class World {
 				squirrels.add(squirrel);
 			}
 			if (rand.nextFloat() > 0.6f) {
-				Coin coin = new Coin(rand.nextFloat()*200, rand.nextFloat() * 200);
+				Coin coin = new Coin(WORLD_WIDTH - rand.nextFloat()*10, rand.nextFloat() * 1000);
 				coins.add(coin);
 			}
 			y += (maxJumpHeight - 0.5f);
@@ -161,7 +163,7 @@ public class World {
 	}
 	
 	private void checkPlatformCollisions () {
-		if (bob.velocity.y > 0) return;
+		//if (bob.velocity.y > 0) return;
 		int len = platforms.size();
 		for (int i = 0; i < len; i++) {
 			Platform platform = platforms.get(i);
@@ -169,9 +171,9 @@ public class World {
 				if (OverlapTester.overlapRectangles(bob.bounds, platform.bounds)) {
 					bob.hitPlatform();
 					listener.jump();
-					if (rand.nextFloat() > 0.5f) {
+					//if (rand.nextFloat() > 0.5f) {
 						platform.pulverize();
-					}
+					//}
 					gravity = new Vector2(0f,1f);
 					break;
 				}
