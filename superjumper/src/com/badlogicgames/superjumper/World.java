@@ -82,7 +82,7 @@ public class World {
 				squirrels.add(squirrel);
 			}
 			if (rand.nextFloat() > 0.6f) {
-				Coin coin = new Coin(rand.nextFloat(), rand.nextFloat() * 200);
+				Coin coin = new Coin(rand.nextFloat()*200, rand.nextFloat() * 200);
 				coins.add(coin);
 			}
 			y += (maxJumpHeight - 0.5f);
@@ -155,7 +155,9 @@ public class World {
 	}
 
 	private void checkVelocity () {
-		
+		if (bob.velocity.y > bob.MAXVELOCITY){
+			bob.setGravityBob(0, 0);
+		}
 	}
 	
 	private void checkPlatformCollisions () {
