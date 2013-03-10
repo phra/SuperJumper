@@ -195,6 +195,7 @@ public class World {
 			Squirrel squirrel = squirrels.get(i);
 			if (OverlapTester.overlapRectangles(squirrel.bounds, bob.bounds)) {
 				bob.hitSquirrel();
+				bob.setGravityBob(0, -5);
 				listener.hit();
 			}
 		}
