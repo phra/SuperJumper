@@ -71,7 +71,8 @@ public class World {
 		while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
 			int type = rand.nextFloat() > 0.8f ? Platform.PLATFORM_TYPE_MOVING : Platform.PLATFORM_TYPE_STATIC;
 			//float x = rand.nextFloat() * (WORLD_WIDTH - Platform.PLATFORM_WIDTH) + Platform.PLATFORM_WIDTH / 2;
-			float x = rand.nextFloat() > 0.5f ? rand.nextFloat() *3 : WORLD_WIDTH - rand.nextFloat() *3;
+			float random = rand.nextFloat();
+			float x = rand.nextFloat() > 0.5f ? random *3 : WORLD_WIDTH - random *3;
 			Platform platform = new Platform(type, x, y);
 			platforms.add(platform);
 			if (rand.nextFloat() > 0.9f && type != Platform.PLATFORM_TYPE_MOVING) {
@@ -83,8 +84,10 @@ public class World {
 					+ Squirrel.SQUIRREL_HEIGHT + rand.nextFloat() * 2);
 				squirrels.add(squirrel);
 			}
-			if (rand.nextFloat() > 0.6f) {
-				Coin coin = new Coin(WORLD_WIDTH - rand.nextFloat()*10, rand.nextFloat() * 1000);
+			if (rand.nextFloat() > 0.3f) {
+				random = rand.nextFloat();
+				Coin coin = new Coin(platform.position.x + (platform.position.x < WORLD_WIDTH /2 ? 3*random : -3*random), 
+					platform.position.y + (rand.nextFloat() > 0.5f ? 3*random : -3*random));
 				coins.add(coin);
 			}
 			y += (maxJumpHeight - 0.5f);
