@@ -80,14 +80,14 @@ public class Bob extends DynamicGameObject {
 	}
 
 	public void hitPlatform () {
-		velocity.y = BOB_JUMP_VELOCITY;
-		state = BOB_STATE_JUMP;
+		//velocity.y = BOB_JUMP_VELOCITY;
+		//state = BOB_STATE_JUMP;
 		stateTime = 0;
 	}
 
 	public void hitSpring () {
-		velocity.y = BOB_JUMP_VELOCITY * 1.5f;
-		state = BOB_STATE_JUMP;
+		//velocity.y = BOB_JUMP_VELOCITY * 1.5f;
+		//state = BOB_STATE_JUMP;
 		stateTime = 0;
 	}
 }

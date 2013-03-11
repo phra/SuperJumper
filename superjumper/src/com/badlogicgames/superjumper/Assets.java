@@ -60,7 +60,7 @@ public class Assets {
 	}
 
 	public static void load () {
-		background = loadTexture("data/background1.png");
+		background = loadTexture("data/background.png");
 		backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
 		items = loadTexture("data/items.png");
 		mainMenu = new TextureRegion(items, 0, 224, 300, 110);

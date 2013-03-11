@@ -111,6 +111,7 @@ public class World {
 		updatePlatforms(deltaTime);
 		updateSquirrels(deltaTime);
 		updateCoins(deltaTime);
+		if (rand.nextFloat() > 0.5f) score += (int)bob.velocity.y;
 		if (bob.state != Bob.BOB_STATE_HIT) checkCollisions();
 		checkGameOver();
 	}
@@ -174,10 +175,8 @@ public class World {
 				if (OverlapTester.overlapRectangles(bob.bounds, platform.bounds)) {
 					bob.hitPlatform();
 					listener.jump();
-					//if (rand.nextFloat() > 0.5f) {
-						platform.pulverize();
-					//}
-					gravity = new Vector2(0f,1f);
+					platform.pulverize();
+					score -= 100;
 					break;
 				}
 			}
