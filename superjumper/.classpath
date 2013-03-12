@@ -7,6 +7,5 @@
 	<classpathentry exported="true" kind="lib" path="libs/tween-engine-api.jar" sourcepath="libs/tween-engine-api-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-lwjgl.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-lwjgl-natives.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/svg-android.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

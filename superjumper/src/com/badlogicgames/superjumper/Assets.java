@@ -19,8 +19,10 @@ package com.badlogicgames.superjumper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
@@ -47,6 +49,8 @@ public class Assets {
 	public static TextureRegion platform;
 	public static Animation brakingPlatform;
 	public static BitmapFont font;
+	public static Pixmap pixmap;
+	public static Texture tmptext;
 
 	public static Music music;
 	public static Sound jumpSound;
@@ -60,8 +64,11 @@ public class Assets {
 	}
 
 	public static void load () {
-		background = loadTexture("data/background.png");
-		backgroundRegion = new TextureRegion(background, 0, 0, 320, 480);
+		//background = loadTexture("data/background1.png");
+		pixmap = new Pixmap(2048, 2048, Pixmap.Format.RGBA8888);
+		tmptext = new Texture(pixmap);
+		DrawSmiley();
+		backgroundRegion = new TextureRegion(tmptext, 0, 0, 720, 1280);
 		items = loadTexture("data/items.png");
 		mainMenu = new TextureRegion(items, 0, 224, 300, 110);
 		pauseMenu = new TextureRegion(items, 224, 128, 192, 96);
@@ -95,7 +102,29 @@ public class Assets {
 		coinSound = Gdx.audio.newSound(Gdx.files.internal("data/coin.wav"));
 		clickSound = Gdx.audio.newSound(Gdx.files.internal("data/click.wav"));
 	}
-
+	private static void DrawSmiley(){
+		Gdx.app.log("MyLibGDXGame", "Game.DrawSmiley()");
+		//-------Going to draw a smiley face on the pixmap, which will show on the texture
+		//draw a yellow circle for the smiley faces head
+		pixmap.setColor(1, 1, 0, 1);
+		pixmap.fillCircle(512/2, 512/2, 512/2);
+ 
+		//first draw a black circle for the smile
+		pixmap.setColor(0, 0, 0,1);
+		pixmap.fillCircle(512/2, 280, 160);
+ 
+		//then a yellow larger over it, to make it look like a partial circle/ a smile
+		pixmap.setColor(1, 1, 0, 1);
+		pixmap.fillCircle(512/2, 200, 200);
+ 
+		//now draw the two eyes
+		pixmap.setColor(0, 0, 0,1);
+		pixmap.fillCircle(512/3, 200, 60);
+		pixmap.fillCircle(512-512/3, 200, 60);
+ 
+		tmptext.draw(pixmap, 0, 0);
+		//tmptext.bind();
+	}
 	public static void playSound (Sound sound) {
 		if (Settings.soundEnabled) sound.play(1);
 	}

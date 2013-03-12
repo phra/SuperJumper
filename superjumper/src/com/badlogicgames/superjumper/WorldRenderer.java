@@ -16,6 +16,9 @@
 
 package com.badlogicgames.superjumper;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -45,9 +48,15 @@ public class WorldRenderer {
 
 	public void renderBackground () {
 		batch.disableBlending();
+		GLCommon gl = Gdx.gl;
+		gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
+ 
+		//start the batcher, so we would want to do all of our draw calls between batcher.begin and .end
 		batch.begin();
-		//batch.draw(Assets.backgroundRegion, cam.position.x - FRUSTUM_WIDTH / 2, cam.position.y - FRUSTUM_HEIGHT / 2, FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
+		//batch.draw(Assets.backgroundRegion, 0, 0);
 		batch.draw(Assets.backgroundRegion, 0, 0, FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
+		//batch.draw(Assets.backgroundRegion, 0, 0, FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
 		batch.end();
 	}
 
