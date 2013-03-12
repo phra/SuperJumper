@@ -46,8 +46,8 @@ public class WorldRenderer {
 	public void renderBackground () {
 		batch.disableBlending();
 		batch.begin();
-		batch.draw(Assets.backgroundRegion, cam.position.x - FRUSTUM_WIDTH / 2, cam.position.y - FRUSTUM_HEIGHT / 2, FRUSTUM_WIDTH,
-			FRUSTUM_HEIGHT);
+		//batch.draw(Assets.backgroundRegion, cam.position.x - FRUSTUM_WIDTH / 2, cam.position.y - FRUSTUM_HEIGHT / 2, FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
+		batch.draw(Assets.backgroundRegion, 0, 0, FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
 		batch.end();
 	}
 
