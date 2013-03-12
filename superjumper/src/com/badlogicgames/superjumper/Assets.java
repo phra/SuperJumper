@@ -17,9 +17,12 @@
 package com.badlogicgames.superjumper;
 
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -65,6 +68,8 @@ public class Assets {
 
 	public static void load () {
 		//background = loadTexture("data/background1.png");
+		
+		
 		pixmap = new Pixmap(2048, 2048, Pixmap.Format.RGBA8888);
 		tmptext = new Texture(pixmap);
 		DrawSmiley();
@@ -116,7 +121,7 @@ public class Assets {
 		//then a yellow larger over it, to make it look like a partial circle/ a smile
 		pixmap.setColor(1, 1, 0, 1);
 		pixmap.fillCircle(512/2, 200, 200);
- 
+		
 		//now draw the two eyes
 		pixmap.setColor(0, 0, 0,1);
 		pixmap.fillCircle(512/3, 200, 60);
