@@ -1,19 +1,3 @@
-/*******************************************************************************
- * Copyright 2011 See AUTHORS file.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
-
 package com.badlogicgames.superjumper;
 
 import com.badlogic.gdx.Game;
@@ -25,6 +9,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogicgames.superjumper.World.WorldListener;
@@ -35,7 +20,7 @@ public class GameScreen implements Screen {
 	static final int GAME_PAUSED = 2;
 	static final int GAME_LEVEL_END = 3;
 	static final int GAME_OVER = 4;
-	
+
 	Game game;
 	int state;
 	OrthographicCamera guiCam;
@@ -77,6 +62,20 @@ public class GameScreen implements Screen {
 			public void coin () {
 				Assets.playSound(Assets.coinSound);
 			}
+
+			@Override
+			public void life () {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void projectile () {
+				// TODO Auto-generated method stub
+				
+			}
+
+			
 		};
 		world = new World(worldListener);
 		renderer = new WorldRenderer(batcher, world);
@@ -117,9 +116,9 @@ public class GameScreen implements Screen {
 	}
 
 	private void updateRunning (float deltaTime) {
-		if (Gdx.input.justTouched()) {
+				if (Gdx.input.justTouched()) {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-
+			world.ShotProjectile();
 			if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				state = GAME_PAUSED;
@@ -132,7 +131,7 @@ public class GameScreen implements Screen {
 				}
 			}
 		}
-		
+
 		ApplicationType appType = Gdx.app.getType();
 		// should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
 		if (appType == ApplicationType.Android || appType == ApplicationType.iOS) {
@@ -227,8 +226,14 @@ public class GameScreen implements Screen {
 	}
 
 	private void presentRunning () {
-		batcher.draw(Assets.pause, 320 - 64, 480 - 64, 64, 64);
+		batcher.draw(Assets.pause, 320 - 54, 480 - 54, 54, 44);
 		Assets.font.draw(batcher, scoreString, 16, 480 - 20);
+		
+		
+		String scoret;
+		scoret = world.shot+"x ";
+		Assets.font.draw(batcher, scoret, 4, 480 - 410);
+		batcher.draw(Assets.portaproj, 320 - 315, 480 - 410, 35, 35);
 	}
 
 	private void presentPaused () {

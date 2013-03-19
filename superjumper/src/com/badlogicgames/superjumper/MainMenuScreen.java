@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
@@ -33,6 +34,7 @@ public class MainMenuScreen implements Screen {
 	SpriteBatch batcher;
 	Rectangle soundBounds;
 	Rectangle playBounds;
+	Rectangle multiplayerBounds;
 	Rectangle highscoresBounds;
 	Rectangle helpBounds;
 	Vector3 touchPoint;
@@ -45,8 +47,9 @@ public class MainMenuScreen implements Screen {
 		batcher = new SpriteBatch();
 		soundBounds = new Rectangle(0, 0, 64, 64);
 		playBounds = new Rectangle(160 - 150, 200 + 18, 300, 36);
-		highscoresBounds = new Rectangle(160 - 150, 200 - 18, 300, 36);
-		helpBounds = new Rectangle(160 - 150, 200 - 18 - 36, 300, 36);
+		multiplayerBounds = new Rectangle(160 - 150, 200 - 36, 300, 36);
+		highscoresBounds = new Rectangle(160 - 150, 200 - 36-18, 300, 36);
+		helpBounds = new Rectangle(160 - 150, 200 - 36 - 36-18, 300, 36);
 		touchPoint = new Vector3();
 	}
 
@@ -89,19 +92,20 @@ public class MainMenuScreen implements Screen {
 
 		batcher.disableBlending();
 		batcher.begin();
-		batcher.draw(Assets.backgroundRegion, 0, 0, 320, 480);
+		batcher.draw(Assets.backgroundRegionmain, 0, 0, 320, 480);
 		batcher.end();
-
-		batcher.enableBlending();
+      batcher.enableBlending();
 		batcher.begin();
-		batcher.draw(Assets.logo, 160 - 274 / 2, 480 - 10 - 142, 274, 142);
-		batcher.draw(Assets.mainMenu, 10, 200 - 110 / 2, 300, 110);
-		batcher.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 64, 64);
+		/*batcher.draw(Assets.logo, 160 - 274 / 2, 480 - 10 - 142, 274, 142);*/
+		batcher.draw(Assets.mainMenu, 10, 200 - 110, 300, 240);
+	
+		batcher.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 54, 44);
 		batcher.end();
 	}
 
 	@Override
 	public void render (float delta) {
+		
 		update(delta);
 		draw(delta);
 	}
