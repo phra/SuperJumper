@@ -19,6 +19,8 @@ package com.badlogicgames.superjumper;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
+import java.io.*;
+import java.net.*;
 
 public class SuperJumper extends Game {
 	boolean firstTimeCreate = true;
@@ -44,7 +46,7 @@ public class SuperJumper extends Game {
 	@Override
 	public void dispose () {
 		super.dispose();
-
+		
 		getScreen().dispose();
 	}
 }

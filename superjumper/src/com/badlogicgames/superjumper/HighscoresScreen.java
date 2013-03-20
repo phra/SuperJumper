@@ -74,7 +74,6 @@ public class HighscoresScreen implements Screen {
 		batcher.begin();
 		batcher.draw(Assets.backgroundRegion, 0, 0, 320, 480);
 		batcher.end();
-
 		batcher.enableBlending();
 		batcher.begin();
 		batcher.draw(Assets.highScoresRegion, 10, 360 - 16, 300, 33);

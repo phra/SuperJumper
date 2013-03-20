@@ -39,6 +39,7 @@ public class MainMenuScreen implements Screen {
 	Rectangle helpBounds;
 	Vector3 touchPoint;
 
+
 	public MainMenuScreen (Game game) {
 		this.game = game;
 
@@ -47,7 +48,7 @@ public class MainMenuScreen implements Screen {
 		batcher = new SpriteBatch();
 		soundBounds = new Rectangle(0, 0, 64, 64);
 		playBounds = new Rectangle(160 - 150, 200 + 18, 300, 36);
-		multiplayerBounds = new Rectangle(160 - 150, 200 - 36, 300, 36);
+		multiplayerBounds = new Rectangle(160 - 150, 200 - 18,300, 36);
 		highscoresBounds = new Rectangle(160 - 150, 200 - 36-18, 300, 36);
 		helpBounds = new Rectangle(160 - 150, 200 - 36 - 36-18, 300, 36);
 		touchPoint = new Vector3();
@@ -60,25 +61,23 @@ public class MainMenuScreen implements Screen {
 			if (OverlapTester.pointInRectangle(playBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				game.setScreen(new GameScreen(game));
-				return;
-			}
-			if (OverlapTester.pointInRectangle(highscoresBounds, touchPoint.x, touchPoint.y)) {
+			} else if (OverlapTester.pointInRectangle(highscoresBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				game.setScreen(new HighscoresScreen(game));
-				return;
-			}
-			if (OverlapTester.pointInRectangle(helpBounds, touchPoint.x, touchPoint.y)) {
+			} else if (OverlapTester.pointInRectangle(helpBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				game.setScreen(new HelpScreen(game));
-				return;
-			}
-			if (OverlapTester.pointInRectangle(soundBounds, touchPoint.x, touchPoint.y)) {
+			} else if (OverlapTester.pointInRectangle(soundBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				Settings.soundEnabled = !Settings.soundEnabled;
 				if (Settings.soundEnabled)
 					Assets.music.play();
 				else
 					Assets.music.pause();
+			} else if (OverlapTester.pointInRectangle(multiplayerBounds, touchPoint.x, touchPoint.y)) {
+				Assets.playSound(Assets.clickSound);
+				game.setScreen(new MultiplayerScreen(game));
+				
 			}
 		}
 	}

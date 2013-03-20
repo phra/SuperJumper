@@ -18,4 +18,5 @@
     <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="10"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+      <uses-permission android:name="android.permission.INTERNET"/>
 </manifest> 
