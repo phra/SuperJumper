@@ -152,6 +152,7 @@ public class GameScreen implements Screen {
 		if (world.state == World.WORLD_STATE_GAME_OVER) {
 			state = GAME_OVER;
 			if (lastScore >= Settings.highscores[4])
+
 				scoreString = "NEW HIGHSCORE: " + lastScore;
 			else
 				scoreString = "SCORE: " + lastScore;
@@ -190,6 +191,7 @@ public class GameScreen implements Screen {
 	private void updateGameOver () {
 		if (Gdx.input.justTouched()) {
 			game.setScreen(new MainMenuScreen(game));
+
 		}
 	}
 

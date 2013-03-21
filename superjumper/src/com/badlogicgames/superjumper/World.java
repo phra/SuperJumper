@@ -394,6 +394,7 @@ public class World {
         int len = coins.size();
         for (int i = 0; i < len; i++) {
             int p=0;
+
             Coin coin = coins.get(i);
             if (coin.state != Coin.COIN_STATE_PULVERIZING && OverlapTester.overlapRectangles(bob.bounds, coin.bounds)) {
                

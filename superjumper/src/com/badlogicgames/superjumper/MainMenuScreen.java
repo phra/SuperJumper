@@ -76,7 +76,9 @@ public class MainMenuScreen implements Screen {
 					Assets.music.pause();
 			} else if (OverlapTester.pointInRectangle(multiplayerBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
-				game.setScreen(new MultiplayerScreen(game));
+				//#FIXME
+				//game.setScreen(new MultiplayerScreen(game));
+				game.setScreen(new GameScreenMulti(game));
 				
 			}
 		}
