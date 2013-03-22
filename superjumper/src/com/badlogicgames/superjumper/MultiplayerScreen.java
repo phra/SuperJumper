@@ -59,14 +59,18 @@ public class MultiplayerScreen implements Screen {
                    else if (OverlapTester.pointInRectangle(ClientBounds, touchPoint.x, touchPoint.y)) {
                            Assets.playSound(Assets.clickSound);
                            str = "CONNECTING";
-                           /*FIXME ConnectThread thr = new ConnectThread("192.168.0.2",9999);
-                           thr.start();*/
+                           ConnectThread thr = new ConnectThread("192.168.0.2",9999,WorldMulti.buffer);
+                           thr.start();
+                           game.setScreen(new GameScreenMulti(game));
+
                    }
                    else if (OverlapTester.pointInRectangle(ServerBounds, touchPoint.x, touchPoint.y)) {
                            Assets.playSound(Assets.clickSound);
                            str = "ACCEPTING";
-                           /*FIXME AcceptThread thr = new AcceptThread(9999);
-                           thr.start();*/
+                           AcceptThread thr = new AcceptThread(9999,WorldMulti.buffer);
+                           thr.start();
+                           game.setScreen(new GameScreenMulti(game));
+                           
                    }
            }
    }
