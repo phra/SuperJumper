@@ -1,16 +1,15 @@
-
 package com.badlogicgames.superjumper.client;
 
+import com.badlogicgames.superjumper.SuperJumper;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.badlogicgames.superjumper.SuperJumper;
 
-public class SuperJumperGwt extends GwtApplication {
+public class GwtLauncher extends GwtApplication {
 	@Override
 	public GwtApplicationConfiguration getConfig () {
-		GwtApplicationConfiguration config = new GwtApplicationConfiguration(320, 480);
-		return config;
+		GwtApplicationConfiguration cfg = new GwtApplicationConfiguration(480, 320);
+		return cfg;
 	}
 
 	@Override
