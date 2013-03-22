@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogicgames.superjumper.World.WorldListener;
+import com.badlogicgames.superjumper.WorldMulti.WorldListener;
 
 public class GameScreenMulti implements Screen {
 	static final int GAME_READY = 0;
@@ -26,9 +26,9 @@ public class GameScreenMulti implements Screen {
 	OrthographicCamera guiCam;
 	Vector3 touchPoint;
 	SpriteBatch batcher;
-	World world;
+	WorldMulti world;
 	WorldListener worldListener;
-	WorldRenderer renderer;
+	WorldRendererMulti renderer;
 	Rectangle pauseBounds;
 	Rectangle resumeBounds;
 	Rectangle quitBounds;
@@ -77,8 +77,8 @@ public class GameScreenMulti implements Screen {
 
 			
 		};
-		world = new World(worldListener);
-		renderer = new WorldRenderer(batcher, world);
+		world = new WorldMulti(worldListener);
+		renderer = new WorldRendererMulti(batcher, world);
 		pauseBounds = new Rectangle(320 - 64, 480 - 64, 64, 64);
 		resumeBounds = new Rectangle(160 - 96, 240, 192, 36);
 		quitBounds = new Rectangle(160 - 96, 240 - 36, 192, 36);
@@ -181,8 +181,8 @@ public class GameScreenMulti implements Screen {
 
 	private void updateLevelEnd () {
 		if (Gdx.input.justTouched()) {
-			world = new World(worldListener);
-			renderer = new WorldRenderer(batcher, world);
+			world = new WorldMulti(worldListener);
+			renderer = new WorldRendererMulti(batcher, world);
 			world.score = lastScore;
 			state = GAME_READY;
 		}
