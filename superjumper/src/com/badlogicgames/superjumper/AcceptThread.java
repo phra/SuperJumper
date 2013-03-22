@@ -6,18 +6,20 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class AcceptThread extends Thread {
-	
+
 	ServerSocket ssock ;
 	Socket sock;
 	int port;
 	BTsocket btsock;
 	Boolean OK2Send = false;
-	
-	public AcceptThread(int port) {
+	FullDuplexBuffer buf;
+
+	public AcceptThread(int port, FullDuplexBuffer buf) {
 		super();
 		this.port = port;
+		this.buf = buf;
 	}
-	
+
 	@Override
 	public void run () {
 		try {
@@ -26,7 +28,7 @@ public class AcceptThread extends Thread {
 			btsock = new BTsocket(sock.getInputStream(),sock.getOutputStream());
 			OK2Send = true;
 			new SendThread().start();
-			
+
 			while (true){
 				Pacco pkt = btsock.readPkt();
 				if (pkt.getType() == 0){
@@ -34,13 +36,13 @@ public class AcceptThread extends Thread {
 					break;
 				}
 				try {
-					WorldMulti.putPaccoIn(pkt);
+					buf.putPaccoInBLOCK(pkt);
 				} catch (InterruptedException e) { }
 			}
 			/*
 			Pacco pkt = btsock.readPkt();
 			MultiplayerScreen.str = "RECV OK! " + new String(pkt.getData());
-			*/
+			 */
 			btsock.close();
 			sock.close();
 		} catch (UnknownHostException e) {
@@ -49,9 +51,9 @@ public class AcceptThread extends Thread {
 			MultiplayerScreen.str = "IO EXCEPTION";
 		}
 	}
-	
+
 	private class SendThread extends Thread {
-		
+
 		public SendThread () {
 			super();
 		}
@@ -60,7 +62,7 @@ public class AcceptThread extends Thread {
 		public void run () {
 			while(OK2Send){
 				try {
-					btsock.writePkt(WorldMulti.takePaccoOut());
+					btsock.writePkt(buf.takePaccoOutBLOCK());
 				} catch (InterruptedException e) { }
 			}
 		}

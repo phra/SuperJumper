@@ -11,13 +11,15 @@ public class ConnectThread extends Thread {
 	int port;
 	String dest;
 	Boolean OK2Send = false;
-	
-	public ConnectThread(String dest, int port) {
+	FullDuplexBuffer buf;
+
+	public ConnectThread(String dest, int port, FullDuplexBuffer buf) {
 		super();
 		this.dest = dest;
 		this.port = port;
+		this.buf = buf;
 	}
-	
+
 	@Override
 	public void run () {
 		String test = "TEST";
@@ -33,14 +35,14 @@ public class ConnectThread extends Thread {
 					break;
 				}
 				try {
-					WorldMulti.putPaccoIn(pkt);
+					buf.putPaccoInBLOCK(pkt);
 				} catch (InterruptedException e) { }
 			}
 			/*
 			Pacco pkt = new Pacco(1,test.getBytes(),test.getBytes().length);
 			btsock.writePkt(pkt);
 			MultiplayerScreen.str = "SEND OK!";
-			*/
+			 */
 			btsock.close();
 			sock.close();
 		} catch (UnknownHostException e) {
@@ -49,9 +51,9 @@ public class ConnectThread extends Thread {
 			MultiplayerScreen.str = "IO EXCEPTION";
 		}
 	}
-	
+
 	private class SendThread extends Thread {
-		
+
 		public SendThread () {
 			super();
 		}
@@ -60,7 +62,7 @@ public class ConnectThread extends Thread {
 		public void run () {
 			while(OK2Send){
 				try {
-					btsock.writePkt(WorldMulti.takePaccoOut());
+					btsock.writePkt(buf.takePaccoOutBLOCK());
 				} catch (InterruptedException e) { }
 			}
 		}
