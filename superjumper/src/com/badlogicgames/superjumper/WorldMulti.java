@@ -171,7 +171,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 				break;
 			}
 		}
-		
+		//updateBobMulti(deltaTime,-accelX);
 		buffer.putPaccoOutNOBLOCK(new PaccoUpdateBobMulti(deltaTime, accelX));
 		updateBob(deltaTime, accelX);
 		updatePlatforms(deltaTime);
@@ -179,13 +179,13 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 		updateCoins(deltaTime);
 		updateLifes(deltaTime);
 		updateProjectiles(deltaTime);
-		if (rand.nextFloat() > 0.5f) score += (int)bob.velocity.y;
+		score += (int)bob.velocity.y / 2;
 		if (bob.state != Bob.BOB_STATE_HIT) checkCollisions();
 		checkRemovePlatform();
 		checkRemoveProjectile();
 		checkRemoveCoin();
-		checkGameOver();
-		checkGameOverMulti();
+		//checkGameOver();
+		//checkGameOverMulti();
 
 	}
 
@@ -197,7 +197,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 	}
 
 	private void updateBobMulti(float deltaTime, float accelX){
-		bobMulti.velocity.x = accelX / 10 * Bob.BOB_MOVE_VELOCITY;
+		bobMulti.velocity.x = -accelX / 10 * Bob.BOB_MOVE_VELOCITY;
 		bobMulti.update(deltaTime);
 	}
 

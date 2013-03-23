@@ -61,6 +61,9 @@ public class MainMenuScreen implements Screen {
 			if (OverlapTester.pointInRectangle(playBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				game.setScreen(new GameScreen(game));
+			} else if (OverlapTester.pointInRectangle(multiplayerBounds, touchPoint.x, touchPoint.y)) {
+				Assets.playSound(Assets.clickSound);
+				game.setScreen(new MultiplayerScreen(game));
 			} else if (OverlapTester.pointInRectangle(highscoresBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				game.setScreen(new HighscoresScreen(game));
@@ -74,12 +77,6 @@ public class MainMenuScreen implements Screen {
 					Assets.music.play();
 				else
 					Assets.music.pause();
-			} else if (OverlapTester.pointInRectangle(multiplayerBounds, touchPoint.x, touchPoint.y)) {
-				Assets.playSound(Assets.clickSound);
-				//#FIXME
-				//game.setScreen(new MultiplayerScreen(game));
-				game.setScreen(new GameScreenMulti(game));
-				
 			}
 		}
 	}
@@ -90,7 +87,6 @@ public class MainMenuScreen implements Screen {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		guiCam.update();
 		batcher.setProjectionMatrix(guiCam.combined);
-
 		batcher.disableBlending();
 		batcher.begin();
 		batcher.draw(Assets.backgroundRegionmain, 0, 0, 320, 480);
@@ -99,7 +95,6 @@ public class MainMenuScreen implements Screen {
 		batcher.begin();
 		/*batcher.draw(Assets.logo, 160 - 274 / 2, 480 - 10 - 142, 274, 142);*/
 		batcher.draw(Assets.mainMenu, 10, 200 - 110, 300, 240);
-	
 		batcher.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 54, 44);
 		batcher.end();
 	}

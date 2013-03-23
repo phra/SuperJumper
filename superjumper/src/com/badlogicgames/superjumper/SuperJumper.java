@@ -16,7 +16,9 @@
 
 package com.badlogicgames.superjumper;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import java.io.*;
@@ -30,6 +32,7 @@ public class SuperJumper extends Game {
 	public void create () {
 		Settings.load();
 		Assets.load();
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		setScreen(new MainMenuScreen(this));
 		fps = new FPSLogger();
 	}

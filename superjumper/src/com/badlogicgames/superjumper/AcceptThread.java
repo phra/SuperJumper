@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.Semaphore;
+
+import com.badlogic.gdx.Gdx;
 
 public class AcceptThread extends Thread {
 
@@ -13,20 +16,27 @@ public class AcceptThread extends Thread {
 	BTsocket btsock;
 	Boolean OK2Send = false;
 	FullDuplexBuffer buf;
+	Semaphore sem;
 
-	public AcceptThread(int port, FullDuplexBuffer buf) {
+	public AcceptThread(int port, FullDuplexBuffer buf, Semaphore sem) {
 		super();
+		Gdx.app.debug("PHTEST", "ACCEPTTHREAD()");
 		this.port = port;
 		this.buf = buf;
+		this.sem = sem;
 	}
 
 	@Override
 	public void run () {
+		Gdx.app.debug("PHTEST", "ACCEPTTHREAD.RUN");
 		try {
 			ssock = new ServerSocket(port);
 			sock =  ssock.accept();
 			btsock = new BTsocket(sock.getInputStream(),sock.getOutputStream());
 			OK2Send = true;
+			Gdx.app.debug("PHTEST", "rilascio sem (accept thread)");
+			MultiplayerScreen.str = "ACCEPT THREAD";
+			sem.release();
 			new SendThread().start();
 
 			while (true){

@@ -56,4 +56,37 @@ public class FullDuplexBuffer {
 		} catch (InterruptedException e) { }
 		return null;
 	}
+	
+	public boolean selfTest(){
+		Pacco tmp1 = new Pacco(1);
+		Pacco tmp2 = new Pacco(2);
+		Pacco tmp3 = new Pacco(3);
+		Pacco tmp4 = new Pacco(4);
+		
+		try {
+			this.putPaccoOutBLOCK(tmp1);
+			this.putPaccoOutNOBLOCK(tmp2);
+			this.putPaccoInBLOCK(tmp3);
+			this.putPaccoInNOBLOCK(tmp4);
+			Pacco tmp7 = this.takePaccoOutBLOCK();
+			Pacco tmp8 = this.takePaccoOutNOBLOCK();
+			Pacco tmp9 = this.takePaccoInBLOCK();
+			Pacco tmp10 = this.takePaccoInNOBLOCK();
+			if (tmp7.getType() != 1){
+				return false;
+			}
+			if (tmp8.getType() != 2){
+				return false;
+			}
+			if (tmp9.getType() != 3){
+				return false;
+			}
+			if (tmp10.getType() != 4){
+				return false;
+			}
+		} catch (InterruptedException e) {
+			return false;
+		}
+		return true;
+	}
 }
