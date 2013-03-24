@@ -36,6 +36,11 @@ public class ConnectThread extends Thread {
 			OK2Send = true;
 			Gdx.app.debug("PHTEST", "rilascio sem (connect thread)");
 			MultiplayerScreen.str = "CONNECT THREAD";
+			//FIXME
+			if (btsock.readPkt().getType() != PROTOCOL_CONSTANTS.PACKET_START){
+				Gdx.app.debug("PHTEST", "ERRORE PROTOCOLLO START");
+				return;
+			}
 			sem.release();
 			new SendThread().start();
 			while (true){
