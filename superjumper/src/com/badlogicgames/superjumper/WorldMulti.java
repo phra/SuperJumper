@@ -40,6 +40,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 	public int turbo=1;
 	private Vector2 gravity = new Vector2(0,15);
 	protected static FullDuplexBuffer buffer = new FullDuplexBuffer();
+	public static String enemy = "";
 
 	public WorldMulti (WorldListener listener) {
 		this.bob = new Bob(4, 2);

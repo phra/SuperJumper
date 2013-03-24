@@ -35,10 +35,7 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 		Recv1Thread recv1;
 		Send2Thread send2;
 		Recv2Thread recv2;
-		if (pkt1.getType() != PROTOCOL_CONSTANTS.PACKET_WELCOME){
-			this.close();
-			return;
-		} else if (pkt2.getType() != PROTOCOL_CONSTANTS.PACKET_WELCOME){
+		if ((pkt1.getType() != PROTOCOL_CONSTANTS.PACKET_WELCOME) || (pkt2.getType() != PROTOCOL_CONSTANTS.PACKET_WELCOME)){
 			this.close();
 			return;
 		}
@@ -51,6 +48,8 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 			this.close();
 			return;
 		}
+		btsock2.writePkt(pkt3);
+		btsock1.writePkt(pkt4);
 		int id1 = SuperJumperServer.getID(), id2 = SuperJumperServer.getID();
 		SuperJumperServer.users.put(id1,new User(pkt3.getNick(),id1));
 		SuperJumperServer.users.put(id2,new User(pkt4.getNick(),id2));
@@ -103,7 +102,7 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 					if (tmp.getType() == PROTOCOL_CONSTANTS.PACKET_END){
 						OK--;
 						latch.countDown();
-						return;
+						//return;
 					}
 					btsock1.writePkt(buffer.takePaccoOutBLOCK());
 				} catch (InterruptedException e) {
@@ -159,7 +158,7 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 					if (tmp.getType() == PROTOCOL_CONSTANTS.PACKET_END){
 						OK--;
 						latch.countDown();
-						return;
+						//return;
 					}
 					btsock2.writePkt(tmp);
 				} catch (InterruptedException e) {

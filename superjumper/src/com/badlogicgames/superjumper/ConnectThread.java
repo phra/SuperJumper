@@ -36,17 +36,40 @@ public class ConnectThread extends Thread {
 			OK2Send = true;
 			Gdx.app.debug("PHTEST", "rilascio sem (connect thread)");
 			MultiplayerScreen.str = "CONNECT THREAD";
-			//FIXME
-			if (btsock.readPkt().getType() != PROTOCOL_CONSTANTS.PACKET_START){
-				Gdx.app.debug("PHTEST", "ERRORE PROTOCOLLO START");
+			
+			Gdx.app.debug("PHTEST", "CONNECTTHREAD():mando pkt welcome");
+			btsock.writePkt(new PaccoWelcome("TEST"));
+			Pacco p = btsock.readPkt();
+			
+			if (p.getType() != PROTOCOL_CONSTANTS.PACKET_WELCOME){
+				Gdx.app.debug("PHTEST", "ERRORE PROTOCOLLO WELCOME");
+				this.close();
 				return;
 			}
+			Gdx.app.debug("PHTEST", "CONNECTTHREAD():ricevuto pkt welcome");
+			try {
+				WorldMulti.enemy = new PaccoWelcome(p).getNick();
+			} catch (ProtocolException e1) {
+				Gdx.app.debug("PHTEST", "ERRORE PROTOCOLLO WELCOME");
+				this.close();
+				return;
+			}
+			Gdx.app.debug("PHTEST", "CONNECTTHREAD(: mando pkt start)");
+			btsock.writePkt(new PaccoStart());
+
+			if (btsock.readPkt().getType() != PROTOCOL_CONSTANTS.PACKET_START){
+				Gdx.app.debug("PHTEST", "ERRORE PROTOCOLLO START");
+				this.close();
+				return;
+			}
+			Gdx.app.debug("PHTEST", "CONNECTTHREAD(:ricevuto packet start)");
 			sem.release();
 			new SendThread().start();
-			while (true){
+
+			while (OK2Send){
 				Pacco pkt = btsock.readPkt();
-				if (pkt.getType() == 0){
-					OK2Send = false;
+				if (pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END){
+					//OK2Send = false;
 					break;
 				}
 				try {
@@ -54,16 +77,26 @@ public class ConnectThread extends Thread {
 				} catch (InterruptedException e) { }
 			}
 			/*
-			Pacco pkt = new Pacco(1,test.getBytes(),test.getBytes().length);
-			btsock.writePkt(pkt);
-			MultiplayerScreen.str = "SEND OK!";
+			Pacco pkt = btsock.readPkt();
+			MultiplayerScreen.str = "RECV OK! " + new String(pkt.getData());
 			 */
-			btsock.close();
-			sock.close();
+			
 		} catch (UnknownHostException e) {
 			MultiplayerScreen.str = "UNKNOWN HOST EXCEPTION";
+			sem.release();
 		} catch (IOException e) {
 			MultiplayerScreen.str = "IO EXCEPTION";
+			sem.release();
+		}
+	}
+	
+	void close(){
+		btsock.close();
+		try {
+			sock.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -77,9 +110,12 @@ public class ConnectThread extends Thread {
 		public void run () {
 			while(OK2Send){
 				try {
-					btsock.writePkt(buf.takePaccoOutBLOCK());
+					Pacco pkt = buf.takePaccoOutBLOCK();
+					btsock.writePkt(pkt);
+					if (pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END) break;
 				} catch (InterruptedException e) { }
 			}
 		}
+		
 	}
 }

@@ -82,7 +82,7 @@ public class Pacco {
 		try {
 			w.writeInt(len);
 			w.writeInt(type);
-			w.write(payload);
+			if (payload != null) w.write(payload);
 			w.flush();
 			w.close(); //FIXME 
 		} catch (IOException e) {
