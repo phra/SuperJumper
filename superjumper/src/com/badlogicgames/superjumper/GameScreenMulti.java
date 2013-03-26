@@ -34,8 +34,9 @@ public class GameScreenMulti implements Screen {
 	Rectangle quitBounds;
 	int lastScore;
 	String scoreString;
+	private int seed;
 
-	public GameScreenMulti (Game game) {
+	public GameScreenMulti (Game game, int seed) {
 		this.game = game;
 		state = GAME_READY;
 		guiCam = new OrthographicCamera(320, 480);
@@ -77,7 +78,8 @@ public class GameScreenMulti implements Screen {
 
 			
 		};
-		world = new WorldMulti(worldListener);
+		this.seed = seed;
+		world = new WorldMulti(worldListener, seed);
 		renderer = new WorldRendererMulti(batcher, world);
 		pauseBounds = new Rectangle(320 - 64, 480 - 64, 64, 64);
 		resumeBounds = new Rectangle(160 - 96, 240, 192, 36);
@@ -181,7 +183,7 @@ public class GameScreenMulti implements Screen {
 
 	private void updateLevelEnd () {
 		if (Gdx.input.justTouched()) {
-			world = new WorldMulti(worldListener);
+			world = new WorldMulti(worldListener, this.seed);
 			renderer = new WorldRendererMulti(batcher, world);
 			world.score = lastScore;
 			state = GAME_READY;

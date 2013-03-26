@@ -30,6 +30,7 @@ public class MultiplayerScreen implements Screen {
 	String[] highScores;
 	float xOffset = 0;
 	static String str = "INIT";
+	static int seed = 10000;
 
 	public MultiplayerScreen (Game game) {
 		this.game = game;
@@ -64,7 +65,7 @@ public class MultiplayerScreen implements Screen {
 				str = "CONNECTING";
 				if (WorldMulti.buffer.selfTest()) Gdx.app.debug("PHTEST", "BUFFER OK");
 				else Gdx.app.debug("PHTEST", "BUFFER KO");
-				ConnectThread thr = new ConnectThread("192.168.0.3",10000,WorldMulti.buffer,sem);
+				ConnectThread thr = new ConnectThread("192.168.0.16",10000,WorldMulti.buffer,sem);
 				thr.start();
 				Gdx.app.debug("PHTEST", "started connect thread");
 				try {
@@ -74,7 +75,7 @@ public class MultiplayerScreen implements Screen {
 					return;
 				}
 				str = "CONNECTED";
-				game.setScreen(new GameScreenMulti(game));
+				game.setScreen(new GameScreenMulti(game,seed));
 
 			}
 			else if (OverlapTester.pointInRectangle(ServerBounds, touchPoint.x, touchPoint.y)) {
@@ -94,7 +95,7 @@ public class MultiplayerScreen implements Screen {
 					return;
 				}
 				str = "CONNECTED";
-				game.setScreen(new GameScreenMulti(game));
+				game.setScreen(new GameScreenMulti(game,seed));
 
 			}
 		}

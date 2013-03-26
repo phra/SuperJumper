@@ -55,13 +55,16 @@ public class ConnectThread extends Thread {
 				return;
 			}
 			Gdx.app.debug("PHTEST", "CONNECTTHREAD(: mando pkt start)");
-			btsock.writePkt(new PaccoStart());
+			btsock.writePkt(new PaccoStart(10000));
 
 			if (btsock.readPkt().getType() != PROTOCOL_CONSTANTS.PACKET_START){
 				Gdx.app.debug("PHTEST", "ERRORE PROTOCOLLO START");
 				this.close();
 				return;
 			}
+			//FIXME set seed
+			
+			
 			Gdx.app.debug("PHTEST", "CONNECTTHREAD(:ricevuto packet start)");
 			sem.release();
 			new SendThread().start();
