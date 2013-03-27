@@ -153,8 +153,9 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 
     public void update (float deltaTime, float accelX) {
         
-        Pacco pkt = buffer.takePaccoInNOBLOCK();
-        if (pkt != null) {
+        Pacco pkt;
+        
+        while ((pkt = buffer.takePaccoInNOBLOCK()) != null) {
             switch (pkt.getType()) {
             case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
                 PaccoUpdateBobMulti pktbob;
@@ -173,12 +174,13 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
                 System.out.println("PKT FUORI DAL PROTOCOLLO.");
                 break;
             }
-        } else {
+        } /*else {
             //this.precdelta /= 2;
             //this.precaccelx /= 2;
             updateBobMulti(this.precdelta,this.precaccelx);
-        }
-        //updateBobMulti(deltaTime,-accelX);
+        }*/
+        
+        //updateBobMulti(deltaTime,accelX * 1.2f);
         buffer.putPaccoOutNOBLOCK(new PaccoUpdateBobMulti(deltaTime, accelX));
         updateBob(deltaTime, accelX);
         updatePlatforms(deltaTime);
