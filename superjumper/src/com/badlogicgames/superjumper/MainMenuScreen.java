@@ -118,12 +118,12 @@ public class MainMenuScreen implements Screen {
 		keyFrame = Assets.bobJump.getKeyFrame(0.2f, Animation.ANIMATION_LOOPING);
 		//Gdx.app.debug("Animation", "position"+bob.position.x+" "+bob.position.y);
 
-		if(bob.position.y>50) {
+		/*if(bob.position.y>50) {
 
 			batcher.draw(keyFrame, bob.position.x,bob.position.y, 25, 35, 50, 70, 1, 1, bob.rotationcounter);
 		}
-		else batcher.draw(keyFrame, bob.position.x, bob.position.y, 50, 70);    
-
+		else batcher.draw(keyFrame, bob.position.x, bob.position.y, 50, 70);*/
+		batcher.draw(keyFrame, bob.position.x,bob.position.y, 25, 35, 50, 70, 1, 1, bob.rotationcounter);
 
 		batcher.end();
 	}
@@ -147,7 +147,7 @@ public class MainMenuScreen implements Screen {
 	private void updatebob(float deltaTime){
 		//	bob.setGravityBob(0,0);
 		//if(bob.position.y>480/10)bob.velocity.y=100;
-		bob.velocity.set(13, 13);
+		//bob.velocity.set(13, 13);
 		bob.update(deltaTime);
 	}
 
