@@ -14,7 +14,7 @@ public class PaccoWelcome extends Pacco implements PROTOCOL_CONSTANTS {
 		this.setData(nick.getBytes());
 		this.setSize(nick.getBytes().length);
 	}
-	
+
 	public PaccoWelcome (Pacco pkt) throws ProtocolException {
 		super(pkt.getType(),pkt.getData(),pkt.getSize());
 		if (this.getType() != PROTOCOL_CONSTANTS.PACKET_WELCOME) {

@@ -10,16 +10,16 @@ import java.io.IOException;
  */
 
 public class PaccoStart extends Pacco implements PROTOCOL_CONSTANTS {
-	
+
 	int seed;
-	
+
 	public PaccoStart(int seed) {
 		super(PROTOCOL_CONSTANTS.PACKET_START);
 		byte[] payload = Utils.serializeInt(seed);
 		this.setSize(payload.length);
 		this.setData(payload);
 		this.seed = seed;
-		
+
 	}
 
 	public PaccoStart(Pacco pkt) throws ProtocolException {

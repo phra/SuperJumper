@@ -36,12 +36,12 @@ public class ConnectThread extends Thread {
 			OK2Send = true;
 			Gdx.app.debug("PHTEST", "rilascio sem (connect thread)");
 			MultiplayerScreen.str = "CONNECT THREAD";
-			
+
 			Gdx.app.debug("PHTEST", "CONNECTTHREAD():mando pkt welcome");
 			btsock.writePkt(new PaccoWelcome("TEST"));
 			Pacco p = btsock.readPkt();
-			
-			if (p.getType() != PROTOCOL_CONSTANTS.PACKET_WELCOME){
+
+			if (p == null || p.getType() != PROTOCOL_CONSTANTS.PACKET_WELCOME){
 				Gdx.app.debug("PHTEST", "ERRORE PROTOCOLLO WELCOME");
 				this.close();
 				return;
@@ -54,7 +54,7 @@ public class ConnectThread extends Thread {
 				this.close();
 				return;
 			}
-			Gdx.app.debug("PHTEST", "CONNECTTHREAD(: mando pkt start)");
+			Gdx.app.debug("PHTEST", "CONNECTTHREAD(): mando pkt start");
 			btsock.writePkt(new PaccoStart(10000));
 
 			if (btsock.readPkt().getType() != PROTOCOL_CONSTANTS.PACKET_START){
@@ -63,16 +63,15 @@ public class ConnectThread extends Thread {
 				return;
 			}
 			//FIXME set seed
-			
-			
-			Gdx.app.debug("PHTEST", "CONNECTTHREAD(:ricevuto packet start)");
+
+
+			Gdx.app.debug("PHTEST", "CONNECTTHREAD(): ricevuto packet start");
 			sem.release();
 			new SendThread().start();
 
-			while (OK2Send){
+			while (true){
 				Pacco pkt = btsock.readPkt();
-				if (pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END){
-					//OK2Send = false;
+				if (pkt == null || pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END){
 					break;
 				}
 				try {
@@ -80,10 +79,10 @@ public class ConnectThread extends Thread {
 				} catch (InterruptedException e) { }
 			}
 			/*
-			Pacco pkt = btsock.readPkt();
-			MultiplayerScreen.str = "RECV OK! " + new String(pkt.getData());
+            Pacco pkt = btsock.readPkt();
+            MultiplayerScreen.str = "RECV OK! " + new String(pkt.getData());
 			 */
-			
+
 		} catch (UnknownHostException e) {
 			MultiplayerScreen.str = "UNKNOWN HOST EXCEPTION";
 			sem.release();
@@ -92,7 +91,7 @@ public class ConnectThread extends Thread {
 			sem.release();
 		}
 	}
-	
+
 	void close(){
 		btsock.close();
 		try {
@@ -111,7 +110,7 @@ public class ConnectThread extends Thread {
 
 		@Override
 		public void run () {
-			while(OK2Send){
+			while(true){
 				try {
 					Pacco pkt = buf.takePaccoOutBLOCK();
 					btsock.writePkt(pkt);
@@ -119,6 +118,5 @@ public class ConnectThread extends Thread {
 				} catch (InterruptedException e) { }
 			}
 		}
-		
 	}
 }

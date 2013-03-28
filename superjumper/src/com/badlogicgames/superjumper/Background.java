@@ -2,15 +2,15 @@ package com.badlogicgames.superjumper;
 
 
 public class Background {
-	
+
 	private float bgX, bgY, speedY;
-	
+
 	public Background(int x, int y){
 		bgX = x;
 		bgY = y;
 		speedY = 0;
 	}
-	
+
 	public void update() {
 		bgY += speedY;
 
@@ -43,7 +43,7 @@ public class Background {
 		this.speedY = speedY;
 	}
 
-	
-	
-	
+
+
+
 }

@@ -9,13 +9,13 @@ import java.util.concurrent.CountDownLatch;
  *
  */
 public class SuperJumperServer implements PROTOCOL_CONSTANTS {
-	
+
 	protected static final Hashtable<Integer,User> users = new Hashtable<Integer,User>();
 	private static int ID = 0;
 	private static Object mutexID = new Object(); 
 	private static final int PORT = 10000;
 	private static ServerSocket ssock;
-	
+
 	/**
 	 * @param args
 	 */
@@ -48,7 +48,7 @@ public class SuperJumperServer implements PROTOCOL_CONSTANTS {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static int getID(){
 		synchronized (mutexID) {
 			return ID++;

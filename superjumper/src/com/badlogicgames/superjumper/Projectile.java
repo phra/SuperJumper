@@ -12,7 +12,7 @@ public class Projectile extends DynamicGameObject {
 
 	public Projectile (float x, float y) {
 		super(x, y, BOB_WIDTH, BOB_HEIGHT);
-	stateTime = 0;
+		stateTime = 0;
 	}
 
 	public void setGravity(float x, float y){

@@ -67,16 +67,16 @@ public class GameScreenMulti implements Screen {
 			@Override
 			public void life () {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void projectile () {
 				// TODO Auto-generated method stub
-				
+
 			}
 
-			
+
 		};
 		this.seed = seed;
 		world = new WorldMulti(worldListener, seed);
@@ -118,7 +118,7 @@ public class GameScreenMulti implements Screen {
 	}
 
 	private void updateRunning (float deltaTime) {
-				if (Gdx.input.justTouched()) {
+		if (Gdx.input.justTouched()) {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 			world.ShotProjectile();
 			if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
@@ -232,8 +232,8 @@ public class GameScreenMulti implements Screen {
 	private void presentRunning () {
 		batcher.draw(Assets.pause, 320 - 54, 480 - 54, 54, 44);
 		Assets.font.draw(batcher, scoreString, 16, 480 - 20);
-		
-		
+
+
 		String scoret;
 		scoret = world.shot+"x ";
 		Assets.font.draw(batcher, scoret, 4, 480 - 410);

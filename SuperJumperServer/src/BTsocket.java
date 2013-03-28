@@ -63,13 +63,13 @@ public class BTsocket {
 			dataout.writeInt(i);
 
 			// Share the sent message back to the UI Activity
-//            mHandler.obtainMessage(BluetoothChat.MESSAGE_WRITE, -1, -1, buffer)
-//                    .sendToTarget();
+			//            mHandler.obtainMessage(BluetoothChat.MESSAGE_WRITE, -1, -1, buffer)
+			//                    .sendToTarget();
 		} catch (IOException e) {
 			//Log.e(TAG, "Exception during writeInt", e);
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void writeFloat(float f) {
 		try {

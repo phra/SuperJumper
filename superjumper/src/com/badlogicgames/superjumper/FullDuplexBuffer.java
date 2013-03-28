@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class FullDuplexBuffer {
 	private LinkedBlockingQueue<Pacco> QueueOut, QueueIn;
-	
+
 	public FullDuplexBuffer(){
 		this.QueueIn = new LinkedBlockingQueue<Pacco>();
 		this.QueueOut = new LinkedBlockingQueue<Pacco>();
@@ -56,13 +56,13 @@ public class FullDuplexBuffer {
 		} catch (InterruptedException e) { }
 		return null;
 	}
-	
+
 	public boolean selfTest(){
 		Pacco tmp1 = new Pacco(1);
 		Pacco tmp2 = new Pacco(2);
 		Pacco tmp3 = new Pacco(3);
 		Pacco tmp4 = new Pacco(4);
-		
+
 		try {
 			this.putPaccoOutBLOCK(tmp1);
 			this.putPaccoOutNOBLOCK(tmp2);

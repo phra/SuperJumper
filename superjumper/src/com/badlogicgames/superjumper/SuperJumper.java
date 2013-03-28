@@ -36,7 +36,7 @@ public class SuperJumper extends Game {
 		setScreen(new MainMenuScreen(this));
 		fps = new FPSLogger();
 	}
-	
+
 	@Override
 	public void render() {
 		super.render();
@@ -49,7 +49,7 @@ public class SuperJumper extends Game {
 	@Override
 	public void dispose () {
 		super.dispose();
-		
+
 		getScreen().dispose();
 	}
 }

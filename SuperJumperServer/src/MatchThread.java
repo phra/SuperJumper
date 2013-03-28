@@ -10,7 +10,7 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 	private FullDuplexBuffer buffer;
 	private CountDownLatch latch = new CountDownLatch(4);
 	private CountDownLatch latchParent;
-	
+
 	public MatchThread(Socket sock1, Socket sock2, CountDownLatch latchParent) {
 		super();
 		System.out.println("MatchThread()");
@@ -27,7 +27,7 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 			this.close();
 		}
 	}
-	
+
 	@Override
 	public void start() {
 		System.out.println("MatchThread: start()");
@@ -60,7 +60,7 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 		int id1 = SuperJumperServer.getID(), id2 = SuperJumperServer.getID();
 		SuperJumperServer.users.put(id1,new User(pkt3.getNick(),id1));
 		SuperJumperServer.users.put(id2,new User(pkt4.getNick(),id2));
-		
+
 		OK = 2;
 		send1 = new Send1Thread();
 		recv1 = new Recv1Thread();
@@ -80,7 +80,7 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 		SuperJumperServer.users.remove(id2);
 		this.close();
 	}
-	
+
 	public void close(){
 		System.out.println("MatchThread: close()");
 		btsock1.close();
@@ -94,7 +94,7 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 		}
 		latchParent.countDown();
 	}
-	
+
 	private class Send1Thread extends Thread {
 
 		public Send1Thread () {
@@ -106,35 +106,42 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 		public void run () {
 			System.out.println("Send1Thread: run()");
 			//btsock1.writePkt(new PaccoStart());
-			while(OK > 0){
+			while(true){
 				try {
 					Pacco tmp = buffer.takePaccoOutBLOCK();
 					btsock1.writePkt(tmp);
-					System.out.println("Send1Thread: writePkt()");
+					//System.out.println("Send1Thread: writePkt()");
 					switch(tmp.getType()){
 					case PROTOCOL_CONSTANTS.PACKET_WELCOME:
-					case PROTOCOL_CONSTANTS.PACKET_START:
-					case PROTOCOL_CONSTANTS.PACKET_END:
-						System.out.println("Send1Thread: send pacco " + tmp.getType());
+						System.out.println("Send2Thread: send pacco WELCOME.");
 						break;
-				}
+					case PROTOCOL_CONSTANTS.PACKET_START:
+						System.out.println("Send2Thread: send pacco START.");
+						break;
+					case PROTOCOL_CONSTANTS.PACKET_END:
+						System.out.println("Send2Thread: send pacco END.");
+						break;
+					default:
+						System.out.println("Send2Thread: send pacco " + tmp.getType());
+						break;
+					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
+					}
 					if (tmp.getType() == PROTOCOL_CONSTANTS.PACKET_END){
-						OK--;
 						latch.countDown();
+						System.out.println("Send1Thread: finish");
 						return;
 					}
 				} catch (InterruptedException e) {
+					System.out.println("Send1Thread: finish (interrupted exception)");
 					latch.countDown();
 					return;
 				}
 			}
-			latch.countDown();
-			return;
 		}
 	}
-	
+
 	private class Recv1Thread extends Thread {
-		
+
 		public Recv1Thread () {
 			super();
 			System.out.println("Recv1Thread()");
@@ -143,17 +150,27 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 		@Override
 		public void run () {
 			System.out.println("Recv1Thread: start()");
-			while(OK > 0){
+			while(true){
 				Pacco pkt = btsock1.readPkt();
-				System.out.println("Recv1Thread: readPkt()");
-				if (pkt != null) switch(pkt.getType()){
-				case PROTOCOL_CONSTANTS.PACKET_WELCOME:
-				case PROTOCOL_CONSTANTS.PACKET_START:
-				case PROTOCOL_CONSTANTS.PACKET_END:
-					System.out.println("Recv1Thread: ricevuto pacco " + pkt.getType());
-					break;
-				} else System.out.println("Recv1Thread: readPkt return nulls");
-				if (pkt == null){
+				//System.out.println("Recv1Thread: readPkt()");
+				if (pkt != null) 
+					switch(pkt.getType()){
+					case PROTOCOL_CONSTANTS.PACKET_WELCOME:
+						System.out.println("Recv1Thread: ricevuto pacco WELCOME");
+						break;
+					case PROTOCOL_CONSTANTS.PACKET_START:
+						System.out.println("Recv1Thread: ricevuto pacco START");
+						break;
+					case PROTOCOL_CONSTANTS.PACKET_END:
+						System.out.println("Recv1Thread: ricevuto pacco END, termino thread");
+						break;
+					default:
+						System.out.println("Recv1Thread: ricevuto pacco " + pkt.getType());
+						break;
+					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
+					} else System.out.println("Recv1Thread: readPkt return nulls");
+				if (pkt == null) {
+					System.out.println("Recv1Thread: finish");
 					latch.countDown();
 					return;
 				}
@@ -163,16 +180,20 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					latch.countDown();
+					System.out.println("Recv1Thread: finish");
+					return;
+				}
+				if (pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END){
+					latch.countDown();
+					System.out.println("Recv1Thread: finish");
 					return;
 				}
 			}
-			latch.countDown();
-			return;
 		}
 	}
-	
+
 	private class Send2Thread extends Thread {
-		
+
 		public Send2Thread () {
 			super();
 			System.out.println("Send2Thread()");
@@ -181,35 +202,41 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 		@Override
 		public void run () {
 			System.out.println("Send2Thread: start()");
-			//btsock1.writePkt(new PaccoStart());
-			while(OK > 0){
+			while(true){
 				try {
 					Pacco tmp = buffer.takePaccoInBLOCK();
 					btsock2.writePkt(tmp);
-					System.out.println("Send2Thread: writePkt()");
+					//System.out.println("Send2Thread: writePkt()");
 					switch(tmp.getType()){
 					case PROTOCOL_CONSTANTS.PACKET_WELCOME:
+						System.out.println("Send2Thread: send pacco WELCOME.");
+						break;
 					case PROTOCOL_CONSTANTS.PACKET_START:
+						System.out.println("Send2Thread: send pacco START.");
+						break;
 					case PROTOCOL_CONSTANTS.PACKET_END:
+						System.out.println("Send2Thread: send pacco END.");
+						break;
+					default:
 						System.out.println("Send2Thread: send pacco " + tmp.getType());
 						break;
-				}
+					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
+					}
 					if (tmp.getType() == PROTOCOL_CONSTANTS.PACKET_END){
-						OK--;
 						latch.countDown();
+						System.out.println("Send2Thread: finish");
 						return;
 					}
 
 				} catch (InterruptedException e) {
 					latch.countDown();
+					System.out.println("Send2Thread: finish");
 					return;
 				}
 			}
-			latch.countDown();
-			return;
 		}
 	}
-	
+
 	private class Recv2Thread extends Thread {
 
 		public Recv2Thread () {
@@ -220,18 +247,27 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 		@Override
 		public void run () {
 			System.out.println("Recv2Thread: start()");
-			while(OK > 0){
-
+			while(true){
 				Pacco pkt = btsock2.readPkt();
-				System.out.println("Recv2Thread: readPkt");
-				if (pkt != null) switch(pkt.getType()){
+				//System.out.println("Recv2Thread: readPkt");
+				if (pkt != null) 
+					switch(pkt.getType()){
 					case PROTOCOL_CONSTANTS.PACKET_WELCOME:
+						System.out.println("Recv2Thread: ricevuto pacco WELCOME");
+						break;
 					case PROTOCOL_CONSTANTS.PACKET_START:
+						System.out.println("Recv2Thread: ricevuto pacco START");
+						break;
 					case PROTOCOL_CONSTANTS.PACKET_END:
+						System.out.println("Recv2Thread: ricevuto pacco END, termino thread");
+						break;
+					default:
 						System.out.println("Recv2Thread: ricevuto pacco " + pkt.getType());
 						break;
-				} else System.out.println("Recv2Thread: readPkt return nulls");
+					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
+					} else System.out.println("Recv2Thread: readPkt return nulls");
 				if (pkt == null) {
+					System.out.println("Recv2Thread: finish");
 					latch.countDown();
 					return;
 				}
@@ -243,10 +279,12 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 					latch.countDown();
 					return;
 				}
+				if (pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END){
+					latch.countDown();
+					System.out.println("Recv2Thread: finish");
+					return;
+				}
 			}
-			latch.countDown();
-			return;
 		}
 	}
-
 }
