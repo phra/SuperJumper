@@ -33,25 +33,18 @@ public class BobMain extends DynamicGameObject {
 		this.gravity.y = y;
 	}
 
-	private int OverlapCircleTester(){
-		//try 2 invert
-		//int distx = (int)this.position.x - MainMenuScreen.centrox;
-		//int disty = (int)this.position.y - MainMenuScreen.centroy;
-		int distx = MainMenuScreen.centrox - (int)this.position.x;
-		int disty = MainMenuScreen.centroy - (int)this.position.y;
-		//Gdx.app.debug("OVERLAPCIRCLE", "overlap returns " + (+(((int)this.position.x^2 + (int)this.position.y^2 + (int)this.position.x*MainMenuScreen.centrox + (int)this.position.y*MainMenuScreen.centroy) - RAGGIO^2)));
-		//return +(((int)this.position.x^2 + (int)this.position.y^2 + (int)this.position.x*MainMenuScreen.centrox + (int)this.position.y*MainMenuScreen.centroy) - RAGGIO^2);
-		Gdx.app.debug("OVERLAPCIRCLE", "overlap w/ distx=" + distx + "e disty= " + disty + " returns " + (+(distx^2 + disty^2 - RAGGIO^2)));
-		return +(distx^2 + disty^2 - RAGGIO^2);
+	private boolean OverlapCircleTester(){
+		Gdx.app.debug("OVERLAPCIRCLE", "overlap returns " +(int)Math.sqrt((int)Math.pow((double)MainMenuScreen.centrox - (double)this.position.x,2) + (int)Math.pow((double)MainMenuScreen.centroy - (double)this.position.y,2)));
+		return (int)Math.sqrt((int)Math.pow((double)MainMenuScreen.centrox - (double)this.position.x,2) + (int)Math.pow((double)MainMenuScreen.centroy - (double)this.position.y,2)) >= RAGGIO ? true : false;
 	}
 	
 	private void updateGravity(){
 
 		final float TESTGRAVITY = 5f;
-		/*
+		
 		if (position.x >= MainMenuScreen.centrox && position.y >=  MainMenuScreen.centroy){
 			
-			if (OverlapCircleTester() >= 0){
+			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "ALTO DX FUORI");
 				this.gravity.x = -TESTGRAVITY;
 				this.gravity.y = -TESTGRAVITY;
@@ -64,7 +57,7 @@ public class BobMain extends DynamicGameObject {
 			}
 		} else if (position.x >= MainMenuScreen.centrox && position.y <  MainMenuScreen.centroy){
 			
-			if (OverlapCircleTester() >= 0){
+			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "BASSO DX FUORI");
 				this.gravity.x = -TESTGRAVITY;
 				this.gravity.y = +TESTGRAVITY;
@@ -77,7 +70,7 @@ public class BobMain extends DynamicGameObject {
 			}
 		} else if (position.x < MainMenuScreen.centrox && position.y >=  MainMenuScreen.centroy){
 			
-			if (OverlapCircleTester() >= 0){
+			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "ALTO SX FUORI");
 				this.gravity.x = +TESTGRAVITY;
 				this.gravity.y = -TESTGRAVITY;
@@ -90,7 +83,7 @@ public class BobMain extends DynamicGameObject {
 			}
 		} else if (position.x < MainMenuScreen.centrox && position.y <  MainMenuScreen.centroy){
 			
-			if (OverlapCircleTester() >= 0){
+			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "BASSO SX FUORI");
 				this.gravity.x = +TESTGRAVITY;
 				this.gravity.y = +TESTGRAVITY;
@@ -101,8 +94,8 @@ public class BobMain extends DynamicGameObject {
 				this.gravity.y = -TESTGRAVITY;
 				//this.gravity.add(-TESTGRAVITY, -TESTGRAVITY);
 			}
-		}*/
-		if (position.x >= MainMenuScreen.centrox && position.y >= MainMenuScreen.centroy){
+		}
+		/*if (position.x >= MainMenuScreen.centrox && position.y >= MainMenuScreen.centroy){
 			this.gravity.rotate(90);
 			} else if (position.x >= MainMenuScreen.centrox && position.y < MainMenuScreen.centroy){
 			this.gravity.rotate(360);
@@ -110,11 +103,11 @@ public class BobMain extends DynamicGameObject {
 			this.gravity.rotate(270);
 			} else if (position.x < MainMenuScreen.centrox && position.y < MainMenuScreen.centroy){
 			this.gravity.rotate(180);
-		}
+		}*/
 	}
 	
 	public void update(float deltaTime) {
-		//updateGravity();
+		updateGravity();
 		
 		
 		velocity.add(gravity.x * deltaTime, gravity.y * deltaTime );

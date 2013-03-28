@@ -40,8 +40,8 @@ public class MainMenuScreen implements Screen {
 	Rectangle highscoresBounds;
 	Rectangle helpBounds;
 	Vector3 touchPoint;
-	static int centrox = 320/2;
-	static int centroy = 480/2;
+	final static int centrox = 320/2;
+	final static int centroy = 480/2;
 
 
 	public MainMenuScreen (Game game) {
