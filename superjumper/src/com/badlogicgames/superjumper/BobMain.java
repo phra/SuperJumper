@@ -12,12 +12,11 @@ public class BobMain extends DynamicGameObject {
 	public static final float BOB_WIDTH = 0.8f;
 	public static final float BOB_HEIGHT = 0.8f;
 	public final float MAXVELOCITY = 6f;
-	public Vector2 gravity = new Vector2(0,0);
-	public final int RAGGIO = 50;
-	
-
+	public Vector2 gravity = new Vector2(-1,-1);
+	public final int RAGGIO = 100;
+	private float totaltime = 0;
 	public static boolean BOB_DOUBLE_JUMP = false;
-	public int rotationcounter=0;
+	public float rotationcounter=0;
 	int state;
 	float stateTime;
 	public static float jumpTime;
@@ -32,17 +31,17 @@ public class BobMain extends DynamicGameObject {
 		this.gravity.x = x;
 		this.gravity.y = y;
 	}
-
+	
 	private boolean OverlapCircleTester(){
-		Gdx.app.debug("OVERLAPCIRCLE", "overlap returns " +(int)Math.sqrt((int)Math.pow((double)MainMenuScreen.centrox - (double)this.position.x,2) + (int)Math.pow((double)MainMenuScreen.centroy - (double)this.position.y,2)));
+		//Gdx.app.debug("OVERLAPCIRCLE", "overlap returns " +(int)Math.sqrt((int)Math.pow((double)MainMenuScreen.centrox - (double)this.position.x,2) + (int)Math.pow((double)MainMenuScreen.centroy - (double)this.position.y,2)));
 		return (int)Math.sqrt((int)Math.pow((double)MainMenuScreen.centrox - (double)this.position.x,2) + (int)Math.pow((double)MainMenuScreen.centroy - (double)this.position.y,2)) >= RAGGIO ? true : false;
 	}
 	
 	private void updateGravity(){
 
-		final float TESTGRAVITY = 5f;
-		
-		if (position.x >= MainMenuScreen.centrox && position.y >=  MainMenuScreen.centroy){
+		final float TESTGRAVITY = 10f;
+		Gdx.app.debug("UPDATEGRAVITY","position.x = " + position.x + ", position.y = " + position.y);
+		if (position.x > MainMenuScreen.centrox && position.y >  MainMenuScreen.centroy){
 			
 			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "ALTO DX FUORI");
@@ -55,7 +54,7 @@ public class BobMain extends DynamicGameObject {
 				this.gravity.y = +TESTGRAVITY;
 				//this.gravity.add(+TESTGRAVITY, +TESTGRAVITY);
 			}
-		} else if (position.x >= MainMenuScreen.centrox && position.y <  MainMenuScreen.centroy){
+		} else if (position.x > MainMenuScreen.centrox && position.y <  MainMenuScreen.centroy){
 			
 			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "BASSO DX FUORI");
@@ -68,7 +67,7 @@ public class BobMain extends DynamicGameObject {
 				this.gravity.y = -TESTGRAVITY;
 				//this.gravity.add(+TESTGRAVITY, -TESTGRAVITY);
 			}
-		} else if (position.x < MainMenuScreen.centrox && position.y >=  MainMenuScreen.centroy){
+		} else if (position.x < MainMenuScreen.centrox && position.y >  MainMenuScreen.centroy){
 			
 			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "ALTO SX FUORI");
@@ -106,12 +105,23 @@ public class BobMain extends DynamicGameObject {
 		}*/
 	}
 	
+	private void setCircularPosition(float deltaTime, int raggio, int x, int y){
+		//Gdx.app.debug("SETCIRCULARPOSITION", "deltatime = " + deltaTime);
+		totaltime += deltaTime;
+		if (rotationcounter >= 360f) rotationcounter = 0;
+		//rotationcounter += deltaTime*360; 
+		//Gdx.app.debug("SETCIRCULARPOSITION","rotationcounter = " + rotationcounter);
+		this.position.x = (float) ((double)x + (double)raggio*Math.cos((double)totaltime));
+		this.position.y = (float) ((double)y + (double)raggio*Math.sin((double)totaltime));
+		//this.position.add(x + raggio*(float)Math.cos(totaltime*2*Math.PI),y + raggio*(float)Math.sin(totaltime*2*Math.PI));
+		//Gdx.app.debug("SETCIRCULARPOSITION", "position.x = " + position.x + ", position.y = " + position.y + ", totaltime = " + totaltime + ", cos= " + Math.cos(totaltime*2*Math.PI) + ", sin = " + (y + raggio*Math.sin(totaltime*2*Math.PI)));
+	}
+	
 	public void update(float deltaTime) {
-		updateGravity();
-		
-		
+		/*updateGravity();
 		velocity.add(gravity.x * deltaTime, gravity.y * deltaTime );
-		position.add(velocity.x * deltaTime, velocity.y * deltaTime );
+		position.add(velocity.x * deltaTime, velocity.y * deltaTime );*/
+		setCircularPosition(deltaTime, RAGGIO, MainMenuScreen.centrox, MainMenuScreen.centroy);
 
 		/*velocity.x += gravity.x * deltaTime;
 		velocity.y += gravity.y * deltaTime;
@@ -121,8 +131,9 @@ public class BobMain extends DynamicGameObject {
 		bounds.x = position.x - bounds.width / 2;
 		bounds.y = position.y - bounds.height / 2;
 
-		if(rotationcounter==360)rotationcounter=0;
-		else rotationcounter++;
+		//if(rotationcounter==360)rotationcounter=0;
+		/*FIXME
+		else rotationcounter++;*/
 		if (velocity.y > 0 && state != BOB_STATE_HIT) {
 			if (state != BOB_STATE_JUMP) {
 				state = BOB_STATE_JUMP;
