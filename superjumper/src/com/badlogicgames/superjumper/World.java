@@ -183,7 +183,7 @@ public class World {
 		updateBubbles(deltaTime);
 		updateSquirrels(deltaTime);
 		updateCoins(deltaTime);
-		updateGravityPlanet(deltaTime);
+		//updateGravityPlanet(deltaTime);
 		updateLifes(deltaTime);
 		addStarDynamic();
 		updateStar( deltaTime);
@@ -237,15 +237,28 @@ public class World {
 	}
 
 	private void updatePlatforms (float deltaTime) {
+		
+		for ( Platform plat : this.platforms) {
+			if (plat.type != Platform.PLATFORM_TYPE_MOVING){
+				Utils.changeGravityTowards(plat, bob);
+			}
+			plat.update(deltaTime);
+		}
+		
+		
+		/*
 		int len = platforms.size();
 		for (int i = 0; i < len; i++) {
 			Platform platform = platforms.get(i);
+			if (platform.type != Platform.PLATFORM_TYPE_MOVING){
+				Utils.changeGravityTowards(platform, bob);
+			}
 			platform.update(deltaTime);
-			if (platform.state == Platform.PLATFORM_STATE_PULVERIZING && platform.stateTime > Platform.PLATFORM_PULVERIZE_TIME) {
+			if (platform.state == Platform.PLATFORM_STATE_PULVERIZING && platform.stateTime > Platform.PLATFORM_PULVERIZE_TIME) { //FIXME
 				platforms.remove(platform);
 				len = platforms.size();
 			}
-		}
+		}*/
 	}
 	
 	private void updateBubbles (float deltaTime) {
