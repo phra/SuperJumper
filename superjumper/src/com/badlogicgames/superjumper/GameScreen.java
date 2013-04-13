@@ -229,23 +229,25 @@ public class GameScreen implements Screen {
 
 	private void presentRunning () {
 		batcher.draw(Assets.pause, 320 - 54, 480 - 54, 54, 44);
-		Assets.font.draw(batcher, scoreString, 16, 480 - 20);
+		Assets.font.draw(batcher, scoreString, 16, 480 - 10);
 
 
 		String scoret;
 		scoret = world.shot+"x ";
-		Assets.font.draw(batcher, scoret, 4, 480 - 410);
-		batcher.draw(Assets.portaproj, 320 - 315, 480 - 410, 35, 35);
+		Assets.font.draw(batcher, scoret, 2, 480 - 190);
+		batcher.draw(Assets.portaproj, 320 - 318, 480 - 190, 35, 35);
 	}
 
 	private void presentPaused () {
-		batcher.draw(Assets.pauseMenu, 160 - 192 / 2, 240 - 96 / 2, 192, 96);
+		Assets.font.draw(batcher, "R e s u m e",160 - 85, 265);
+		Assets.font.draw(batcher, "Q u i t",160 - 45, 230 );
+		//batcher.draw(Assets.pauseMenu, 160 - 192 / 2, 240 - 96 / 2, 192, 96);
 		Assets.font.draw(batcher, scoreString, 16, 480 - 20);
 	}
 
 	private void presentLevelEnd () {
-		String topText = "the princess is ...";
-		String bottomText = "in another castle!";
+		String topText = "your friends ...";
+		String bottomText = "aren't here!";
 		float topWidth = Assets.font.getBounds(topText).width;
 		float bottomWidth = Assets.font.getBounds(bottomText).width;
 		Assets.font.draw(batcher, topText, 160 - topWidth / 2, 480 - 40);
@@ -253,7 +255,8 @@ public class GameScreen implements Screen {
 	}
 
 	private void presentGameOver () {
-		batcher.draw(Assets.gameOver, 160 - 160 / 2, 240 - 96 / 2, 160, 96);
+		Assets.font.draw(batcher, "G A M E  O V E R",160 - 200 / 2, 300);
+		//batcher.draw(Assets.gameOver, 160 - 160 / 2, 240 - 96 / 2, 160, 96);
 		float scoreWidth = Assets.font.getBounds(scoreString).width;
 		Assets.font.draw(batcher, scoreString, 160 - scoreWidth / 2, 480 - 20);
 	}

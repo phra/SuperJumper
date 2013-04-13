@@ -54,8 +54,10 @@ public class Platform extends DynamicGameObject {
 				velocity.x = -velocity.x;
 				position.x = World.WORLD_WIDTH - PLATFORM_WIDTH / 2;
 			}
+		} else {
+			position.add(velocity.x * deltaTime/2,velocity.y * deltaTime/2);
+			//position.add(0.01f , 0.01f);
 		}
-
 		stateTime += deltaTime;
 	}
 

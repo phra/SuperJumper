@@ -23,43 +23,53 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-public class HighscoresScreen implements Screen {
+public class CharScreen implements Screen {
 	Game game;
 
 	OrthographicCamera guiCam;
 	SpriteBatch batcher;
-	Rectangle backBounds;
+	Rectangle nextBounds;
 	Vector3 touchPoint;
-	String[] highScores;
-	float xOffset = 0;
-
-	public HighscoresScreen (Game game) {
+	Rectangle backBounds;
+	Rectangle character;
+	public static int state=1;
+	public CharScreen (Game game) {
 		this.game = game;
 
 		guiCam = new OrthographicCamera(320, 480);
 		guiCam.position.set(320 / 2, 480 / 2, 0);
+		nextBounds = new Rectangle(320 - 64, 0, 64, 64);
 		backBounds = new Rectangle(0, 0, 64, 64);
+		character= new Rectangle(120, 150,120, 150);
 		touchPoint = new Vector3();
 		batcher = new SpriteBatch();
-		highScores = new String[5];
-		for (int i = 0; i < 5; i++) {
-			highScores[i] = i + 1 + ". " + Settings.highscores[i];
-			xOffset = Math.max(Assets.font.getBounds(highScores[i]).width, xOffset);
-		}
-		xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
+		
 	}
 
 	public void update (float deltaTime) {
 		if (Gdx.input.justTouched()) {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
-			if (OverlapTester.pointInRectangle(backBounds, touchPoint.x, touchPoint.y)) {
+			if (OverlapTester.pointInRectangle(nextBounds, touchPoint.x, touchPoint.y)) {
+				Assets.playSound(Assets.clickSound);
+				game.setScreen(new GameScreen(game));
+				return;
+			}
+			else if (OverlapTester.pointInRectangle(backBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				game.setScreen(new MainMenuScreen(game));
+				return;
+			}
+			else if (OverlapTester.pointInRectangle(character, touchPoint.x, touchPoint.y)) {
+				Assets.playSound(Assets.clickSound);
+			if(state==0)state=1;
+			else state=0;
 				return;
 			}
 		}
@@ -74,20 +84,21 @@ public class HighscoresScreen implements Screen {
 		batcher.disableBlending();
 		batcher.begin();
 		MainMenuScreen.drawGradient(batcher, Assets.rect, 0, 0, 320, 480,Color.BLACK,Color.BLUE, false);
-		//batcher.draw(Assets.backgroundRegion, 0, 0, 320, 480);
 		batcher.end();
+
 		batcher.enableBlending();
 		batcher.begin();
-		//batcher.draw(Assets.highScoresRegion, 10, 360 - 16, 300, 33);
-		Assets.font.draw(batcher, "HighScores", 100,460);
-		float y = 230;
-		for (int i = 4; i >= 0; i--) {
-			Assets.font.draw(batcher, highScores[i], xOffset, y);
-			y += Assets.font.getLineHeight();
-		}
-
-		batcher.draw(Assets.arrow, 0, 0, 64, 64);
+		Assets.font.draw(batcher, "Choose Character", 29,440);
+		Assets.font.draw(batcher, "GO", 280,35);
+		Assets.font.draw(batcher, "BACK", 3,35);
+		if(state==1)
+			batcher.draw(Assets.backgroundRegion, 150,200, 25, 35, 120, 150, 1, 1, 180);
+		else
+			batcher.draw(Assets.backgroundRegion10, 150,200, 25, 35, 120, 150, 1, 1, 180);
+		//batcher.draw(Assets.arrow, 320, 0, -64, 64);
 		batcher.end();
+
+		gl.glDisable(GL10.GL_BLEND);
 	}
 
 	@Override
@@ -100,6 +111,10 @@ public class HighscoresScreen implements Screen {
 	public void resize (int width, int height) {
 	}
 
+	public int state() {
+		return state;
+	}
+	
 	@Override
 	public void show () {
 	}
@@ -110,6 +125,7 @@ public class HighscoresScreen implements Screen {
 
 	@Override
 	public void pause () {
+		Assets.backgroundmain4.dispose();
 	}
 
 	@Override

@@ -13,10 +13,10 @@ public class BobMain extends DynamicGameObject {
 	public static final float BOB_HEIGHT = 0.8f;
 	public final float MAXVELOCITY = 6f;
 	public Vector2 gravity = new Vector2(-1,-1);
-	public final int RAGGIO = 100;
+	public final int RAGGIO = 130;
 	private float totaltime = 0;
 	public static boolean BOB_DOUBLE_JUMP = false;
-	public float rotationcounter=0;
+	public float rotationcounter=0;//da sistemare
 	int state;
 	float stateTime;
 	public static float jumpTime;
@@ -36,7 +36,7 @@ public class BobMain extends DynamicGameObject {
 		//Gdx.app.debug("OVERLAPCIRCLE", "overlap returns " +(int)Math.sqrt((int)Math.pow((double)MainMenuScreen.centrox - (double)this.position.x,2) + (int)Math.pow((double)MainMenuScreen.centroy - (double)this.position.y,2)));
 		return (int)Math.sqrt((int)Math.pow((double)MainMenuScreen.centrox - (double)this.position.x,2) + (int)Math.pow((double)MainMenuScreen.centroy - (double)this.position.y,2)) >= RAGGIO ? true : false;
 	}
-	
+	/*
 	private void updateGravity(){
 
 		final float TESTGRAVITY = 10f;
@@ -102,14 +102,14 @@ public class BobMain extends DynamicGameObject {
 			this.gravity.rotate(270);
 			} else if (position.x < MainMenuScreen.centrox && position.y < MainMenuScreen.centroy){
 			this.gravity.rotate(180);
-		}*/
-	}
+		}
+	}*/
 	
 	private void setCircularPosition(float deltaTime, int raggio, int x, int y){
 		//Gdx.app.debug("SETCIRCULARPOSITION", "deltatime = " + deltaTime);
 		totaltime += deltaTime;
 		if (rotationcounter >= 360f) rotationcounter = 0;
-		//rotationcounter += deltaTime*360; 
+		rotationcounter += 0.957f; //da sistemare x la rotazione d BobMain
 		//Gdx.app.debug("SETCIRCULARPOSITION","rotationcounter = " + rotationcounter);
 		this.position.x = (float) ((double)x + (double)raggio*Math.cos((double)totaltime));
 		this.position.y = (float) ((double)y + (double)raggio*Math.sin((double)totaltime));
@@ -121,8 +121,8 @@ public class BobMain extends DynamicGameObject {
 		/*updateGravity();
 		velocity.add(gravity.x * deltaTime, gravity.y * deltaTime );
 		position.add(velocity.x * deltaTime, velocity.y * deltaTime );*/
-		setCircularPosition(deltaTime, RAGGIO, MainMenuScreen.centrox, MainMenuScreen.centroy);
-
+		//Modificata la posizione del cerchio x migliorare la rotazione di bob
+		setCircularPosition(deltaTime, RAGGIO, MainMenuScreen.centrox-10, MainMenuScreen.centroy-150);
 		/*velocity.x += gravity.x * deltaTime;
 		velocity.y += gravity.y * deltaTime;
 		position.x += velocity.x * deltaTime;

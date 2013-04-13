@@ -12,6 +12,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -74,7 +75,7 @@ public class MultiplayerScreen implements Screen {
 				str = "CONNECTING";
 				if (WorldMulti.buffer.selfTest()) Gdx.app.debug("PHTEST", "BUFFER OK");
 				else Gdx.app.debug("PHTEST", "BUFFER KO");
-				ConnectThread thr = new ConnectThread("192.168.0.16",10000,WorldMulti.buffer,sem);
+				ConnectThread thr = new ConnectThread("192.168.0.2",10000,WorldMulti.buffer,sem);
 				thr.start();
 				Gdx.app.debug("PHTEST", "started connect thread");
 				try {
@@ -117,7 +118,8 @@ public class MultiplayerScreen implements Screen {
 		batcher.setProjectionMatrix(guiCam.combined);
 		batcher.disableBlending();
 		batcher.begin();
-		batcher.draw(Assets.backgroundRegionmain, 0, 0, 320, 480);
+		MainMenuScreen.drawGradient(batcher, Assets.rect, 0, 0, 320, 480,Color.BLACK,Color.BLUE, false);
+		//batcher.draw(Assets.backgroundRegionmain, 0, 0, 320, 480);
 		batcher.end();
 
 		batcher.enableBlending();
@@ -125,6 +127,7 @@ public class MultiplayerScreen implements Screen {
 		//batcher.draw(Assets.highScoresRegion, 10, 360 - 16, 300, 33);
 		Assets.font.draw(batcher, client, 100,230);
 		Assets.font.draw(batcher, server, 120,280);
+		Assets.font.draw(batcher, "BACK", 3,35);
 		//	batcher.draw(Assets.life1, 200, 100, 33, 33);
 		//	batcher.draw(Assets.life, 280, 180, 33, 33);
 		Assets.font.draw(batcher, str, 30, 460);
