@@ -177,6 +177,7 @@ public class GameScreen implements Screen {
 				this.prectouch = false;
 				//FIXME projectiles o rockets?
 				world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie , traiettoria));
+				traiettoria = new LinkedList<Vector2>();
 			}
 		}
 		ApplicationType appType = Gdx.app.getType();
