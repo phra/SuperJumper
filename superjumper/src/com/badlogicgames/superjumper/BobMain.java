@@ -7,7 +7,7 @@ public class BobMain extends DynamicGameObject {
 	public static final int BOB_STATE_FALL = 1;
 	public static final int BOB_STATE_HIT = 2;
 	public static final float BOB_JUMP_VELOCITY = 11;
-	public static final float BOB_MOVE_VELOCITY = 20;
+	public static final float BOB_MOVE_VELOCITY = 8;
 	public static final float BOB_WIDTH = 0.8f;
 	public static final float BOB_HEIGHT = 0.8f;
 	public final float MAXVELOCITY = 6f;

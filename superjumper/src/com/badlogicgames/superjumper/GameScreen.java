@@ -1,12 +1,14 @@
 package com.badlogicgames.superjumper;
 /*CONTROLLER*/
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Input.Peripheral;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
@@ -15,6 +17,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogicgames.superjumper.World.WorldListener;
 
@@ -25,6 +28,7 @@ public class GameScreen implements Screen {
 	static final int GAME_LEVEL_END = 3;
 	static final int GAME_OVER = 4;
 	public final List<Button> buttons;
+	FingerControl control=new FingerControl();
 	Game game;
 	int state;
 	OrthographicCamera guiCam;
@@ -36,11 +40,15 @@ public class GameScreen implements Screen {
 	Rectangle pauseBounds;
 	Rectangle resumeBounds;
 	Rectangle quitBounds;
+	Rectangle missileBounds;
 	Rectangle nosBounds;
 	Rectangle bubbleBounds;
 	int lastScore;
 	float statexplosion=0;
 	String scoreString;
+	public static boolean attivatraj=false;
+	public LinkedList<Vector2> traiettoria;
+	private boolean prectouch = false;
 
 	public GameScreen (Game game) {
 		this.game = game;
@@ -90,10 +98,12 @@ public class GameScreen implements Screen {
 		pauseBounds = new Rectangle(320 - 64, 480 - 64, 64, 64);
 		resumeBounds = new Rectangle(160 - 96, 240, 192, 36);
 		quitBounds = new Rectangle(160 - 96, 240 - 36, 192, 36);
+		missileBounds = new Rectangle(320 - 64, 480 - 320, 64, 64);
 		nosBounds = new Rectangle(320 - 64, 480 - 400, 64, 64);
 		bubbleBounds = new Rectangle(320 - 64, 12, 64, 64);
 		lastScore = 0;
 		scoreString = "SCORE: 0";
+		traiettoria = new LinkedList<Vector2>();
 	}
 
 	public void update (float deltaTime) {
@@ -125,45 +135,54 @@ public class GameScreen implements Screen {
 	}
 
 	private void updateRunning (float deltaTime) {
-		if (Gdx.input.justTouched()) 
-		{
 
+		if (Gdx.input.justTouched()) {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-			if ((!(OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)))&&
-				(!(OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)))&&
-				(!OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) )
+			if ((!OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) 
+				&& (!(OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)))
+				&&	(!OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)))
 				world.ShotProjectile();
-			if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) 
-			{
+			if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				Button button = new Button(90,230);
 				buttons.add(button);
 				Button buttones = new Button(88,180);
 				buttons.add(buttones);
 				state = GAME_PAUSED;
-
 				return;
 			}
 
-			if (OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) 
-			{
+			if (OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) {
 				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
 				world.nosActivate();
 				return;
 			}
-			else 	if (OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) 
-			{
+			else if (OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) {
 				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
 				world.bubbleActivate();
 				return;
 			}
+			else if (OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y)) {
+				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
+				attivatraj=true;
+				return;
+			}
+		} else {
+			if (attivatraj && Gdx.input.isTouched()) { 
+				this.prectouch = true;
+				traiettoria.offer(new Vector2(Gdx.input.getX(),Gdx.input.getY()));
+				Gdx.app.debug("ISTOUCHED", "position.y: " + Gdx.input.getY() + " position.x: " + Gdx.input.getX());
+			} else if (this.prectouch == true) {
+				attivatraj = false;
+				this.prectouch = false;
+				//FIXME projectiles o rockets?
+				world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie , traiettoria));
+			}
 		}
-
-
-
 		ApplicationType appType = Gdx.app.getType();
 		// should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
-		if (appType == ApplicationType.Android || appType == ApplicationType.iOS) {
+		if (Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)) {
+			//if (appType == ApplicationType.Android || appType == ApplicationType.iOS) {
 			world.update(deltaTime, Gdx.input.getAccelerometerX());
 		} else {
 			float accel = 0;
@@ -181,7 +200,6 @@ public class GameScreen implements Screen {
 		if (world.state == World.WORLD_STATE_GAME_OVER) {
 			state = GAME_OVER;
 			if (lastScore >= Settings.highscores[4])
-
 				scoreString = "NEW HIGHSCORE: " + lastScore;
 			else
 				scoreString = "SCORE:" + lastScore;
@@ -199,13 +217,11 @@ public class GameScreen implements Screen {
 		}
 		if (Gdx.input.justTouched()) {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-
 			if (OverlapTester.pointInRectangle(resumeBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				state = GAME_RUNNING;
 				return;
 			}
-
 			if (OverlapTester.pointInRectangle(quitBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				game.setScreen(new MainMenuScreen(game));
@@ -285,8 +301,8 @@ public class GameScreen implements Screen {
 		batcher.draw(Assets.portalife, 276, 480 - 95, 35, 35);
 		controlLockCharacter();
 
-	}	
-	
+	}   
+
 	private void controlLockCharacter()
 	{ 
 		if (world.signal2screen==1)
@@ -297,7 +313,7 @@ public class GameScreen implements Screen {
 		{
 			stampo("+1 life");
 		}
-		else	if (world.signal2screen==3)
+		else    if (world.signal2screen==3)
 		{
 			stampo("-1 warning");
 		}
@@ -307,57 +323,57 @@ public class GameScreen implements Screen {
 			if(statexplosion==0)
 				world.signal2screen=10;
 		}
-		else	if (world.signal2screen==5)
+		else    if (world.signal2screen==5)
 		{
 			stampo("good!");
 			if(statexplosion==0)
 				world.signal2screen=11;
 		}
-		else	if (world.signal2screen==6)
+		else    if (world.signal2screen==6)
 		{
 			stampo("fast!");
 			if(statexplosion==0)
 				world.signal2screen=12;
 		}
-		else	if (world.signal2screen==7)
+		else    if (world.signal2screen==7)
 		{
 			stampo("excellent!");
 			if(statexplosion==0)
-			world.signal2screen=13;
+				world.signal2screen=13;
 		}
-		else	if (world.signal2screen==8 )
+		else    if (world.signal2screen==8 )
 		{
 			stampo("new alien");
 			world.print1times=2;
 		}
-		else	if (world.signal2screen==9 )
+		else    if (world.signal2screen==9 )
 		{
 			stampo("new alien");
 			world.print1times=3;
 		}
-		else	if (world.signal2screen==10)
+		else    if (world.signal2screen==10)
 		{
 			stampo("+100");
 		}
-		else	if (world.signal2screen==11)
+		else    if (world.signal2screen==11)
 		{
 			stampo("+200");
 		}
-		else	if (world.signal2screen==12)
+		else    if (world.signal2screen==12)
 		{
 			stampo("+500");
 		}
-		else	if (world.signal2screen==13)
+		else    if (world.signal2screen==13)
 		{
 			stampo("+1000");
 		}
-		else	if (world.signal2screen==14)
+		else    if (world.signal2screen==14)
 		{
 			stampo("Kill!!");
 			world.print1times=1;
 		}
 
-}
+	}
 	private void stampo(String explosion)
 	{
 		Assets.handfontsmall.scale(0.03f);
@@ -394,14 +410,14 @@ public class GameScreen implements Screen {
 	}
 
 	private void presentLevelEnd () {
-	
+
 		String topText = "your friends ...";
 		String bottomText = "... aren't here!";
 		float topWidth = Assets.font.getBounds(topText).width;
 		float bottomWidth = Assets.font.getBounds(bottomText).width;
 		Assets.handfontsmall.draw(batcher, topText, 160 - topWidth / 2, 480 - 40);
 		Assets.handfontsmall.draw(batcher, bottomText, 160 - bottomWidth / 2, 40);
-		
+
 	}
 
 	private void presentGameOver () {

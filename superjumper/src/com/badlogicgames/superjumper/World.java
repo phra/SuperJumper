@@ -18,7 +18,7 @@ public class World {
 		public void projectile();
 	}
 	public static final float WORLD_WIDTH = 10;
-	public static final float WORLD_HEIGHT = 1000;
+	public static final float WORLD_HEIGHT = 10000;
 	public static final int WORLD_STATE_RUNNING = 0;
 	public static final int WORLD_STATE_NEXT_LEVEL = 1;
 	public static final int WORLD_STATE_GAME_OVER = 2;
@@ -32,6 +32,7 @@ public class World {
 	public final List<Squirrel> squirrels;
 	public final List<Projectile> projectiles;
 	public final List<Projectile> projectenemy;
+	public final List<Missile> rockets;
 	public final List<Coin> coins;
 	public Castle castle;
 	public final WorldListener listener;
@@ -49,6 +50,7 @@ public class World {
 	public float bubbletimes;
 	private Vector2 gravity = new Vector2(0,15);
 	float enemyshotTime=0;
+	protected boolean activemissile = false;
 	public World (WorldListener listener) {
 		this.bob = new Bob(4, 2);
 		this.charlie = new Enemy(5,200);
@@ -59,6 +61,7 @@ public class World {
 		this.squirrels = new ArrayList<Squirrel>();
 		this.coins = new ArrayList<Coin>();
 		this.projectenemy=new ArrayList<Projectile>();
+		this.rockets=new ArrayList<Missile>();
 		this.listener = listener;
 		this.rand = new Random(5000L);
 		this.generateLevel();
@@ -81,10 +84,11 @@ public class World {
 			float x = rand.nextFloat() > 0.5f ? rand.nextFloat() *k : WORLD_WIDTH - rand.nextFloat() *k/2;
 			//star generate
 			int type_star = Star.STAR_TYPE_STATIC;//star
-			float y_star = rand.nextFloat() *20;//star
+			float y_star = rand.nextFloat() *100;//star
 			float x_star = rand.nextFloat() *10;//star
 			Star star = new Star(type_star, x_star, y_star);//star
 			stars.add(star);
+			//stars.add(star);
 			//end star generate
 			Platform platform = new Platform(type, x, y*2);
 			platforms.add(platform);
@@ -135,7 +139,7 @@ public class World {
 		updateProjectilenemys(deltaTime);
 		updateunlockcharacter ();
 		//if (rand.nextFloat() > 0.5f) 
-		score += (int)bob.velocity.y/8;
+		score += (int)bob.velocity.y/10;
 		//if (bob.state != Bob.BOB_STATE_HIT) //caso in cui bob cade verso il basso quando muore senza sbattere con gli ogg restati
 		checkCollisions();
 		checkRemovePlatform();
@@ -156,7 +160,7 @@ public class World {
 			}
 		}
 	}
-	
+
 	public void LifeLess(){
 
 		if(life>0){
@@ -190,7 +194,7 @@ public class World {
 			turbo-=1;
 		}
 	}
-	
+
 	public void TurboLess()
 	{
 		bob.velocity.y=12;
@@ -199,7 +203,7 @@ public class World {
 
 	private void updateBob (float deltaTime, float accelX) {
 		//if (bob.state != Bob.BOB_STATE_HIT && bob.position.y <= 0.5f) bob.hitPlatform();
-		if (bob.state != Bob.BOB_STATE_HIT) bob.velocity.x = -accelX / 2f * Bob.BOB_MOVE_VELOCITY;
+		if (bob.state != Bob.BOB_STATE_HIT) bob.velocity.x = -accelX / 3f * Bob.BOB_MOVE_VELOCITY;
 		bob.update(deltaTime);
 		heightSoFar = Math.max(bob.position.y, heightSoFar);
 	}
@@ -222,8 +226,8 @@ public class World {
 			}
 			ScoreEnemyDied();
 		}
-		else if(bob.position.y<500 && charlie==null)this.charlie = new Enemy(5,500);
-		else if(bob.position.y<800 && charlie==null)this.charlie = new Enemy(5,800);
+		else if (bob.position.y<500 && charlie==null) this.charlie = new Enemy(5,500);
+		else if (bob.position.y<800 && charlie==null) this.charlie = new Enemy(5,800);
 	}
 
 	private void EnemyShotBob()
@@ -239,7 +243,7 @@ public class World {
 			projectilenemy.state=1;
 			projectilenemy.setVelocity(0,-20);
 			projectenemy.add(projectilenemy);
-			Gdx.app.debug("x"+projectilenemy.position.x,"y"+projectilenemy.position.y);
+			Gdx.app.debug("ENEMYSHOTBOB","x"+projectilenemy.position.x + "y"+projectilenemy.position.y);
 		}
 	}
 
@@ -277,16 +281,18 @@ public class World {
 	}
 
 
+
 	private void addStarDynamic(){
 		//star generate
 		int type_star = rand.nextFloat()>0.3?Star.STAR_TYPE_STATIC:Star.STAR_TYPE_MOVING;//star light
 		float y_star = rand.nextFloat() *10;//star
 		float x_star = rand.nextFloat() *10;//star
 		Star star = new Star(type_star, x_star, y_star+bob.position.y+13);
-		Star star1 = new Star(type_star, x_star, y_star+bob.position.y+9);//aggiunto da poco
+		Star star1 = new Star(type_star, x_star, y_star+bob.position.y+9);
+		Star star2 = new Star(Star.STAR_TYPE_STATIC, x_star, y_star+bob.position.y-3);//aggiunto da poco
 		stars.add(star);
-		stars.add(star);//aggiunto da poco
 		stars.add(star1);//aggiunto da poco
+		stars.add(star2);//aggiunto da poco
 		////end star generate
 	}
 
@@ -378,8 +384,8 @@ public class World {
 	private void CheckRemoveEnemey()
 	{	
 		if(charlie!=null)
-		if (charlie.state==Enemy.ENEMY_STATE_REM && charlie.stateTime - charlie.pulverizetime>Enemy.ENEMY_PULVERIZE_TIME) //FIXME
-			charlie=null;
+			if (charlie.state==Enemy.ENEMY_STATE_REM && charlie.stateTime - charlie.pulverizetime>Enemy.ENEMY_PULVERIZE_TIME) //FIXME
+				charlie=null;
 	}
 
 
@@ -529,7 +535,11 @@ public class World {
 					signal2screen=1;
 					break;
 				}
-
+				else if(random>0.85f )
+				{ 
+					this.activemissile = true;
+					GameScreen.attivatraj = true;
+				}   
 				listener.hit(); 
 				//squirrels.remove(squirrel);
 				len = squirrels.size();
@@ -546,7 +556,7 @@ public class World {
 			if (coin.state != Coin.COIN_STATE_PULVERIZING && OverlapTester.overlapRectangles(bob.bounds, coin.bounds)) {
 				Gdx.input.vibrate(new long[] { 1, 90, 40, 90},-1); 
 				if(bob.enablebubble!=1)
-				{	
+				{   
 					bob.velocity.y=2;
 					bob.setGravityBob(0, 3);
 					LifeLess();
@@ -582,27 +592,27 @@ public class World {
 		if (!projectiles.isEmpty() && !platforms.isEmpty()){
 
 			/* Platform platformstmp;
-        int len= platforms.size();
-        int len1 = projectiles.size();
-       if (platforms.get(0).position.y > projectiles.get(0).position.y)
-                return;
-            else if (OverlapTester.overlapRectangles(platforms.get(0).bounds, projectiles.get(0).bounds)){
-                platforms.get(0).pulverize();
-                projectiles.remove(0);
-                return;
-            }
-            else {
-                Platform primaplatform = platforms.get(i);
-                for (; i < projectiles.size(); i++) {
-                    //#FIXME
-                    for (platformstmp = platforms.get(0); projectiles.get(j).position.y > primaplatform.position.y; j++){
-                        if (OverlapTester.overlapRectangles(platformstmp.bounds, projectiles.get(j).bounds)) {
-                          platforms.get(j).pulverize();
-                           projectiles.remove(i);
-                        }
-                    }
-                }
-            }
+      int len= platforms.size();
+      int len1 = projectiles.size();
+     if (platforms.get(0).position.y > projectiles.get(0).position.y)
+              return;
+          else if (OverlapTester.overlapRectangles(platforms.get(0).bounds, projectiles.get(0).bounds)){
+              platforms.get(0).pulverize();
+              projectiles.remove(0);
+              return;
+          }
+          else {
+              Platform primaplatform = platforms.get(i);
+              for (; i < projectiles.size(); i++) {
+                  //#FIXME
+                  for (platformstmp = platforms.get(0); projectiles.get(j).position.y > primaplatform.position.y; j++){
+                      if (OverlapTester.overlapRectangles(platformstmp.bounds, projectiles.get(j).bounds)) {
+                        platforms.get(j).pulverize();
+                         projectiles.remove(i);
+                      }
+                  }
+              }
+          }
 			 */
 
 
@@ -617,7 +627,7 @@ public class World {
 						bob.hitPlatform();
 						//Turbo();
 						Gdx.input.vibrate(new long[] { 1, 20,10, 5}, -1); 
-						score += 300;
+						score += 100;
 						//turbo=turbo+1;
 						//shot=shot+5;
 						projectiles.remove(i);
@@ -644,7 +654,7 @@ public class World {
 					Coin coin=coins.get(j);
 					if (coin.state != Coin.COIN_STATE_PULVERIZING && OverlapTester.overlapRectangles(coin.bounds, projectile.bounds)) {
 						Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
-						score += 300;
+						score += 100;
 						coin.pulverize(); 
 						coins.remove(j);
 						projectiles.remove(i);
@@ -666,7 +676,7 @@ public class World {
 				Projectile projectile=projectiles.get(i);
 				if (OverlapTester.overlapRectangles(charlie.bounds, projectile.bounds)) {
 					Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
-					score += 300;
+					score += 100;
 					projectiles.remove(i);
 					charlie.life-=1;
 					/*platforms.remove(j);*/
@@ -684,7 +694,7 @@ public class World {
 				Projectile projectilenem=projectenemy.get(i);
 				if ((bob.enablebubble!=1)&&OverlapTester.overlapRectangles(bob.bounds, projectilenem.bounds)) {
 					Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
-					score -= 300;
+					score -= 100;
 					LifeLess();
 					projectiles.remove(projectilenem);
 					len = projectenemy.size();
@@ -751,6 +761,7 @@ public class World {
 			state = WORLD_STATE_NEXT_LEVEL;
 		}
 	}
+
 
 	private void checkGameOver () {
 		if (heightSoFar - 7.5f > bob.position.y) {
