@@ -29,6 +29,7 @@ public class Settings {
 	public final static int[] highscores = new int[] {100, 80, 50, 30, 10};
 	public final static String file = ".superjumper";
 
+
 	public static void load () {
 		BufferedReader in = null;
 		try {
@@ -52,8 +53,10 @@ public class Settings {
 		try {
 			out = new BufferedWriter(new OutputStreamWriter(Gdx.files.external(file).write(false)));
 			out.write(Boolean.toString(soundEnabled));
+			out.write("\n");
 			for (int i = 0; i < 5; i++) {
 				out.write(Integer.toString(highscores[i]));
+				out.write("\n");
 			}
 
 		} catch (Throwable e) {
@@ -63,6 +66,46 @@ public class Settings {
 			} catch (IOException e) {
 			}
 		}
+	}
+	
+	
+	public static void saveFloat (float i) {
+		BufferedWriter out = null;
+		try {
+			out = new BufferedWriter(new OutputStreamWriter(Gdx.files.external(file).write(false)));
+			
+				out.write(Float.toString(i));
+				out.write("\n");
+			
+
+		} catch (Throwable e) {
+		} finally {
+			try {
+				if (out != null) out.close();
+			} catch (IOException e) {
+			}
+		}
+	}
+	
+	
+
+	public static float readFloat () {
+		BufferedReader in = null;
+		float h = 0 ;
+		try {
+			in = new BufferedReader(new InputStreamReader(Gdx.files.external(file).read()));
+			
+				h = Float.parseFloat(in.readLine());
+			
+		} catch (Throwable e) {
+			// :( It's ok we have defaults
+		} finally {
+			try {
+				if (in != null) in.close();
+			} catch (IOException e) {
+			}
+		}
+		return h;
 	}
 
 	public static void addScore (int score) {

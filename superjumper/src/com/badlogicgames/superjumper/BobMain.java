@@ -1,6 +1,5 @@
 package com.badlogicgames.superjumper;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class BobMain extends DynamicGameObject {
@@ -15,8 +14,9 @@ public class BobMain extends DynamicGameObject {
 	public Vector2 gravity = new Vector2(-1,-1);
 	public final int RAGGIO = 130;
 	private float totaltime = 0;
+	private float provatime = 0;
 	public static boolean BOB_DOUBLE_JUMP = false;
-	public float rotationcounter=0;//da sistemare
+	public float rotationcounter=90;//90-180 da sistemare
 	int state;
 	float stateTime;
 	public static float jumpTime;
@@ -31,7 +31,7 @@ public class BobMain extends DynamicGameObject {
 		this.gravity.x = x;
 		this.gravity.y = y;
 	}
-	
+
 	private boolean OverlapCircleTester(){
 		//Gdx.app.debug("OVERLAPCIRCLE", "overlap returns " +(int)Math.sqrt((int)Math.pow((double)MainMenuScreen.centrox - (double)this.position.x,2) + (int)Math.pow((double)MainMenuScreen.centroy - (double)this.position.y,2)));
 		return (int)Math.sqrt((int)Math.pow((double)MainMenuScreen.centrox - (double)this.position.x,2) + (int)Math.pow((double)MainMenuScreen.centroy - (double)this.position.y,2)) >= RAGGIO ? true : false;
@@ -42,7 +42,7 @@ public class BobMain extends DynamicGameObject {
 		final float TESTGRAVITY = 10f;
 		Gdx.app.debug("UPDATEGRAVITY","position.x = " + position.x + ", position.y = " + position.y);
 		if (position.x > MainMenuScreen.centrox && position.y >  MainMenuScreen.centroy){
-			
+
 			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "ALTO DX FUORI");
 				this.gravity.x = -TESTGRAVITY;
@@ -55,7 +55,7 @@ public class BobMain extends DynamicGameObject {
 				//this.gravity.add(+TESTGRAVITY, +TESTGRAVITY);
 			}
 		} else if (position.x > MainMenuScreen.centrox && position.y <  MainMenuScreen.centroy){
-			
+
 			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "BASSO DX FUORI");
 				this.gravity.x = -TESTGRAVITY;
@@ -68,7 +68,7 @@ public class BobMain extends DynamicGameObject {
 				//this.gravity.add(+TESTGRAVITY, -TESTGRAVITY);
 			}
 		} else if (position.x < MainMenuScreen.centrox && position.y >  MainMenuScreen.centroy){
-			
+
 			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "ALTO SX FUORI");
 				this.gravity.x = +TESTGRAVITY;
@@ -81,7 +81,7 @@ public class BobMain extends DynamicGameObject {
 				//this.gravity.add(-TESTGRAVITY, +TESTGRAVITY);
 			}
 		} else if (position.x < MainMenuScreen.centrox && position.y <  MainMenuScreen.centroy){
-			
+
 			if (OverlapCircleTester()){
 				Gdx.app.debug("UPDATEGRAVITY", "BASSO SX FUORI");
 				this.gravity.x = +TESTGRAVITY;
@@ -104,30 +104,30 @@ public class BobMain extends DynamicGameObject {
 			this.gravity.rotate(180);
 		}
 	}*/
-	
+
 	private void setCircularPosition(float deltaTime, int raggio, int x, int y){
 		//Gdx.app.debug("SETCIRCULARPOSITION", "deltatime = " + deltaTime);
 		totaltime += deltaTime;
-		if (rotationcounter >= 360f) rotationcounter = 0;
-		rotationcounter += 0.957f; //da sistemare x la rotazione d BobMain
+		if(totaltime<=0.1f)rotationcounter=0;
+		//if (rotationcounter >= 360f) rotationcounter = 0;
+		rotationcounter += 0.987f; //da sistemare x la rotazione d BobMain
 		//Gdx.app.debug("SETCIRCULARPOSITION","rotationcounter = " + rotationcounter);
-		this.position.x = (float) ((double)x + (double)raggio*Math.cos((double)totaltime));
-		this.position.y = (float) ((double)y + (double)raggio*Math.sin((double)totaltime));
+		this.position.x = (float) (x + raggio*Math.cos(totaltime));
+		this.position.y = (float) (y + raggio*Math.sin(totaltime));
 		//this.position.add(x + raggio*(float)Math.cos(totaltime*2*Math.PI),y + raggio*(float)Math.sin(totaltime*2*Math.PI));
 		//Gdx.app.debug("SETCIRCULARPOSITION", "position.x = " + position.x + ", position.y = " + position.y + ", totaltime = " + totaltime + ", cos= " + Math.cos(totaltime*2*Math.PI) + ", sin = " + (y + raggio*Math.sin(totaltime*2*Math.PI)));
 	}
-	
+
 	public void update(float deltaTime) {
 		/*updateGravity();
 		velocity.add(gravity.x * deltaTime, gravity.y * deltaTime );
 		position.add(velocity.x * deltaTime, velocity.y * deltaTime );*/
 		//Modificata la posizione del cerchio x migliorare la rotazione di bob
-		setCircularPosition(deltaTime, RAGGIO, MainMenuScreen.centrox-10, MainMenuScreen.centroy-150);
+		setCircularPosition(deltaTime, RAGGIO, MainMenuScreen.centrox-15, MainMenuScreen.centroy-150);
 		/*velocity.x += gravity.x * deltaTime;
 		velocity.y += gravity.y * deltaTime;
 		position.x += velocity.x * deltaTime;
 		position.y += velocity.y * deltaTime;*/
-
 		bounds.x = position.x - bounds.width / 2;
 		bounds.y = position.y - bounds.height / 2;
 

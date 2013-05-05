@@ -29,7 +29,6 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 	public final List<Squirrel> squirrels;
 	public final List<Projectile> projectiles;
 	public final List<Coin> coins;
-	public final List<Life> lifes;
 	public Castle castle;
 	public final WorldListener listener;
 	public Random rand;
@@ -51,21 +50,15 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 		this.springs = new ArrayList<Spring>();
 		this.squirrels = new ArrayList<Squirrel>();
 		this.coins = new ArrayList<Coin>();
-		this.lifes = new ArrayList<Life>();
 		this.listener = listener;
 		this.rand = new Random();
 		this.generateLevel();
 		this.setGravity(0, 3);
 		this.heightSoFar = 0;
 		this.score = 0;
-		this.rand = new Random((long)seed);
+		this.rand = new Random(seed);
 		this.state = WORLD_STATE_RUNNING;
-		Life life = new Life(0,0);
-		lifes.add(life);
-		lifes.add(life);
-		lifes.add(life);
-		lifes.add(life);
-		lifes.add(life);
+
 	}
 
 	private void generateLevel () {
@@ -110,30 +103,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 		bobMulti.setGravityBob(x,y);
 	}
 	
- //FIXME
-	@SuppressWarnings("static-access")
-	public void LifeLess(){
-		float len = lifes.size();
-		int i=0;
-		if(i<len && lifes.size() > 1){
-			Life life = lifes.get(i);
-			lifes.remove(life);
-			len = lifes.size();
-		}
-		else {
-			state = WORLD_STATE_GAME_OVER;
-			this.buffer.putPaccoOutNOBLOCK(new PaccoEnd());
-		}
-	}
-
-	public void LifeMore(){
-		float len = lifes.size();
-		Life life = new Life(0,0);
-		if(len<=4)lifes.add(life);
-
-
-	}
-
+ 
 
 	public void ShotProjectile()
 	{
@@ -191,7 +161,6 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 		updatePlatforms(deltaTime);
 		updateSquirrels(deltaTime);
 		updateCoins(deltaTime);
-		updateLifes(deltaTime);
 		updateProjectiles(deltaTime);
 		score += (int)bob.velocity.y / 2;
 		if (bob.state != Bob.BOB_STATE_HIT) checkCollisions();
@@ -257,14 +226,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 	}
 
 
-	private void updateLifes (float deltaTime) {
-		int len = lifes.size();
-		for (int i = 0; i < len; i++) {
-			Life life = lifes.get(i);
-			life.update(deltaTime);
-		}
-	}
-
+	
 	private void checkRemoveProjectile(){
 		int i = 0;
 		if (!projectiles.isEmpty()) {
@@ -520,7 +482,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 			Squirrel squirrel = squirrels.get(i);
 			if (OverlapTester.overlapRectangles(squirrel.bounds, bob.bounds)) {
 				Gdx.input.vibrate(new long[] { 1, 100, 60, 100}, -1); 
-				LifeMore();
+			//	LifeMore();
 				listener.hit(); 
 				squirrels.remove(squirrel);
 				len = squirrels.size();
@@ -535,7 +497,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 			Squirrel squirrel = squirrels.get(i);
 			if (OverlapTester.overlapRectangles(squirrel.bounds, bobMulti.bounds)) {
 				Gdx.input.vibrate(new long[] { 1, 100, 60, 100}, -1); 
-				LifeMore();
+				//LifeMore();
 				listener.hit(); 
 				squirrels.remove(squirrel);
 				len = squirrels.size();
@@ -556,7 +518,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 				len = coins.size();
 				listener.coin();
 				coin.pulverize();
-				LifeLess();
+				//LifeLess();
 				score -= 300;
 				coins.remove(coin);
 				break;
@@ -588,7 +550,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 				len = coins.size();
 				listener.coin();
 				coin.pulverize();
-				LifeLess();
+				//LifeLess();
 				score -= 300;
 				coins.remove(coin);
 				break;

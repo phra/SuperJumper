@@ -5,26 +5,24 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 public class MultiplayerScreen implements Screen {
 	Game game;
-
+	public final List<Button> buttons;
 	OrthographicCamera guiCam;
 	SpriteBatch batcher;
 	Rectangle backBounds;
@@ -41,7 +39,7 @@ public class MultiplayerScreen implements Screen {
 
 	public MultiplayerScreen (Game game) {
 		this.game = game;
-
+		this.buttons=new ArrayList<Button>();
 		guiCam = new OrthographicCamera(320, 480);
 		guiCam.position.set(320 / 2, 480 / 2, 0);
 		backBounds = new Rectangle(0, 0, 64, 64);
@@ -51,16 +49,19 @@ public class MultiplayerScreen implements Screen {
 		ServerBounds = new Rectangle(100, 260, 300, 20);
 		touchPoint = new Vector3();
 		batcher = new SpriteBatch();
-		/*highScores = new String[5];
-		for (int i = 0; i < 5; i++) {
-			highScores[i] = i + 1 + ". " + Settings.highscores[i];
-			xOffset = Math.max(Assets.font.getBounds(highScores[i]).width, xOffset);
-		}
-		xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
-		 */
+		Button button = new Button(90,230);
+		buttons.add(button);
+		Button buttones = new Button(90,180);
+		buttons.add(buttones);
+	
 	}
 
 	public void update (float deltaTime) {
+		int len = buttons.size();
+		for (int i = 0; i < len; i++) {
+			Button button=buttons.get(i);
+			button.update(deltaTime);
+		}
 		if (Gdx.input.justTouched()) {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
@@ -118,28 +119,23 @@ public class MultiplayerScreen implements Screen {
 		batcher.setProjectionMatrix(guiCam.combined);
 		batcher.disableBlending();
 		batcher.begin();
-		MainMenuScreen.drawGradient(batcher, Assets.rect, 0, 0, 320, 480,Color.BLACK,Color.BLUE, false);
-		//batcher.draw(Assets.backgroundRegionmain, 0, 0, 320, 480);
+		//MainMenuScreen.drawGradient(batcher, Assets.rect, 0, 0, 320, 480,Color.BLACK,Color.BLUE, false);
 		batcher.end();
-
 		batcher.enableBlending();
 		batcher.begin();
-		//batcher.draw(Assets.highScoresRegion, 10, 360 - 16, 300, 33);
-		Assets.font.draw(batcher, client, 100,230);
-		Assets.font.draw(batcher, server, 120,280);
-		Assets.font.draw(batcher, "BACK", 3,35);
-		//	batcher.draw(Assets.life1, 200, 100, 33, 33);
-		//	batcher.draw(Assets.life, 280, 180, 33, 33);
-		Assets.font.draw(batcher, str, 30, 460);
+		batcher.draw(Assets.welcomemulti, 0,0, 512, 512);
+		//Assets.font.draw(batcher, client, 100,230);
+		//Assets.font.draw(batcher, server, 120,280);
+		batcher.draw(Assets.icontextback, 3,10, 54, 54);
 
+		int len = buttons.size();
+		for (int i = 0; i < len; i++) {
+			Button button = buttons.get(i);
+			Texture keyFrame =Assets.ospita;
+			if(i==1)keyFrame=Assets.partecipa;
+			batcher.draw(keyFrame,button.position.x,button.position.y,145,145);
+			}
 
-		/*float y = 230;
-		for (int i = 4; i >= 0; i--) {
-			Assets.font.draw(batcher, highScores[i], xOffset, y);
-			y += Assets.font.getLineHeight();
-		}
-
-		batcher.draw(Assets.arrow, 0, 0, 64, 64);*/
 		batcher.end();
 	}
 

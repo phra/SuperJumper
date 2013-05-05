@@ -21,8 +21,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
-import java.io.*;
-import java.net.*;
 
 public class SuperJumper extends Game {
 	boolean firstTimeCreate = true;
@@ -33,7 +31,7 @@ public class SuperJumper extends Game {
 		Settings.load();
 		Assets.load();
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-		setScreen(new MainMenuScreen(this));
+		setScreen(new FirstScreen(this));
 		fps = new FPSLogger();
 	}
 

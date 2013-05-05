@@ -75,7 +75,7 @@ public class HelpScreen implements Screen {
 
 		batcher.enableBlending();
 		batcher.begin();
-		batcher.draw(Assets.arrow, 320, 0, -64, 64);
+		batcher.draw(Assets.icontextback, 320, 0, -54, 54);
 		batcher.end();
 
 		gl.glDisable(GL10.GL_BLEND);

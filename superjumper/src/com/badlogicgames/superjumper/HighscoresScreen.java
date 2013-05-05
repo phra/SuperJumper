@@ -19,7 +19,6 @@ package com.badlogicgames.superjumper;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -37,6 +36,7 @@ public class HighscoresScreen implements Screen {
 	String[] highScores;
 	float xOffset = 0;
 
+
 	public HighscoresScreen (Game game) {
 		this.game = game;
 
@@ -49,6 +49,7 @@ public class HighscoresScreen implements Screen {
 		for (int i = 0; i < 5; i++) {
 			highScores[i] = i + 1 + ". " + Settings.highscores[i];
 			xOffset = Math.max(Assets.font.getBounds(highScores[i]).width, xOffset);
+			
 		}
 		xOffset = 160 - xOffset / 2 + Assets.font.getSpaceWidth() / 2;
 	}
@@ -73,25 +74,27 @@ public class HighscoresScreen implements Screen {
 		batcher.setProjectionMatrix(guiCam.combined);
 		batcher.disableBlending();
 		batcher.begin();
-		MainMenuScreen.drawGradient(batcher, Assets.rect, 0, 0, 320, 480,Color.BLACK,Color.BLUE, false);
+		batcher.draw(Assets.welcomehigh,0,0,512,512);
+		//MainMenuScreen.drawGradient(batcher, Assets.rect, 0, 0, 320, 480,Color.BLACK,Color.BLUE, false);
 		//batcher.draw(Assets.backgroundRegion, 0, 0, 320, 480);
 		batcher.end();
 		batcher.enableBlending();
 		batcher.begin();
 		//batcher.draw(Assets.highScoresRegion, 10, 360 - 16, 300, 33);
-		Assets.font.draw(batcher, "HighScores", 100,460);
+		//Assets.font.draw(batcher, "HighScores", 100,460);
 		float y = 230;
 		for (int i = 4; i >= 0; i--) {
 			Assets.font.draw(batcher, highScores[i], xOffset, y);
 			y += Assets.font.getLineHeight();
 		}
 
-		batcher.draw(Assets.arrow, 0, 0, 64, 64);
+		batcher.draw(Assets.icontextback, 0, 0, 54, 54);
 		batcher.end();
 	}
 
 	@Override
 	public void render (float delta) {
+		Settings.load();
 		update(delta);
 		draw(delta);
 	}

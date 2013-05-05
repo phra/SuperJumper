@@ -103,10 +103,12 @@ public class MainMenuScreen implements Screen {
 		float x_star = rand.nextFloat() *320;//star
 		Star star = new Star(type_star, x_star, y_star);//star
 		stars.add(star);//star
+		
 
 	}
 
 	public void draw (float deltaTime) {
+		
 		GLCommon gl = Gdx.gl;
 		gl.glClearColor(1, 0, 0, 1);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -125,7 +127,7 @@ public class MainMenuScreen implements Screen {
 			TextureRegion keyFrame2 = Assets.starRegion;
 			batcher.draw(keyFrame2, star.position.x , star.position.y , 5, 5);
 		}
-		batcher.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 54, 44);
+		batcher.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 46, 46);
 		batcher.end();
 		batcher.enableBlending();
 		batcher.begin();
@@ -139,6 +141,7 @@ public class MainMenuScreen implements Screen {
 		batcher.draw(keyFrame1,0, 0, 320, 480);
 		batcher.draw(keyFrame, bob.position.x,bob.position.y, 25, 35, 50, 70, 1, 1, bob.rotationcounter);
 		batcher.end();
+	
 	}
 
 
@@ -174,6 +177,7 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void resume () {
+		Settings.load();
 	}
 
 	@Override
