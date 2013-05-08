@@ -46,6 +46,7 @@ public class GameScreen implements Screen {
 	int lastScore;
 	float statexplosion=0;
 	String scoreString;
+	private boolean missileON = false;
 	/*public static boolean attivatraj=false;
 	public LinkedList<Vector2> traiettoria;
 	private boolean prectouch = false;*/
@@ -137,12 +138,7 @@ public class GameScreen implements Screen {
 	private void updateRunning (float deltaTime) {
 
 		if (Gdx.input.justTouched()) {
-			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-			if ((!OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) 
-				&& (!(OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)))
-				&&	(!OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y))
-				&& !(OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y)))
-				world.ShotProjectile();
+			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));				
 			if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				Button button = new Button(90,230);
@@ -152,23 +148,38 @@ public class GameScreen implements Screen {
 				state = GAME_PAUSED;
 				return;
 			}
-
 			if (OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) {
 				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
 				world.nosActivate();
-				return;
 			}
 			else if (OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) {
 				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
 				world.bubbleActivate();
-				return;
 			}
 			else if (OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y)) {
 				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
 				//attivatraj=true;
-				world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie));
-				return;
+				//this.missileON = true;
+				if (world.charlie != null) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie));
+			} /*else if (this.missileON) {
+				int i = 0;
+				if (OverlapTester.pointInRectangle(world.charlie.bounds, touchPoint.x, touchPoint.y)){
+					world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie));
+					this.missileON = false;
+				} else {
+					for (Platform plat : world.platforms){
+						if ((OverlapTester.pointInRectangle(plat.bounds, touchPoint.x, touchPoint.y))) {
+							world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, plat));
+							this.missileON = false;
+							break;
+						}
+					}
+				}
+			}*/ else {
+				world.ShotProjectile();
 			}
+				
+
 		}/* else {
 			if (attivatraj && Gdx.input.isTouched()) { 
 				this.prectouch = true;

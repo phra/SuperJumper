@@ -18,7 +18,7 @@ public class Missile extends Projectile {
 	
 	@Override
 	public void update (float deltaTime) {
-		Gdx.app.debug("MISSILEUPDATE", "init");
+		//Gdx.app.debug("MISSILEUPDATE", "init");
 	/*	if (!this.path.isEmpty()) {
 			Gdx.app.debug("MISSILEUPDATE", "prendo posizione dalla lista");
 			Vector2 tmp = this.path.remove();
@@ -27,16 +27,16 @@ public class Missile extends Projectile {
 			//position.add(tmp.x * deltaTime, tmp.y * deltaTime);
 		} else*/ if (target != null) {
 			//velocity.add(gravity.x * deltaTime, gravity.y * deltaTime);
-			Gdx.app.debug("MISSILEUPDATE", "genero la posizione");
+			//Gdx.app.debug("MISSILEUPDATE", "genero la posizione");
 			Utils.changeGravityTowards(this,target);
 			position.add(velocity.x * deltaTime, (velocity.y+10f) * deltaTime);
 			//position.add(0,20);
 		} else {
-			Gdx.app.debug("MISSILEUPDATE", "lista vuota e nemico null");
+			//Gdx.app.debug("MISSILEUPDATE", "lista vuota e nemico null");
 			return;
 		}
 		
-		Gdx.app.debug("MISSILEUPDATE", "position.x " + this.position.x + ", position.y " + this.position.y);
+		//Gdx.app.debug("MISSILEUPDATE", "position.x " + this.position.x + ", position.y " + this.position.y);
 		
 		
 		bounds.x = position.x - bounds.width / 2;

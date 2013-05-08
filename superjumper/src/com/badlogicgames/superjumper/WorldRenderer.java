@@ -18,6 +18,7 @@ public class WorldRenderer {
     OrthographicCamera cam;
     SpriteBatch batch;
     TextureRegion background;
+    TextureRegion portaproj; //FIXME
 
 
     public WorldRenderer (SpriteBatch batch, World world) {
@@ -25,6 +26,7 @@ public class WorldRenderer {
         this.cam = new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
         this.cam.position.set(FRUSTUM_WIDTH / 2, FRUSTUM_HEIGHT / 2, 0);
         this.batch = batch;
+        this.portaproj = new TextureRegion(Assets.portaproj);
 
     }
 
@@ -188,7 +190,7 @@ public class WorldRenderer {
                 batch.draw(keyFrame, squirrel.position.x - 0.7f, squirrel.position.y - 0.4f, 1.3f, 1.3f);
             }
             if (world.activemissile == true ){
-                TextureRegion keyFrame = new TextureRegion(Assets.portaproj);
+                TextureRegion keyFrame = this.portaproj; // FIXME
                 batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 2.8f , 1.5f, 1.5f);
             }
             if (squirrel.nosTap == true ){

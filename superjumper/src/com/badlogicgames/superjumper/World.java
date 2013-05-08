@@ -172,7 +172,7 @@ public class World {
 	}
 
 	public void LifeMore(){
-		if(life<=4)life+=1;
+		if(life<=4) life+=1;
 	}
 
 	public void ShotProjectile()
@@ -209,7 +209,7 @@ public class World {
 		heightSoFar = Math.max(bob.position.y, heightSoFar);
 	}
 
-	private void updateEnemy (float deltaTime,DynamicGameObject oggetto) {
+	private void updateEnemy (float deltaTime, DynamicGameObject oggetto) {
 		if(charlie!=null)
 		{
 			charlie.update(deltaTime,oggetto);
@@ -522,7 +522,7 @@ public class World {
 					break;
 				} else if(random<=0.85f) { 
 					Gdx.app.debug("checkSquirrelCollisions", "missile");
-					this.activemissile = true;
+					//this.activemissile = true;
 					//GameScreen.attivatraj = true;
 				} else { 
 					Gdx.app.debug("checkSquirrelCollisions", "ammo");
