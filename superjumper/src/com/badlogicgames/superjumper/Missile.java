@@ -29,7 +29,7 @@ public class Missile extends Projectile {
 			//velocity.add(gravity.x * deltaTime, gravity.y * deltaTime);
 			//Gdx.app.debug("MISSILEUPDATE", "genero la posizione");
 			Utils.changeGravityTowards(this,target);
-			position.add(velocity.x * deltaTime, (velocity.y+10f) * deltaTime);
+			position.add(velocity.x * deltaTime, (velocity.y+11f) * deltaTime);
 			//position.add(0,20);
 		} else {
 			//Gdx.app.debug("MISSILEUPDATE", "lista vuota e nemico null");

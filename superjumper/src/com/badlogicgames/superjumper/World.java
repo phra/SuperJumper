@@ -63,7 +63,7 @@ public class World {
 		this.projectenemy=new ArrayList<Projectile>();
 		this.rockets=new ArrayList<Missile>();
 		this.listener = listener;
-		this.rand = new Random(5000L);
+		this.rand = new Random();
 		this.generateLevel();
 		this.setGravity(0, 3);
 		this.heightSoFar = 0;
@@ -74,6 +74,7 @@ public class World {
 	}
 
 	private void generateLevel () {
+		Random rand = new Random(5000L);
 		final float k = 5;
 		float y = Platform.PLATFORM_HEIGHT / 2;
 		//float maxJumpHeight = Bob.BOB_JUMP_VELOCITY * Bob.BOB_JUMP_VELOCITY / (2 * this.gravity.y);
@@ -396,7 +397,7 @@ public class World {
 			for (int i = 0; i < len; i++) {
 				Projectile projectile = projectiles.get(i);
 				if ( projectile.position.y > bob.position.y+11 ) 
-					//FIXME projectiles.remove(projectile);
+					projectiles.remove(projectile);
 				len = projectiles.size();
 			}
 		}
