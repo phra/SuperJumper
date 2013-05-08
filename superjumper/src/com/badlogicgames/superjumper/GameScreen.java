@@ -46,9 +46,9 @@ public class GameScreen implements Screen {
 	int lastScore;
 	float statexplosion=0;
 	String scoreString;
-	public static boolean attivatraj=false;
+	/*public static boolean attivatraj=false;
 	public LinkedList<Vector2> traiettoria;
-	private boolean prectouch = false;
+	private boolean prectouch = false;*/
 
 	public GameScreen (Game game) {
 		this.game = game;
@@ -103,7 +103,7 @@ public class GameScreen implements Screen {
 		bubbleBounds = new Rectangle(320 - 64, 12, 64, 64);
 		lastScore = 0;
 		scoreString = "SCORE: 0";
-		traiettoria = new LinkedList<Vector2>();
+		//traiettoria = new LinkedList<Vector2>();
 	}
 
 	public void update (float deltaTime) {
@@ -140,7 +140,8 @@ public class GameScreen implements Screen {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 			if ((!OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) 
 				&& (!(OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)))
-				&&	(!OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)))
+				&&	(!OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y))
+				&& !(OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y)))
 				world.ShotProjectile();
 			if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
@@ -164,13 +165,14 @@ public class GameScreen implements Screen {
 			}
 			else if (OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y)) {
 				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
-				attivatraj=true;
+				//attivatraj=true;
+				world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie));
 				return;
 			}
-		} else {
+		}/* else {
 			if (attivatraj && Gdx.input.isTouched()) { 
 				this.prectouch = true;
-				traiettoria.offer(new Vector2(Gdx.input.getX(),Gdx.input.getY()));
+				traiettoria.offer(new Vector2((Gdx.input.getX()*World.WORLD_WIDTH)/320,((Gdx.input.getY()*World.WORLD_HEIGHT)/480)+world.bob.position.y));
 				Gdx.app.debug("ISTOUCHED", "position.y: " + Gdx.input.getY() + " position.x: " + Gdx.input.getX());
 			} else if (this.prectouch == true) {
 				attivatraj = false;
@@ -179,7 +181,7 @@ public class GameScreen implements Screen {
 				world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie , traiettoria));
 				traiettoria = new LinkedList<Vector2>();
 			}
-		}
+		}*/
 		ApplicationType appType = Gdx.app.getType();
 		// should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
 		if (Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)) {
@@ -210,7 +212,6 @@ public class GameScreen implements Screen {
 	}
 
 	private void updatePaused (float deltaTime) {
-
 		int len = buttons.size();
 		for (int i = 0; i < len; i++) {
 			Button button=buttons.get(i);

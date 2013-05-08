@@ -1,5 +1,6 @@
 package com.badlogicgames.superjumper;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends DynamicGameObject {
@@ -32,6 +33,7 @@ public class Enemy extends DynamicGameObject {
 	}
 
 	public void update (float deltaTime,DynamicGameObject bob) {
+		//Gdx.app.debug("ENEMYUPDATE", "position.x " + this.position.x + ", position.y " + this.position.y);
 		//velocity.add(gravity.x * deltaTime, gravity.y * deltaTime);
 		position.add(velocity.x * deltaTime, velocity.y * deltaTime);
 		bounds.x = position.x - bounds.width/2;

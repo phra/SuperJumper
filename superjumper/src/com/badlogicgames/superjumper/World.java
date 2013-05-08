@@ -127,7 +127,7 @@ public class World {
 
 	public void update (float deltaTime, float accelX) {
 		checkRemoveStars();
-		updateEnemy(deltaTime,bob);
+		
 		updateBob(deltaTime, accelX);
 		updatePlatforms(deltaTime);
 		updateSquirrels(deltaTime);
@@ -137,6 +137,7 @@ public class World {
 		updateStar( deltaTime);
 		updateProjectiles(deltaTime);
 		updateProjectilenemys(deltaTime);
+		updateEnemy(deltaTime,bob);
 		updateunlockcharacter ();
 		//if (rand.nextFloat() > 0.5f) 
 		score += (int)bob.velocity.y/10;
@@ -520,16 +521,16 @@ public class World {
 					squirrel.inuse=true;
 					break;
 				} else if(random<=0.85f) { 
+					Gdx.app.debug("checkSquirrelCollisions", "missile");
+					this.activemissile = true;
+					//GameScreen.attivatraj = true;
+				} else { 
 					Gdx.app.debug("checkSquirrelCollisions", "ammo");
 					squirrel.state=Squirrel.PROJ_CLISION;
 					shot=shot+10;
 					squirrel.inuse=true;
 					signal2screen=1;
 					break;
-				} else { 
-					Gdx.app.debug("checkSquirrelCollisions", "missile");
-					this.activemissile = true;
-					GameScreen.attivatraj = true;
 				}   
 				listener.hit(); 
 				squirrels.remove(squirrel);
