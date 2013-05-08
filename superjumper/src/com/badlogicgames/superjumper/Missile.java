@@ -18,19 +18,26 @@ public class Missile extends Projectile {
 	
 	@Override
 	public void update (float deltaTime) {
-
-		if (this.path.isEmpty()) {
+		Gdx.app.debug("MISSILEUPDATE", "init");
+		if (!this.path.isEmpty()) {
+			Gdx.app.debug("MISSILEUPDATE", "prendo posizione dalla lista");
+			Vector2 tmp = this.path.remove();
+			this.position.x = tmp.x;
+			this.position.y = tmp.y;
+			position.add(tmp.x * deltaTime, tmp.y * deltaTime);
+		} else if (target != null) {
 			//velocity.add(gravity.x * deltaTime, gravity.y * deltaTime);
 			Gdx.app.debug("MISSILEUPDATE", "genero la posizione");
 			Utils.changeGravityTowards(this,target);
 			position.add(velocity.x * deltaTime, velocity.y * deltaTime);
 		} else {
-			Gdx.app.debug("MISSILEUPDATE", "prendo posizione dalla lista");
-			Vector2 tmp = this.path.remove();
-			position.add(tmp.x * deltaTime, tmp.y * deltaTime);
+			Gdx.app.debug("MISSILEUPDATE", "lista vuota e nemico null");
+			return;
 		}
 		bounds.x = position.x - bounds.width / 2;
 		bounds.y = position.y - bounds.height / 2;
 		stateTime += deltaTime;
 	}
 }
+
+

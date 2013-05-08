@@ -53,7 +53,7 @@ public class WorldRenderer {
 
         batch.begin();
         renderStars();
-        renderMissile();
+        //renderMissile();
         renderBob();
         renderPlatforms();
         renderItems();

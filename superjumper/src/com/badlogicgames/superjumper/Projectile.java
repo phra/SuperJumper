@@ -14,6 +14,7 @@ public class Projectile extends DynamicGameObject {
 	public Projectile (float x, float y) {
 		super(x, y, BOB_WIDTH, BOB_HEIGHT);
 		stateTime = 0;
+		setGravity(0,20);
 	}
 
 	public void setGravity(float x, float y){
@@ -26,8 +27,8 @@ public class Projectile extends DynamicGameObject {
 		this.velocity.y = y;
 	}
 	public void update (float deltaTime) {
-		if(state==0)setGravity(0,20);
-		else velocity.y=-20;
+		//if(state==0)setGravity(0,20);
+		//else velocity.y=-20;
 		velocity.add(gravity.x * deltaTime, gravity.y * deltaTime);
 		position.add(velocity.x * deltaTime, velocity.y * deltaTime);
 		bounds.x = position.x - bounds.width / 2;

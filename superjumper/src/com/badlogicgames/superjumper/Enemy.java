@@ -14,12 +14,11 @@ public class Enemy extends DynamicGameObject {
 	public int life=5;
 	public Vector2 gravity = new Vector2();
 
-	public static boolean BOB_DOUBLE_JUMP = false;
- int active=0;
-float  pulverizetime;
+	int active=0;
+	float pulverizetime;
 	int state;
 	float stateTime;
-	public static float jumpTime;
+	//public static float jumpTime;
 
 	public Enemy (float x, float y) {
 		super(x, y, BOB_WIDTH, BOB_HEIGHT);
@@ -35,9 +34,9 @@ float  pulverizetime;
 	public void update (float deltaTime,DynamicGameObject bob) {
 		//velocity.add(gravity.x * deltaTime, gravity.y * deltaTime);
 		position.add(velocity.x * deltaTime, velocity.y * deltaTime);
-		bounds.x = position.x - bounds.width;
-		bounds.y = position.y - bounds.height;
-		if(active==1){
+		bounds.x = position.x - bounds.width/2;
+		bounds.y = position.y - bounds.height/2;
+		if(active==1){ //FIXME
 			if(position.y-bob.position.y<10)velocity.y+=0.5f;
 			if(position.y-bob.position.y>8.5f)velocity.y-=0.5f;
 			if(position.x-bob.position.x<1f)velocity.x+=0.5f;
@@ -48,9 +47,8 @@ float  pulverizetime;
 			if(position.x<0)velocity.x+=1;
 			if(bob.position.x==position.x)velocity.x=-5;
 		}
-		
 		stateTime += deltaTime;
-		jumpTime += deltaTime;
+		//jumpTime += deltaTime;
 	}
 
 

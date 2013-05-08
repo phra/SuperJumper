@@ -38,8 +38,8 @@ public class Squirrel extends DynamicGameObject {
 
 	public void update (float deltaTime) {
 		//position.add(velocity.x * deltaTime, velocity.y * deltaTime);
-		bounds.x = position.x ;
-		bounds.y = position.y ;
+		bounds.x = position.x - SQUIRREL_WIDTH/2;
+		bounds.y = position.y - SQUIRREL_HEIGHT/2;
 
 		if (position.x < SQUIRREL_WIDTH / 2) {
 		//	position.x = SQUIRREL_WIDTH / 2;

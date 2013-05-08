@@ -44,7 +44,7 @@ public class World {
 	public int shot=10;
 	public int nosinuse=0;
 	public int turbo=1;
-	public int life=5;
+	public int life=50;
 	public float signal2screen=0;
 	public int print1times=0;
 	public float bubbletimes;
@@ -395,7 +395,7 @@ public class World {
 			for (int i = 0; i < len; i++) {
 				Projectile projectile = projectiles.get(i);
 				if ( projectile.position.y > bob.position.y+11 ) 
-					projectiles.remove(projectile);
+					//FIXME projectiles.remove(projectile);
 				len = projectiles.size();
 			}
 		}
@@ -492,23 +492,19 @@ public class World {
 
 
 	private void checkSquirrelCollisions () {
-		int len = squirrels.size();
 		float random=randsquirrel.nextFloat();
-		for (int i = 0; i < len; i++) {
+		for (int i = 0; i < squirrels.size(); i++) {
 			Squirrel squirrel = squirrels.get(i);
 			if (!squirrel.inuse && OverlapTester.overlapRectangles(squirrel.bounds, bob.bounds)) {
 				Gdx.input.vibrate(new long[] { 1, 10, 6, 10}, -1);
-				if(random<=0.30f &&  life<5 )
-				{
+				if(random<=0.30f)	{
 					Gdx.app.debug("checkSquirrelCollisions", "vita");
 					squirrel.state=Squirrel.LIFE_CLISION;
 					LifeMore();
 					squirrel.inuse=true;
 					signal2screen=2;
 					break;
-				}
-				else if(random>0.25f && random <= 0.5f && bob.enablenos!=1 )
-				{    
+				} else if(random<= 0.5f && bob.enablenos!=1) {    
 					Gdx.app.debug("checkSquirrelCollisions", "nos");
 					/*GameScreen si occupa di controllare il click sul nos x attivarlo*/
 					squirrel.state=Squirrel.NOS_CLISION;
@@ -516,34 +512,28 @@ public class World {
 					squirrel.nosTap=true;
 					bob.enablenos=1;
 					break;
-				}
-				else if(random>0.5f && random<=0.75f && !(bob.enablebubble>0)  )
-				{
+				} else if(random<=0.75f && !(bob.enablebubble>0))	{
 					Gdx.app.debug("checkSquirrelCollisions", "bolla");
 					squirrel.state=Squirrel.BUBBLE_CLISION;
 					bob.enablebubble=2;
 					squirrel.bubbleuse=1;
 					squirrel.inuse=true;
 					break;
-				}
-				else if(random>0.75f )
-				{ 
+				} else if(random<=0.85f) { 
 					Gdx.app.debug("checkSquirrelCollisions", "ammo");
 					squirrel.state=Squirrel.PROJ_CLISION;
 					shot=shot+10;
 					squirrel.inuse=true;
 					signal2screen=1;
 					break;
-				}
-				else if(random>0.85f )
-				{ 
+				} else { 
 					Gdx.app.debug("checkSquirrelCollisions", "missile");
 					this.activemissile = true;
 					GameScreen.attivatraj = true;
 				}   
 				listener.hit(); 
-				//squirrels.remove(squirrel);
-				len = squirrels.size();
+				squirrels.remove(squirrel);
+				i--;
 				break;
 			}
 		}
@@ -679,7 +669,8 @@ public class World {
 					Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
 					score += 100;
 					projectiles.remove(i);
-					charlie.life-=1;
+					charlie.life--;
+					i--;
 					/*platforms.remove(j);*/
 					break;
 				}
@@ -689,8 +680,7 @@ public class World {
 
 	private void checkProjectilBobCollisions(){
 		if (!projectenemy.isEmpty()){
-			int len = projectenemy.size();
-			for(int i=0;i<len;i++)
+			for(int i=0;i < projectenemy.size();i++)
 			{
 				Projectile projectilenem=projectenemy.get(i);
 				if ((bob.enablebubble!=1)&&OverlapTester.overlapRectangles(bob.bounds, projectilenem.bounds)) {
@@ -698,7 +688,7 @@ public class World {
 					score -= 100;
 					LifeLess();
 					projectiles.remove(projectilenem);
-					len = projectenemy.size();
+					i--;
 					/*platforms.remove(j);*/
 					break;
 				}
