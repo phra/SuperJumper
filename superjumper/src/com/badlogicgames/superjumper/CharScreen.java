@@ -125,10 +125,10 @@ public class CharScreen implements Screen {
 			@Override
 			public boolean fling (float velocityX, float velocityY, int button) {
 				// TODO Auto-generated method stub
-				Gdx.app.debug("x"+velocityX, "y"+velocityY);
+				//Gdx.app.debug("x"+velocityX, "y"+velocityY);
 				if(Math.abs(velocityX)>Math.abs(velocityY)){
 					if(velocityX>0)
-					{Gdx.app.debug("UPDATEGRAVITY", "x="+bob.position.x);
+					{//Gdx.app.debug("UPDATEGRAVITY", "x="+bob.position.x);
 					if(bob.position.x>centrox-20 && bob.position.x<centrox+20 )
 					{
 						swipedeactive=1;
@@ -144,7 +144,7 @@ public class CharScreen implements Screen {
 					}
 					}
 					else if (velocityX<0)
-					{Gdx.app.debug("UPDATEGRAVITY", "x="+bob.position.x);
+					{//Gdx.app.debug("UPDATEGRAVITY", "x="+bob.position.x);
 
 					if(bob.position.x>=finex )
 					{

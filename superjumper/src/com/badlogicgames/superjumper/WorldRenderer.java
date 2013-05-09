@@ -189,10 +189,7 @@ public class WorldRenderer {
                 TextureRegion keyFrame = Assets.portagadget.getKeyFrame(squirrel.stateTime, Animation.ANIMATION_LOOPING);
                 batch.draw(keyFrame, squirrel.position.x - 0.7f, squirrel.position.y - 0.4f, 1.3f, 1.3f);
             }
-            if (world.activemissile == true ){
-                TextureRegion keyFrame = this.portaproj; // FIXME
-                batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 2.8f , 1.5f, 1.5f);
-            }
+          
             if (squirrel.nosTap == true ){
                 TextureRegion keyFrame = Assets.nosAnim.getKeyFrame(squirrel.stateTime, Animation.ANIMATION_LOOPING);
                 batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 4.8f , 1.5f, 1.5f);
@@ -202,6 +199,10 @@ public class WorldRenderer {
                 batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 6.8f , 1.5f, 1.5f);
             }
         }
+        if (world.activemissile == true ){
+           TextureRegion keyFrame = this.portaproj; // FIXME
+           batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 2.8f , 1.5f, 1.5f);
+       }
     }
 
 

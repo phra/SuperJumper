@@ -45,9 +45,11 @@ public class World {
 	public int nosinuse=0;
 	public int turbo=1;
 	public int life=50;
+	public float freeze=100;
 	public float signal2screen=0;
 	public int print1times=0;
 	public float bubbletimes;
+	protected boolean freezeON = false;
 	private Vector2 gravity = new Vector2(0,15);
 	float enemyshotTime=0;
 	protected boolean activemissile = false;
@@ -129,6 +131,10 @@ public class World {
 	public void update (float deltaTime, float accelX) {
 		checkRemoveStars();
 		
+		if (this.freezeON) {
+			deltaTime /= 4;
+		}
+		
 		updateBob(deltaTime, accelX);
 		updatePlatforms(deltaTime);
 		updateSquirrels(deltaTime);
@@ -137,8 +143,8 @@ public class World {
 		addStarDynamic();
 		updateStar( deltaTime);
 		updateProjectiles(deltaTime);
-		updateProjectilenemys(deltaTime);
-		updateEnemy(deltaTime,bob);
+		updateProjectilenemys(deltaTime);//deltaTime*4 se si vuole mantenere la velocità del proiettile nemico anche durante il freezeing
+		updateEnemy(deltaTime,bob);//deltaTime*4 se si vuole mantenere la velocità del nemico anche durante il freezeing
 		updateunlockcharacter ();
 		//if (rand.nextFloat() > 0.5f) 
 		score += (int)bob.velocity.y/10;
@@ -218,7 +224,7 @@ public class World {
 			if(bob.position.y>charlie.position.y-10)
 			{
 				charlie.active=1;
-				if(!(print1times>=1))signal2screen=14;
+
 				if(charlie.killtime==0)charlie.killtime=charlie.stateTime;//imposto il killTime x sapere quanto tempo cè voluto x ucc charlie
 			}
 			if(charlie.life==0 && charlie.pulverizetime==0)
@@ -230,6 +236,9 @@ public class World {
 		}
 		else if (bob.position.y<500 && charlie==null) this.charlie = new Enemy(5,500);
 		else if (bob.position.y<800 && charlie==null) this.charlie = new Enemy(5,800);
+		else if (bob.position.y<1000 && charlie==null) this.charlie = new Enemy(5,1000);
+		else if (bob.position.y<1200 && charlie==null) this.charlie = new Enemy(5,1200);
+		else if (bob.position.y<1400 && charlie==null) this.charlie = new Enemy(5,1400);
 	}
 
 	private void EnemyShotBob()
@@ -523,7 +532,7 @@ public class World {
 					break;
 				} else if(random<=0.85f) { 
 					Gdx.app.debug("checkSquirrelCollisions", "missile");
-					//this.activemissile = true;
+					this.activemissile = true;
 					//GameScreen.attivatraj = true;
 				} else { 
 					Gdx.app.debug("checkSquirrelCollisions", "ammo");

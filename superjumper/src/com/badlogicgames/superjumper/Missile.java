@@ -9,11 +9,12 @@ public class Missile extends Projectile {
 	
 	GameObject target;
 	//LinkedList<Vector2> path;
+	public static final int TYPE = 1;
 	
 	public Missile (float x, float y, GameObject target) {
 		super(x, y);
 		this.target = target;
-		//this.path = path;
+		this.type = 1;
 	}
 	
 	@Override

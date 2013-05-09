@@ -1,5 +1,6 @@
 package com.badlogicgames.superjumper;
 /*CONTROLLER*/
+import java.awt.BufferCapabilities.FlipContents;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -28,6 +31,7 @@ public class GameScreen implements Screen {
 	static final int GAME_LEVEL_END = 3;
 	static final int GAME_OVER = 4;
 	public final List<Button> buttons;
+	GestureDetector gestureDetector ;
 	FingerControl control=new FingerControl();
 	Game game;
 	int state;
@@ -104,6 +108,115 @@ public class GameScreen implements Screen {
 		bubbleBounds = new Rectangle(320 - 64, 12, 64, 64);
 		lastScore = 0;
 		scoreString = "SCORE: 0";
+		gestureDetector = new GestureDetector(20, 0.5f, 2, 0.15f, new GestureListener() {
+
+			@Override
+			public boolean zoom (float initialDistance, float distance) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean touchDown (float x, float y, int pointer, int button) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean tap (float x, float y, int count, int button) {
+
+				guiCam.unproject(touchPoint.set(x, y, 0));				
+				if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
+					Assets.playSound(Assets.clickSound);
+					Button buttone = new Button(90,230);
+					buttons.add(buttone);
+					Button buttones = new Button(88,180);
+					buttons.add(buttones);
+					state = GAME_PAUSED;
+
+				}
+				if (OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) {
+					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
+					world.nosActivate();
+				}
+				else if (OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) {
+					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
+					world.bubbleActivate();
+				}
+				else if (OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y) && world.activemissile) {
+					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
+					//attivatraj=true;
+					//this.missileON = true;
+
+					world.activemissile = false;
+					if (world.charlie != null) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie));
+				} /*else if (this.missileON) {
+						int i = 0;
+						if (OverlapTester.pointInRectangle(world.charlie.bounds, touchPoint.x, touchPoint.y)){
+							world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie));
+							this.missileON = false;
+						} else {
+							for (Platform plat : world.platforms){
+								if ((OverlapTester.pointInRectangle(plat.bounds, touchPoint.x, touchPoint.y))) {
+									world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, plat));
+									this.missileON = false;
+									break;
+								}
+							}
+						}
+					}*/ else {
+						world.ShotProjectile();
+					}
+
+
+
+				return false;
+			}
+
+			@Override
+			public boolean pinch (Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean pan (float x, float y, float deltaX, float deltaY) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean longPress (float x, float y) {
+				//guiCam.zoom=1f;
+				return false;
+			}
+
+			@Override
+			public boolean fling (float velocityX, float velocityY, int button) {
+				// TODO Auto-generated method stub
+				//Gdx.app.debug("x"+velocityX, "y"+velocityY);
+				if(Math.abs(velocityX)>Math.abs(velocityY)){
+					if(velocityX > 0) {
+						Gdx.app.debug("fling", "trascino sx");
+
+					} else {
+						Gdx.app.debug("fling", "trascino dx");
+					}	
+				} else {
+					if(velocityY > 20) {
+						Gdx.app.debug("fling", "trascino giù");
+						world.signal2screen=14;
+						world.freezeON = true;
+					} else if (velocityY < 20) {
+						Gdx.app.debug("fling", "trascino su");
+						world.freezeON = false;
+					}
+					// Ignore the input, because we don't care about up/down swipes.
+				}
+				return true;
+			}
+		});
+		Gdx.input.setInputProcessor(gestureDetector);
 		//traiettoria = new LinkedList<Vector2>();
 	}
 
@@ -137,50 +250,7 @@ public class GameScreen implements Screen {
 
 	private void updateRunning (float deltaTime) {
 
-		if (Gdx.input.justTouched()) {
-			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));				
-			if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
-				Assets.playSound(Assets.clickSound);
-				Button button = new Button(90,230);
-				buttons.add(button);
-				Button buttones = new Button(88,180);
-				buttons.add(buttones);
-				state = GAME_PAUSED;
-				return;
-			}
-			if (OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) {
-				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
-				world.nosActivate();
-			}
-			else if (OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) {
-				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
-				world.bubbleActivate();
-			}
-			else if (OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y)) {
-				//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
-				//attivatraj=true;
-				//this.missileON = true;
-				if (world.charlie != null) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie));
-			} /*else if (this.missileON) {
-				int i = 0;
-				if (OverlapTester.pointInRectangle(world.charlie.bounds, touchPoint.x, touchPoint.y)){
-					world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie));
-					this.missileON = false;
-				} else {
-					for (Platform plat : world.platforms){
-						if ((OverlapTester.pointInRectangle(plat.bounds, touchPoint.x, touchPoint.y))) {
-							world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, plat));
-							this.missileON = false;
-							break;
-						}
-					}
-				}
-			}*/ else {
-				world.ShotProjectile();
-			}
-				
-
-		}/* else {
+		/* else {
 			if (attivatraj && Gdx.input.isTouched()) { 
 				this.prectouch = true;
 				traiettoria.offer(new Vector2((Gdx.input.getX()*World.WORLD_WIDTH)/320,((Gdx.input.getY()*World.WORLD_HEIGHT)/480)+world.bob.position.y));
@@ -382,7 +452,7 @@ public class GameScreen implements Screen {
 		}
 		else    if (world.signal2screen==14)
 		{
-			stampo("Kill!!");
+			stampo("Time freeze!!");
 			world.print1times=1;
 		}
 

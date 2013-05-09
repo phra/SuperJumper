@@ -6,14 +6,17 @@ public class Projectile extends DynamicGameObject {
 	public static final float BOB_WIDTH = 0.3f;
 	public static final float BOB_HEIGHT = 0.6f;
 	public final float MAXVELOCITY = 10f;
+	public int type;
 	public Vector2 gravity = new Vector2();
 	public int state=0;
 	float stateTime;
+	public static final int TYPE = 0;
 
 
 	public Projectile (float x, float y) {
 		super(x, y, BOB_WIDTH, BOB_HEIGHT);
 		stateTime = 0;
+		this.type = 0;
 		setGravity(0,20);
 	}
 
