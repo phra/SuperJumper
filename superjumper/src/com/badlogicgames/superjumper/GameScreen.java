@@ -124,7 +124,6 @@ public class GameScreen implements Screen {
 
 			@Override
 			public boolean tap (float x, float y, int count, int button) {
-
 				guiCam.unproject(touchPoint.set(x, y, 0));				
 				if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
 					Assets.playSound(Assets.clickSound);
@@ -149,7 +148,7 @@ public class GameScreen implements Screen {
 					//this.missileON = true;
 
 					world.activemissile = false;
-					if (world.charlie != null) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.charlie));
+					if (!world.enemies.isEmpty()) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.enemies.peek()));
 				} /*else if (this.missileON) {
 						int i = 0;
 						if (OverlapTester.pointInRectangle(world.charlie.bounds, touchPoint.x, touchPoint.y)){
@@ -167,7 +166,6 @@ public class GameScreen implements Screen {
 					}*/ else {
 						world.ShotProjectile();
 					}
-
 
 
 				return false;

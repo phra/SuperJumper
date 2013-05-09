@@ -13,7 +13,7 @@ public class WorldRenderer {
     static final float FRUSTUM_WIDTH = 10;
     static final float FRUSTUM_HEIGHT = 15;
     private static float[] verts = new float[20];
-    static int a=0;
+    //static int a = 0;
     World world;
     OrthographicCamera cam;
     SpriteBatch batch;
@@ -229,18 +229,18 @@ public class WorldRenderer {
 
     private void renderEnemy()
     {
-        TextureRegion  keyFrame;
-        if(world.charlie!=null){
-            if (world.charlie.state == Enemy.ENEMY_STATE_DIE ||world.charlie.state == Enemy.ENEMY_STATE_REM) {
-                keyFrame = Assets.brakingPlatform.getKeyFrame(world.charlie.stateTime, Animation.ANIMATION_LOOPING);
-                batch.draw(keyFrame, world.charlie.position.x - 1, world.charlie.position.y - 0.25f, 4, 4);
+        TextureRegion keyFrame;
+        for (Enemy charlie : world.enemies){
+            if (charlie.state == Enemy.ENEMY_STATE_DIE || charlie.state == Enemy.ENEMY_STATE_REM) {
+                keyFrame = Assets.brakingPlatform.getKeyFrame( charlie.stateTime, Animation.ANIMATION_LOOPING);
+                batch.draw(keyFrame, charlie.position.x - 1, charlie.position.y - 0.25f, 4, 4);
             }
-            else if (world.charlie.state != Enemy.ENEMY_STATE_DIE||world.charlie.state != Enemy.ENEMY_STATE_REM)
+            else if ( charlie.state != Enemy.ENEMY_STATE_DIE|| charlie.state != Enemy.ENEMY_STATE_REM)
             {
                 keyFrame = Assets.enemyRegion;
-                batch.draw(keyFrame, world.charlie.position.x-1.5f , world.charlie.position.y-0.8f , 2f, 2f);}
+                batch.draw(keyFrame, charlie.position.x-1.5f , charlie.position.y-0.8f , 2f, 2f);}
         }
-        else keyFrame=Assets.enemyRegion1;
+        //else keyFrame=Assets.enemyRegion1;
     }
 
 

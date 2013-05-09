@@ -1,6 +1,7 @@
 package com.badlogicgames.superjumper;
 /*MODEL*/
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
@@ -25,7 +26,7 @@ public class World {
 	public final int PLATFORMS_DISTANCE = 10;
 	public final int STARS_DISTANCE = 1;
 	public final Bob bob;
-	public Enemy charlie;
+	//public Enemy charlie;
 	public final List<Platform> platforms;
 	public final List<Star> stars;
 	public final List<Spring> springs;
@@ -53,9 +54,10 @@ public class World {
 	private Vector2 gravity = new Vector2(0,15);
 	float enemyshotTime=0;
 	protected boolean activemissile = false;
+	public LinkedList<Enemy> enemies;
 	public World (WorldListener listener) {
 		this.bob = new Bob(4, 2);
-		this.charlie = new Enemy(5,200);
+		//this.charlie = new Enemy(5,200);
 		this.platforms = new ArrayList<Platform>();
 		this.stars = new ArrayList<Star>();
 		this.projectiles = new ArrayList<Projectile>();
@@ -72,6 +74,7 @@ public class World {
 		this.score = 0;
 		this.state = WORLD_STATE_RUNNING;
 		this.randsquirrel=new Random();
+		this.enemies = new LinkedList<Enemy>();
 
 	}
 
@@ -130,11 +133,11 @@ public class World {
 
 	public void update (float deltaTime, float accelX) {
 		checkRemoveStars();
-		
+
 		if (this.freezeON) {
 			deltaTime /= 4;
 		}
-		
+
 		updateBob(deltaTime, accelX);
 		updatePlatforms(deltaTime);
 		updateSquirrels(deltaTime);
@@ -217,31 +220,28 @@ public class World {
 	}
 
 	private void updateEnemy (float deltaTime, DynamicGameObject oggetto) {
-		if(charlie!=null)
-		{
-			charlie.update(deltaTime,oggetto);
-			EnemyShotBob();
-			if(bob.position.y>charlie.position.y-10)
+		for (Enemy enemy : enemies) {
+			enemy.update(deltaTime, oggetto);
+			EnemyShotBob(enemy);
+			if(bob.position.y>enemy.position.y-10)
 			{
-				charlie.active=1;
+				enemy.active=1;
 
-				if(charlie.killtime==0)charlie.killtime=charlie.stateTime;//imposto il killTime x sapere quanto tempo cè voluto x ucc charlie
+				if(enemy.killtime==0)enemy.killtime=enemy.stateTime;//imposto il killTime x sapere quanto tempo cè voluto x ucc charlie
 			}
-			if(charlie.life==0 && charlie.pulverizetime==0)
+			if(enemy.life==0 && enemy.pulverizetime==0)
 			{
-				charlie.state = Enemy.ENEMY_STATE_DIE;//cabio stato x polverizzarlo e segnalare a schermo il punteggio
-				charlie.pulverizetime=charlie.stateTime;//setto pulverizeTime da ora x la durata della polverizzazione
+				enemy.state = Enemy.ENEMY_STATE_DIE;//cabio stato x polverizzarlo e segnalare a schermo il punteggio
+				enemy.pulverizetime= enemy.stateTime;//setto pulverizeTime da ora x la durata della polverizzazione
 			}
-			ScoreEnemyDied();
+			ScoreEnemyDied(enemy);
 		}
-		else if (bob.position.y<500 && charlie==null) this.charlie = new Enemy(5,500);
-		else if (bob.position.y<800 && charlie==null) this.charlie = new Enemy(5,800);
-		else if (bob.position.y<1000 && charlie==null) this.charlie = new Enemy(5,1000);
-		else if (bob.position.y<1200 && charlie==null) this.charlie = new Enemy(5,1200);
-		else if (bob.position.y<1400 && charlie==null) this.charlie = new Enemy(5,1400);
+		if (bob.position.y > 500 && enemies.size() < 2) {
+			enemies.offer(new Enemy(-10 + this.rand.nextFloat()*20, this.bob.position.y + this.rand.nextFloat()*100));
+		}
 	}
 
-	private void EnemyShotBob()
+	private void EnemyShotBob(Enemy charlie)
 	{
 		float difficoltxfascio=0.5f;//incrementa x sparare su piu' punti x
 		float delaysparo=0.8f;//decrementa x avere uno sparo piu' veloce
@@ -258,7 +258,7 @@ public class World {
 		}
 	}
 
-	private void ScoreEnemyDied()
+	private void ScoreEnemyDied(Enemy charlie)
 	{
 		if(charlie.state==Enemy.ENEMY_STATE_DIE)
 		{
@@ -392,11 +392,10 @@ public class World {
 		}
 	}
 
-	private void CheckRemoveEnemey()
-	{	
-		if(charlie!=null)
+	private void CheckRemoveEnemey() {	
+		for (Enemy charlie : enemies)
 			if (charlie.state==Enemy.ENEMY_STATE_REM && charlie.stateTime - charlie.pulverizetime>Enemy.ENEMY_PULVERIZE_TIME) //FIXME
-				charlie=null;
+				enemies.remove(charlie);
 	}
 
 
@@ -672,18 +671,21 @@ public class World {
 
 	private void checkProjectilEnemyCollisions(){
 		int i = 0;
-		if (!projectiles.isEmpty() && charlie!=null ){
-			for(i=0;i<projectiles.size();i++)
-			{
-				Projectile projectile=projectiles.get(i);
-				if (OverlapTester.overlapRectangles(charlie.bounds, projectile.bounds)) {
-					Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
-					score += 100;
-					projectiles.remove(i);
-					charlie.life--;
-					i--;
-					/*platforms.remove(j);*/
-					break;
+		if (!projectiles.isEmpty() ) {
+			for (Enemy charlie : enemies){
+
+				for(i=0;i<projectiles.size();i++)
+				{
+					Projectile projectile=projectiles.get(i);
+					if (OverlapTester.overlapRectangles(charlie.bounds, projectile.bounds)) {
+						Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
+						score += 100;
+						projectiles.remove(i);
+						charlie.life--;
+						i--;
+						/*platforms.remove(j);*/
+						break;
+					}
 				}
 			}
 		}
