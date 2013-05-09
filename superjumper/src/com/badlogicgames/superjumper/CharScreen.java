@@ -129,31 +129,26 @@ public class CharScreen implements Screen {
 				if(Math.abs(velocityX)>Math.abs(velocityY)){
 					if(velocityX>0)
 					{//Gdx.app.debug("UPDATEGRAVITY", "x="+bob.position.x);
-					if(bob.position.x>centrox-20 && bob.position.x<centrox+20 )
-					{
-						swipedeactive=1;
-						swipestate=1;
+						if(bob.position.x>centrox-20 && bob.position.x<centrox+20) {
+							swipedeactive=1;
+							swipestate=1;
+						}
+						if(bob.position.x<=iniziox ) {
+							swipestate=2;
+						}
+						if(bob.position.x>=finex )	{
+							swipestate=5;
+						}
 					}
-					if(bob.position.x<=iniziox )
-					{
-						swipestate=2;
-					}
-					if(bob.position.x>=finex )
-					{
-						swipestate=5;
-					}
-					}
-					else if (velocityX<0)
-					{//Gdx.app.debug("UPDATEGRAVITY", "x="+bob.position.x);
+					else if (velocityX<0) {
+						//Gdx.app.debug("UPDATEGRAVITY", "x="+bob.position.x);
 
-					if(bob.position.x>=finex )
-					{
-						swipestate=4;
-					}
-					if(bobfem.position.x>=finex )
-					{
-						swipestate=6;
-					}
+						if(bob.position.x>=finex ) {
+							swipestate=4;
+						}
+						if(bobfem.position.x>=finex )	{
+							swipestate=6;
+						}
 					}
 
 					else {
@@ -215,22 +210,22 @@ public class CharScreen implements Screen {
 		else if(swipestate==2)
 		{
 			sposto(bob,centrox,centroy);
-			}
+		}
 		else if(swipestate==4)
 		{
 			sposto(bob,centrox,centroy);
 			sposto(bobfem,iniziox-100,inizioy);
-			}
+		}
 		else if(swipestate==5)
 		{ 
 			sposto(bobfem,finex+100,finey);
 			sposto(bobmil,centrox-30,centroy);
-			}
+		}
 		else if(swipestate==6)
 		{
 			sposto(bobfem,centrox,centroy);
 			sposto(bobmil,iniziox-150,inizioy);
-			}
+		}
 	}
 	public void sposto(DynamicGameObject alien,float x,float y){
 		alien.velocity.x=(x-alien.position.x)*10;

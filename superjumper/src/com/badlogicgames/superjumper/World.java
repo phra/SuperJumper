@@ -47,6 +47,7 @@ public class World {
 	public int turbo=1;
 	public int life=50;
 	public float freeze=100;
+	public int missiles = 10;
 	public float signal2screen=0;
 	public int print1times=0;
 	public float bubbletimes;
@@ -530,12 +531,12 @@ public class World {
 					break;
 				} else if(random<=0.85f) { 
 					Gdx.app.debug("checkSquirrelCollisions", "missile");
-					this.activemissile = true;
+					if ((missiles+=10) > 0) this.activemissile = true;
 					//GameScreen.attivatraj = true;
 				} else { 
 					Gdx.app.debug("checkSquirrelCollisions", "ammo");
 					squirrel.state=Squirrel.PROJ_CLISION;
-					shot=shot+10;
+					shot+=30;
 					squirrel.inuse=true;
 					signal2screen=1;
 					break;

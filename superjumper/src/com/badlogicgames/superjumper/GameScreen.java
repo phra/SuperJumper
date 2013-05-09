@@ -142,12 +142,12 @@ public class GameScreen implements Screen {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
 					world.bubbleActivate();
 				}
-				else if (OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y) && world.activemissile) {
+				else if (OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y) && world.missiles > 0) {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
 					//attivatraj=true;
 					//this.missileON = true;
 
-					world.activemissile = false;
+					if (--world.missiles <= 0) world.activemissile = false;
 					if (!world.enemies.isEmpty()) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.enemies.peek()));
 				} /*else if (this.missileON) {
 						int i = 0;
