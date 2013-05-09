@@ -182,7 +182,8 @@ public class World {
 	}
 
 	public void LifeMore(){
-		if(life<=4) life+=1;
+		//if(life<=4) life+=1;
+		life++;
 	}
 
 	public void ShotProjectile()
@@ -392,33 +393,31 @@ public class World {
 		}
 	}
 
-	private void CheckRemoveEnemey() {	
-		for (Enemy charlie : enemies)
-			if (charlie.state==Enemy.ENEMY_STATE_REM && charlie.stateTime - charlie.pulverizetime>Enemy.ENEMY_PULVERIZE_TIME) //FIXME
+	private void CheckRemoveEnemey() {
+		for (int i = 0; i < enemies.size(); i++){
+			Enemy charlie = enemies.get(i);
+			if (charlie.state == Enemy.ENEMY_STATE_REM && charlie.stateTime - charlie.pulverizetime > Enemy.ENEMY_PULVERIZE_TIME) //FIXME
 				enemies.remove(charlie);
+		}
 	}
 
 
 	private void checkRemoveProjectile(){
 		if (!projectiles.isEmpty()) {
-			int len = projectiles.size();
-			for (int i = 0; i < len; i++) {
+			for (int i = 0; i < projectiles.size(); i++) {
 				Projectile projectile = projectiles.get(i);
 				if ( projectile.position.y > bob.position.y+11 ) 
 					projectiles.remove(projectile);
-				len = projectiles.size();
 			}
 		}
 	}
 
 	private void checkRemoveEnemyProjectile(){
 		if (!projectenemy.isEmpty()) {
-			int len = projectenemy.size();
-			for (int i = 0; i < len; i++) {
+			for (int i = 0; i < projectenemy.size(); i++) {
 				Projectile projectilenem = projectenemy.get(i);
 				if ( projectilenem.position.y < bob.position.y-5 ) 
 					projectenemy.remove(projectilenem);
-				len = projectenemy.size();
 			}
 		}
 	}
