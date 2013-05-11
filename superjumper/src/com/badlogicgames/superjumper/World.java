@@ -258,7 +258,7 @@ public class World {
 			if (explosions.get(i).duration < 0f)
 				explosions.remove(i);
 		}*/
-		if (explosions.peek().stateTime > explosions.peek().duration)
+		if (!explosions.isEmpty() && explosions.peek().stateTime > explosions.peek().duration)
 			explosions.remove(0);
 	}
 
