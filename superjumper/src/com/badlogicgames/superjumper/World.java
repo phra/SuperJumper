@@ -518,7 +518,7 @@ public class World {
 						LifeLess();
 						score -= 300;
 					}
-					else score += 300;
+					//else score += 300;
 					explosions.offer(new Explosion(platform.position.x, platform.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT,0));
 					platforms.remove(platform);
 					listener.hit();

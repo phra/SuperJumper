@@ -132,21 +132,21 @@ public class GameScreen implements Screen {
 					state = GAME_PAUSED;
 
 				}
-				if (OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y) && world.supermissiles > 0) {
+				if (world.supermissiles > 0 && OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
 					//world.nosActivate();
 					if (--world.supermissiles <= 0) world.supermissileButton = false;
 					if (!world.enemies.isEmpty()) world.projectiles.add(new SuperMissile(world.bob.position.x, world.bob.position.y, SuperMissile.WIDTH, SuperMissile.HEIGHT, world.enemies.peek(),world.projectiles,world.enemies));
 
 				}
-				else if (OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) {
+				else if (world.bubbleButton == true && OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
 					//world.bubbleActivate();
 					world.bob.enablebubble = true;
 					world.bubbleButton = false;
 					world.bob.bubbletime = world.bob.stateTime;
 				}
-				else if (OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y) && world.missiles > 0) {
+				else if (world.missiles > 0 && OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y)) {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
 					//attivatraj=true;
 					//this.missileON = true;

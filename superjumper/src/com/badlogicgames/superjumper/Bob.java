@@ -10,7 +10,7 @@ public class Bob extends DynamicGameObject {
 	public static final float BOB_MOVE_VELOCITY = 20;
 	public static final float BOB_WIDTH = 0.8f;
 	public static final float BOB_HEIGHT = 0.8f;
-	public static final float BUBBLE_TIME = 10f;
+	public static final float BUBBLE_TIME = 5f;
 	public  float CHARSCREENUSE = 0;
 	public final float MAXVELOCITY = 12f;
 	//public int enablenos=0;
