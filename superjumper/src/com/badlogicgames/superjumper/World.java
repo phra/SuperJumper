@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.actions.RemoveActorAction;
-import com.sun.org.apache.bcel.internal.generic.AllocationInstruction;
 
 public class World {
 	public interface WorldListener {
@@ -26,7 +24,7 @@ public class World {
 	public final int PLATFORMS_DISTANCE = 10;
 	public final int STARS_DISTANCE = 1;
 	public final Bob bob;
-	
+
 	//public Enemy charlie;
 	public final List<Platform> platforms;
 	public final List<Star> stars;
@@ -65,7 +63,7 @@ public class World {
 	LevelOption level=new LevelOption();
 	LevelOption levelnos=new LevelOption();
 	LinkedList<Explosion> explosions = new LinkedList<Explosion>();
-	
+
 	public World (WorldListener listener) {
 		this.bob = new Bob(4, 2);
 		//this.charlie = new Enemy(5,200);
@@ -134,19 +132,19 @@ public class World {
 		}
 		castle = new Castle(WORLD_WIDTH / 2, y);
 	}
-	
+
 	public void editPosition(float deltaTime){
 		if(decremento)
 		{
 			level.decremento(deltaTime);
 			if(level.isEmpty)
-				{
+			{
 				freezeON=false;
 				decremento=false;
-				}
+			}
 		}
 		if(!decremento){level.incremento(deltaTime);}
-		
+
 		//if(world.bob.enablenos==1)
 		{
 			if(decrementonos)
@@ -156,10 +154,10 @@ public class World {
 				Turbo();
 				if (rand.nextFloat() < 0.5f) Gdx.input.vibrate(new long[] { 10, 5, 5}, -1); 
 				if(levelnos.isEmpty)
-					{
+				{
 					TurboLess();
 					decrementonos=false;
-					}
+				}
 			}
 			if(!decrementonos){levelnos.incremento(deltaTime);}
 		}
@@ -208,7 +206,7 @@ public class World {
 	{
 		bob.velocity.y=12;
 	}
-	
+
 
 	private void addStarDynamic(){
 		//star generate
@@ -243,6 +241,7 @@ public class World {
 		checkCollisions();
 		checkRemoveStars();
 		checkRemoveSquirrel();
+		checkRemoveExplosions();
 	}
 
 
@@ -251,14 +250,18 @@ public class World {
 			exp.update(deltaTime);
 		}
 	}
-	
+
 	private void checkRemoveExplosions() {
-		for (int i = 0; i < explosions.size(); i++) {
-			if (explosions.get(i).stateTime > Explosion.EXPLOSION_TIME) 
+		/*for (int i = 0; i < explosions.size(); i++) {
+			//if (explosions.get(i).stateTime > explosions.get(i).duration) 
+			Gdx.app.debug("checkremoveexplosion", ", duration = " + explosions.get(i).duration);
+			if (explosions.get(i).duration < 0f)
 				explosions.remove(i);
-		}
+		}*/
+		if (explosions.peek().stateTime > explosions.peek().duration)
+			explosions.remove(0);
 	}
-	
+
 
 
 	private void updateBob (float deltaTime, float accelX) {
@@ -278,7 +281,7 @@ public class World {
 
 				if(enemy.killtime==0)enemy.killtime=enemy.stateTime;//imposto il killTime x sapere quanto tempo cè voluto x ucc charlie
 			}
-			
+
 			updateScoreEnemyDied(enemy);
 		}
 		if (bob.position.y > WORLD_HEIGHT / 10 && enemies.size() < (this.bob.position.y * 5) / WORLD_HEIGHT) {
@@ -300,7 +303,7 @@ public class World {
 			projectilenemy.state=1;
 			projectilenemy.setVelocity(0,-20);
 			projectenemy.add(projectilenemy);
-		//	Gdx.app.debug("ENEMYSHOTBOB","x"+projectilenemy.position.x + "y"+projectilenemy.position.y);
+			//	Gdx.app.debug("ENEMYSHOTBOB","x"+projectilenemy.position.x + "y"+projectilenemy.position.y);
 		}
 	}
 
@@ -333,7 +336,7 @@ public class World {
 				score=score+100;
 				charlie.killtime=-1;
 			}
-		
+
 			//charlie.state = Enemy.ENEMY_STATE_REM;//cambio stato di modo da segnalare una volta sola il risultato
 		}
 	}
@@ -375,10 +378,10 @@ public class World {
 		for (int i = 0; i < len; i++) {
 			Platform platform = platforms.get(i);
 			platform.update(deltaTime);
-				len = platforms.size();
-			}
+			len = platforms.size();
 		}
-	
+	}
+
 
 
 
@@ -396,11 +399,11 @@ public class World {
 		for (int i = 0; i < len; i++) {
 			Coin coin = coins.get(i);
 			coin.update(deltaTime);
-				len = coins.size();
+			len = coins.size();
 
-			}
 		}
-	
+	}
+
 	private void updateProjectiles (float deltaTime) {
 		int len = projectiles.size();
 		for (int i = 0; i < len; i++) {
@@ -435,14 +438,14 @@ public class World {
 		checkRemoveEnemyProjectile();
 		CheckRemoveEnemey();
 	}
-	
-	
+
+
 	private void CheckRemoveEnemey() {
 		for (int i = 0; i < enemies.size(); i++){
 			Enemy charlie = enemies.get(i);
 			if(charlie.life==0 )
 			{
-				explosions.offer(new Explosion(charlie.position.x, charlie.position.y,Enemy.ENEMY_WIDTH,Enemy.ENEMY_HEIGHT));
+				explosions.offer(new Explosion(charlie.position.x, charlie.position.y,Enemy.ENEMY_WIDTH,Enemy.ENEMY_HEIGHT, 0));
 				enemies.remove(i);
 			}
 		}
@@ -455,7 +458,7 @@ public class World {
 				Projectile projectile = projectiles.get(i);
 				if ( projectile.position.y > bob.position.y+11 ){ 
 					projectiles.remove(i);
-					 Gdx.app.debug("projectile:", "remove classica");
+					Gdx.app.debug("projectile:", "remove classica");
 				}
 			}
 		}
@@ -516,7 +519,7 @@ public class World {
 						score -= 300;
 					}
 					else score += 300;
-					explosions.offer(new Explosion(platform.position.x, platform.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT));
+					explosions.offer(new Explosion(platform.position.x, platform.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT,0));
 					platforms.remove(platform);
 					listener.hit();
 					len = platforms.size();
@@ -600,7 +603,7 @@ public class World {
 					score += 300;
 				len = coins.size();
 				listener.coin();
-				explosions.offer(new Explosion(coin.position.x, coin.position.y,Coin.COIN_WIDTH,Coin.COIN_HEIGHT));
+				explosions.offer(new Explosion(coin.position.x, coin.position.y,Coin.COIN_WIDTH,Coin.COIN_HEIGHT,0));
 				coins.remove(coin);
 				break;
 			}
@@ -663,7 +666,7 @@ public class World {
 						//turbo=turbo+1;
 						//shot=shot+5;
 						projectiles.remove(i);
-						explosions.offer(new Explosion(platform.position.x, platform.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT));
+						explosions.offer(new Explosion(platform.position.x, platform.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT,0));
 						platforms.remove(platform);
 						//score += 100;
 						;
@@ -678,26 +681,26 @@ public class World {
 	private void checkProjectileWorldCollisions(){
 		int i = 0, j = 0;
 		for(i=0;i<projectiles.size();i++)
+		{
+			for(j=0;j<coins.size();j++)
 			{
-				for(j=0;j<coins.size();j++)
-				{
-					Projectile projectile=projectiles.get(i);
-					Coin coin=coins.get(j);
-					if ( OverlapTester.overlapRectangles(coin.bounds, projectile.bounds)) {
-						Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
-						score += 100;
-						coins.remove(j);
-						explosions.offer(new Explosion(projectile.position.x, projectile.position.y,projectile.width,projectile.height));
-						projectiles.remove(i);
-						
-						/*platforms.remove(j);*/
-						break;
-					}
+				Projectile projectile=projectiles.get(i);
+				Coin coin=coins.get(j);
+				if ( OverlapTester.overlapRectangles(coin.bounds, projectile.bounds)) {
+					Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
+					score += 100;
+					coins.remove(j);
+					explosions.offer(new Explosion(projectile.position.x, projectile.position.y,projectile.width,projectile.height,0));
+					projectiles.remove(i);
 
+					/*platforms.remove(j);*/
+					break;
 				}
+
 			}
 		}
-	
+	}
+
 
 	private void checkProjectilEnemyCollisions(){
 		int i = 0;
@@ -711,7 +714,7 @@ public class World {
 						Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
 						score += 100;
 						if((projectile.type==1||projectile.type==2)){
-							explosions.offer(new Explosion(charlie.position.x, charlie.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT));
+							explosions.offer(new Explosion(charlie.position.x, charlie.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT,0));
 							projectiles.remove(projectile);
 						}
 						else if(projectile.type==0)projectiles.remove(i);
@@ -733,7 +736,7 @@ public class World {
 					Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
 					score -= 100;
 					LifeLess();
-					explosions.offer(new Explosion(projectilenem.position.x, projectilenem.position.y,Projectile.WIDTH,Projectile.HEIGHT));
+					explosions.offer(new Explosion(projectilenem.position.x, projectilenem.position.y,Projectile.WIDTH,Projectile.HEIGHT,0));
 					projectenemy.remove(projectilenem);
 					/*platforms.remove(j);*/
 					break;

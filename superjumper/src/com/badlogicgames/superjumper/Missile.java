@@ -1,10 +1,5 @@
 package com.badlogicgames.superjumper;
 
-import java.util.LinkedList;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
-
 public class Missile extends Projectile {
 	public static float HEIGHT = 1f;
 	public static float WIDTH = 1f;
