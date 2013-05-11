@@ -4,6 +4,7 @@ import java.awt.BufferCapabilities.FlipContents;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -47,9 +48,14 @@ public class GameScreen implements Screen {
 	Rectangle missileBounds;
 	Rectangle nosBounds;
 	Rectangle bubbleBounds;
+	Boolean decremento=false;
+	Boolean decrementonos=false;
+	LevelOption level=new LevelOption();
+	LevelOption levelnos=new LevelOption();
 	int lastScore;
 	float statexplosion=0;
 	String scoreString;
+	private Random rand =  new Random(); //FIXME
 	private boolean missileON = false;
 	/*public static boolean attivatraj=false;
 	public LinkedList<Vector2> traiettoria;
@@ -134,21 +140,27 @@ public class GameScreen implements Screen {
 					state = GAME_PAUSED;
 
 				}
-				if (OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) {
+				if (OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y) && world.supermissiles > 0) {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
-					world.nosActivate();
+					//world.nosActivate();
+					if (--world.supermissiles <= 0) world.supermissileButton = false;
+					if (!world.enemies.isEmpty()) world.projectiles.add(new SuperMissile(world.bob.position.x, world.bob.position.y, world.enemies.peek(),world.projectiles,world.enemies));
+
 				}
 				else if (OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
-					world.bubbleActivate();
+					//world.bubbleActivate();
+					world.bob.enablebubble = true;
+					world.bubbleButton = false;
+					world.bob.bubbletime = world.bob.stateTime;
 				}
 				else if (OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y) && world.missiles > 0) {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
 					//attivatraj=true;
 					//this.missileON = true;
-
 					if (--world.missiles <= 0) world.activemissile = false;
 					if (!world.enemies.isEmpty()) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.enemies.peek()));
+
 				} /*else if (this.missileON) {
 						int i = 0;
 						if (OverlapTester.pointInRectangle(world.charlie.bounds, touchPoint.x, touchPoint.y)){
@@ -203,11 +215,22 @@ public class GameScreen implements Screen {
 				} else {
 					if(velocityY > 20) {
 						Gdx.app.debug("fling", "trascino giù");
-						world.signal2screen=14;
-						world.freezeON = true;
+						
+						
+						if(!decrementonos){
+							world.signal2screen=14;
+							world.freezeON = true;
+						decremento=true;}
+						if(decrementonos)
+						{
+							decrementonos=false;
+							world.TurboLess();
+						}
 					} else if (velocityY < 20) {
 						Gdx.app.debug("fling", "trascino su");
+						if(!world.freezeON)decrementonos=true;
 						world.freezeON = false;
+						decremento=false;
 					}
 					// Ignore the input, because we don't care about up/down swipes.
 				}
@@ -261,6 +284,34 @@ public class GameScreen implements Screen {
 				traiettoria = new LinkedList<Vector2>();
 			}
 		}*/
+		//FIXME
+		if(decremento)
+		{
+			level.decremento(deltaTime);
+			if(level.isEmpty)
+				{
+				world.freezeON=false;
+				decremento=false;
+				}
+		}
+		if(!decremento){level.incremento(deltaTime);}
+		
+		//if(world.bob.enablenos==1)
+		{
+			if(decrementonos)
+			{
+				levelnos.decremento(deltaTime);
+				world.turbo=true;
+				world.Turbo();
+				if (rand.nextFloat() < 0.5f) Gdx.input.vibrate(new long[] { 10, 5, 5}, -1); 
+				if(levelnos.isEmpty)
+					{
+					world.TurboLess();
+					decrementonos=false;
+					}
+			}
+			if(!decrementonos){levelnos.incremento(deltaTime);}
+		}
 		ApplicationType appType = Gdx.app.getType();
 		// should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
 		if (Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)) {
@@ -268,9 +319,9 @@ public class GameScreen implements Screen {
 			world.update(deltaTime, Gdx.input.getAccelerometerX());
 		} else {
 			float accel = 0;
-			if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT)) accel = 5f;
-			if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT)) accel = -5f;
-			world.update(deltaTime, accel);
+			if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT) || Gdx.input.isKeyPressed(Keys.A)) accel = 5f;
+			if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT) || Gdx.input.isKeyPressed(Keys.D)) accel = -5f;
+			if (Gdx.input.isKeyPressed(Keys.SPACE)) world.ShotProjectile();
 		}
 		if (world.score != lastScore) {
 			lastScore = world.score;
@@ -332,6 +383,7 @@ public class GameScreen implements Screen {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderer.render();
 		guiCam.update();
+		level.update(deltaTime);
 		batcher.setProjectionMatrix(guiCam.combined);
 		batcher.enableBlending();
 		batcher.begin();
@@ -367,7 +419,18 @@ public class GameScreen implements Screen {
 			buttons.remove(button);
 			len = buttons.size();
 		}
+	
+		
 		batcher.draw(Assets.pause, 320 - 49, 480 - 53, 44, 44);
+		{
+			//batcher.draw(Assets.tmprectwhite, 15, 50, 10, 90/level.constant);
+			batcher.draw(Assets.tmprectwhite, 15, 45, 10, 85);
+			batcher.draw(Assets.tmprectwhite, 27, 45, 8, 85);
+			batcher.draw(Assets.tmprectblack, 15, 45, 10, 5*level.constant);
+			batcher.draw(Assets.tmprectblack, 27, 45, 8, 5*levelnos.constant);
+			}
+		batcher.draw(Assets.level, -35, 480 - 479, 130, 154);
+	
 		//Assets.fontsmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		//Assets.fontsmall.scale(3f);explosion text 
 		batcher.draw(Assets.tubo, 0, 225, 250, 280);
@@ -539,6 +602,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void resume () {
+		Assets.RectBlack();
+		Assets.RectWhite();
 	}
 
 	@Override

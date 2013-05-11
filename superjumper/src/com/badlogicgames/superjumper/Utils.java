@@ -85,4 +85,13 @@ public abstract class Utils {
 		//dyn.velocity.x = x - dyn.position.x;
 		//dyn.velocity.y = y - dyn.position.y;
 	}
+	
+	
+	
+	public static double distance(GameObject a, GameObject b){
+		return Math.pow(Math.pow(a.position.x - b.position.x, 2) +  Math.pow(a.position.y - b.position.y, 2), (double)1/(double)2);
+	}
+	
+	
+	
 }

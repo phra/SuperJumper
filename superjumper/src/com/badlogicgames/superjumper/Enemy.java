@@ -14,7 +14,7 @@ public class Enemy extends DynamicGameObject {
 	public float killtime;
 	public int life=5;
 	public Vector2 gravity = new Vector2();
-
+	 public float enemyshotime;
 	int active=0;
 	float pulverizetime;
 	int state;

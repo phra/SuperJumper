@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Assets {
 	public static ParticleEffect particleEffect;
 	public static ParticleEffect particleClouds;
+	public static Texture level;
 	public static Texture enemy;
 	public static Texture enemy1;
 	public static Texture star;
@@ -71,6 +72,8 @@ public class Assets {
 	public static Texture SoundOff;
 	public static Texture tmptext;
 	public static Texture tmptext1;
+	public static Texture tmprectblack;
+	public static Texture tmprectwhite;
 	public static Texture lock,locked;
 	public static Texture welcome;
 	public static Texture choose;
@@ -133,6 +136,8 @@ public class Assets {
 	public static BitmapFont handfontsmaller;
 	public static Pixmap pixmap;
 	public static Pixmap pixmap1;
+	public static Pixmap pixmap2;
+	public static Pixmap pixmap3;
 	public static Sound jumpSound;
 	public static Sound highJumpSound;
 	public static Sound hitSound;
@@ -147,6 +152,8 @@ public class Assets {
 
 	public static void load () {
 		CreateRect4Gradient();
+		RectBlack();
+		RectWhite();
 		//particelle effetto fuoco
 		particleEffect = new ParticleEffect();
 		particleClouds = new ParticleEffect();
@@ -157,6 +164,7 @@ public class Assets {
 		particleClouds.allowCompletion();
 		particleEffect.allowCompletion();
 		//fine particelle effetto fuoco
+		level = loadTexture("data/level.png");
 		enemy = loadTexture("data/enemy.png");
 		enemy1 = loadTexture("data/enemy1.png");
 		star = loadTexture("data/particle.png");
@@ -290,6 +298,7 @@ public class Assets {
 
 
 	private static void SetFilter(){
+		level.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		shuttlemilitar.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		shuttlemilitar1.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		shuttlemilitar2.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -344,6 +353,21 @@ public class Assets {
 		pixmap1.fillRectangle(0, 0, 512, 512);
 		tmptext1.draw(pixmap1, 0, 0);
 		rect = new TextureRegion(tmptext1, 0, 0, 10, 15);
+	}
+	
+	public static void RectWhite()
+	{
+		pixmap2=new Pixmap(512, 512, Pixmap.Format.RGBA8888);
+		pixmap2.setColor(Color.WHITE);
+		pixmap2.fillRectangle(0, 0, 512, 512);
+		tmprectwhite = new Texture(pixmap2);
+	}
+	public static void RectBlack()
+	{
+		pixmap3=new Pixmap(512, 512, Pixmap.Format.RGBA8888);
+		pixmap3.setColor(Color.BLACK);
+		pixmap3.fillRectangle(0, 0, 512, 512);
+		tmprectblack = new Texture(pixmap3);
 	}
 	public static void playSound (Sound sound) {
 		if (Settings.soundEnabled) sound.play(1);

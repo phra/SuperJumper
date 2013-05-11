@@ -17,8 +17,8 @@
 package com.badlogicgames.superjumper;
 
 public class Squirrel extends DynamicGameObject {
-	public static final float SQUIRREL_WIDTH = 1.5f;
-	public static final float SQUIRREL_HEIGHT = 1.5f;
+	public static final float SQUIRREL_WIDTH = 2f;
+	public static final float SQUIRREL_HEIGHT = 2f;
 	public static final float SQUIRREL_VELOCITY = 3f;
 	public static final float BUBBLE_CLISION=3;
 	public static final float NOS_CLISION=2;
@@ -41,28 +41,20 @@ public class Squirrel extends DynamicGameObject {
 		bounds.x = position.x - SQUIRREL_WIDTH/2;
 		bounds.y = position.y - SQUIRREL_HEIGHT/2;
 
-		if (position.x < SQUIRREL_WIDTH / 2) {
-		//	position.x = SQUIRREL_WIDTH / 2;
-		//	velocity.x = SQUIRREL_VELOCITY;
+		/*if (position.x < SQUIRREL_WIDTH / 2) {
+			position.x = SQUIRREL_WIDTH / 2;
+			velocity.x = SQUIRREL_VELOCITY;
 		}
 		if (position.x > World.WORLD_WIDTH - SQUIRREL_WIDTH / 2) {
-		//	position.x = World.WORLD_WIDTH - SQUIRREL_WIDTH / 2;
-		//	velocity.x = -SQUIRREL_VELOCITY;
-		}
-		
+			//	position.x = World.WORLD_WIDTH - SQUIRREL_WIDTH / 2;
+			//	velocity.x = -SQUIRREL_VELOCITY;
+		}*/
 		if(state==Squirrel.BUBBLE_CLISION && crashtime != 0 && crashtime<stateTime-6){
 			bubbleuse=0;
-			
 			inuse=false;
-			
-		}
-		else if(state==Squirrel.NOS_CLISION && nostime != 0 && nostime<stateTime-6){
-
-			
+		} else if(state==Squirrel.NOS_CLISION && nostime != 0 && nostime<stateTime-6){
 			inuse=false;
-		}
-		else if(state==Squirrel.LIFE_CLISION || state==Squirrel.PROJ_CLISION){
-			
+		} else if(state==Squirrel.LIFE_CLISION || state==Squirrel.PROJ_CLISION){
 			inuse=false;
 		}
 		stateTime += deltaTime;

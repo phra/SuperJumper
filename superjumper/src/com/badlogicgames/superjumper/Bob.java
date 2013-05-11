@@ -11,10 +11,12 @@ public class Bob extends DynamicGameObject {
 	public static final float BOB_MOVE_VELOCITY = 20;
 	public static final float BOB_WIDTH = 0.8f;
 	public static final float BOB_HEIGHT = 0.8f;
+	public static final float BUBBLE_TIME = 10f;
 	public  float CHARSCREENUSE = 0;
 	public final float MAXVELOCITY = 12f;
-	public int enablenos=0;
-	public int enablebubble=0;
+	//public int enablenos=0;
+	public boolean enablebubble = false;
+	public float bubbletime = 0;
 	public Vector2 gravity = new Vector2();
 
 	public static boolean BOB_DOUBLE_JUMP = false;
@@ -57,9 +59,12 @@ public class Bob extends DynamicGameObject {
 			if (position.x < 0) position.x = World.WORLD_WIDTH;
 			if (position.x > World.WORLD_WIDTH) position.x = 0;
 		}
-
+		
+		if (this.bubbletime != 0 && this.stateTime > this.bubbletime + BUBBLE_TIME) {
+			this.enablebubble = false;
+			this.bubbletime = 0;
+		}
 		stateTime += deltaTime;
-		jumpTime += deltaTime;
 	}
 
 	public void hitSquirrel () {
