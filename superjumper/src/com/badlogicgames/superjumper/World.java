@@ -26,6 +26,7 @@ public class World {
 	public final int PLATFORMS_DISTANCE = 10;
 	public final int STARS_DISTANCE = 1;
 	public final Bob bob;
+	
 	//public Enemy charlie;
 	public final List<Platform> platforms;
 	public final List<Star> stars;
@@ -59,6 +60,12 @@ public class World {
 	public boolean supermissileButton = false;
 	public boolean bubbleButton = false;
 	public int supermissiles = 0;
+	Boolean decremento=false;
+	Boolean decrementonos=false;
+	LevelOption level=new LevelOption();
+	LevelOption levelnos=new LevelOption();
+	LinkedList<Explosion> explosions = new LinkedList<Explosion>();
+	
 	public World (WorldListener listener) {
 		this.bob = new Bob(4, 2);
 		//this.charlie = new Enemy(5,200);
@@ -127,55 +134,42 @@ public class World {
 		}
 		castle = new Castle(WORLD_WIDTH / 2, y);
 	}
+	
+	public void editPosition(float deltaTime){
+		if(decremento)
+		{
+			level.decremento(deltaTime);
+			if(level.isEmpty)
+				{
+				freezeON=false;
+				decremento=false;
+				}
+		}
+		if(!decremento){level.incremento(deltaTime);}
+		
+		//if(world.bob.enablenos==1)
+		{
+			if(decrementonos)
+			{
+				levelnos.decremento(deltaTime);
+				turbo=true;
+				Turbo();
+				if (rand.nextFloat() < 0.5f) Gdx.input.vibrate(new long[] { 10, 5, 5}, -1); 
+				if(levelnos.isEmpty)
+					{
+					TurboLess();
+					decrementonos=false;
+					}
+			}
+			if(!decrementonos){levelnos.incremento(deltaTime);}
+		}
+	}
 
 	public void setGravity(float x, float y){
 		this.gravity.x = x;
 		this.gravity.y = y;
 		bob.setGravityBob(x, y);
 	}
-
-
-	public void update (float deltaTime, float accelX) {
-		checkRemoveStars();
-
-		if (this.freezeON) {
-			deltaTime /= 4;
-		}
-
-		updateBob(deltaTime, accelX);
-		updatePlatforms(deltaTime);
-		updateSquirrels(deltaTime);
-		updateCoins(deltaTime);
-		//updateGravityPlanet(deltaTime);
-		addStarDynamic();
-		updateStar( deltaTime);
-		updateProjectiles(deltaTime);
-		updateProjectilenemys(deltaTime);//deltaTime*4 se si vuole mantenere la velocità del proiettile nemico anche durante il freezeing
-		updateEnemy(deltaTime,bob);//deltaTime*4 se si vuole mantenere la velocità del nemico anche durante il freezeing
-		updateunlockcharacter ();
-		//if (rand.nextFloat() > 0.5f) 
-		score += (int)bob.velocity.y/10;
-		//if (bob.state != Bob.BOB_STATE_HIT) //caso in cui bob cade verso il basso quando muore senza sbattere con gli ogg restati
-		checkCollisions();
-		checkRemovePlatform();
-		checkRemoveProjectile();
-		checkRemoveCoin();
-		checkGameOver();
-		checkRemoveEnemyProjectile();
-		CheckRemoveEnemey();
-		/* checkRemoveSquirrel();
-		checkRemoveBubble();*/
-
-	}
-
-	private void updateGravityPlanet(float deltaTime){
-		for ( Platform plat : this.platforms) {
-			if (plat.type != Platform.PLATFORM_TYPE_MOVING){
-				Utils.changeGravityTowards(bob, plat);
-			}
-		}
-	}
-
 	public void LifeLess(){
 
 		if(life>0){
@@ -193,7 +187,7 @@ public class World {
 	public void ShotProjectile() {
 		if(shot>0){
 			Gdx.input.vibrate(new long[] { 1, 20, 10, 20}, -1); 
-			Projectile projectile = new Projectile(bob.position.x,bob.position.y);
+			Projectile projectile = new Projectile(bob.position.x,bob.position.y, Projectile.WIDTH, Projectile.HEIGHT);
 			projectile.setVelocity(0,25);
 			projectiles.add(projectile);
 			shot=shot-1;
@@ -214,6 +208,57 @@ public class World {
 	{
 		bob.velocity.y=12;
 	}
+	
+
+	private void addStarDynamic(){
+		//star generate
+		int type_star = rand.nextFloat()>0.3?Star.STAR_TYPE_STATIC:Star.STAR_TYPE_MOVING;//star light
+		float y_star = rand.nextFloat() *10;//star
+		float x_star = rand.nextFloat() *10;//star
+		Star star = new Star(type_star, x_star, y_star+bob.position.y+13);
+		Star star1 = new Star(type_star, x_star, y_star+bob.position.y+9);
+		Star star2 = new Star(Star.STAR_TYPE_STATIC, x_star, y_star+bob.position.y-3);//aggiunto da poco
+		stars.add(star);
+		stars.add(star1);//aggiunto da poco
+		stars.add(star2);//aggiunto da poco
+		////end star generate
+	}
+
+	public void update (float deltaTime, float accelX) {
+		editPosition( deltaTime);
+		score += (int)bob.velocity.y/10;
+		if (this.freezeON)deltaTime /= 4;
+		level.update(deltaTime);
+		updateBob(deltaTime, accelX);
+		updatePlatforms(deltaTime);
+		updateSquirrels(deltaTime);
+		updateCoins(deltaTime);
+		addStarDynamic();
+		updateStar( deltaTime);
+		updateProjectiles(deltaTime);
+		updateExplosions(deltaTime);
+		updateProjectilenemys(deltaTime);//deltaTime*4 se si vuole mantenere la velocità del proiettile nemico anche durante il freezeing
+		updateEnemy(deltaTime,bob);//deltaTime*4 se si vuole mantenere la velocità del nemico anche durante il freezeing
+		updateunlockcharacter();
+		checkCollisions();
+		checkRemoveStars();
+		checkRemoveSquirrel();
+	}
+
+
+	private void updateExplosions(float deltaTime) {
+		for (Explosion exp : this.explosions) {
+			exp.update(deltaTime);
+		}
+	}
+	
+	private void checkRemoveExplosions() {
+		for (int i = 0; i < explosions.size(); i++) {
+			if (explosions.get(i).stateTime > Explosion.EXPLOSION_TIME) 
+				explosions.remove(i);
+		}
+	}
+	
 
 
 	private void updateBob (float deltaTime, float accelX) {
@@ -226,27 +271,23 @@ public class World {
 	private void updateEnemy (float deltaTime, DynamicGameObject oggetto) {
 		for (Enemy enemy : enemies) {
 			enemy.update(deltaTime, oggetto);
-			//EnemyShotBob(enemy);
+			updateEnemyShotBob(enemy);
 			if(bob.position.y>enemy.position.y-10)
 			{
 				enemy.active=1;
 
 				if(enemy.killtime==0)enemy.killtime=enemy.stateTime;//imposto il killTime x sapere quanto tempo cè voluto x ucc charlie
 			}
-			if(enemy.life==0 && enemy.pulverizetime==0)
-			{
-				enemy.state = Enemy.ENEMY_STATE_DIE;//cabio stato x polverizzarlo e segnalare a schermo il punteggio
-				enemy.pulverizetime= enemy.stateTime;//setto pulverizeTime da ora x la durata della polverizzazione
-			}
-			ScoreEnemyDied(enemy);
+			
+			updateScoreEnemyDied(enemy);
 		}
 		if (bob.position.y > WORLD_HEIGHT / 10 && enemies.size() < (this.bob.position.y * 5) / WORLD_HEIGHT) {
 			enemies.offer(new Enemy(-10 + this.rand.nextFloat()*20, this.bob.position.y + this.rand.nextFloat()*100));
 		}
 	}
 
-	private void EnemyShotBob(Enemy charlie) {
-		Gdx.app.debug("ENEMYSHOTBOB","init");
+	private void updateEnemyShotBob(Enemy charlie) {
+		//Gdx.app.debug("ENEMYSHOTBOB","init");
 		float difficoltxfascio=0.5f;//incrementa x sparare su piu' punti x
 		float delaysparo=1f;//decrementa x avere uno sparo piu' veloce
 		/*if( 
@@ -255,15 +296,15 @@ public class World {
 
 		if ((Math.abs(charlie.position.x-bob.position.x) < difficoltxfascio ) && (charlie.position.y-bob.position.y > 5f &&  charlie.position.y-bob.position.y < 15f) && (charlie.stateTime > charlie.enemyshotime + delaysparo)) {
 			charlie.enemyshotime=charlie.stateTime;
-			Projectile projectilenemy = new Projectile( charlie.position.x, charlie.position.y);
+			Projectile projectilenemy = new Projectile( charlie.position.x, charlie.position.y, Projectile.WIDTH, Projectile.HEIGHT);
 			projectilenemy.state=1;
 			projectilenemy.setVelocity(0,-20);
 			projectenemy.add(projectilenemy);
-			Gdx.app.debug("ENEMYSHOTBOB","x"+projectilenemy.position.x + "y"+projectilenemy.position.y);
+		//	Gdx.app.debug("ENEMYSHOTBOB","x"+projectilenemy.position.x + "y"+projectilenemy.position.y);
 		}
 	}
 
-	private void ScoreEnemyDied(Enemy charlie)
+	private void updateScoreEnemyDied(Enemy charlie)
 	{
 		if(charlie.state==Enemy.ENEMY_STATE_DIE)
 		{
@@ -292,25 +333,26 @@ public class World {
 				score=score+100;
 				charlie.killtime=-1;
 			}
-			charlie.state = Enemy.ENEMY_STATE_REM;//cambio stato di modo da segnalare una volta sola il risultato
+		
+			//charlie.state = Enemy.ENEMY_STATE_REM;//cambio stato di modo da segnalare una volta sola il risultato
 		}
 	}
 
-
-
-	private void addStarDynamic(){
-		//star generate
-		int type_star = rand.nextFloat()>0.3?Star.STAR_TYPE_STATIC:Star.STAR_TYPE_MOVING;//star light
-		float y_star = rand.nextFloat() *10;//star
-		float x_star = rand.nextFloat() *10;//star
-		Star star = new Star(type_star, x_star, y_star+bob.position.y+13);
-		Star star1 = new Star(type_star, x_star, y_star+bob.position.y+9);
-		Star star2 = new Star(Star.STAR_TYPE_STATIC, x_star, y_star+bob.position.y-3);//aggiunto da poco
-		stars.add(star);
-		stars.add(star1);//aggiunto da poco
-		stars.add(star2);//aggiunto da poco
-		////end star generate
+	private void updateunlockcharacter () 
+	{
+		if(Settings.highscores[0]<20000 && !(print1times>=2))
+		{
+			if(score>20000)
+			{
+				signal2screen=8;
+			}
+		}
+		else if(Settings.highscores[0]<40000 && !(print1times>=3))
+		{
+			if(score>40000)signal2screen=9;
+		}
 	}
+
 
 
 	private void updateStar(float deltaTime){
@@ -333,12 +375,10 @@ public class World {
 		for (int i = 0; i < len; i++) {
 			Platform platform = platforms.get(i);
 			platform.update(deltaTime);
-			if (platform.state == Platform.PLATFORM_STATE_PULVERIZING && platform.stateTime > Platform.PLATFORM_PULVERIZE_TIME) { //FIXME
-				platforms.remove(platform);
 				len = platforms.size();
 			}
 		}
-	}
+	
 
 
 
@@ -356,13 +396,11 @@ public class World {
 		for (int i = 0; i < len; i++) {
 			Coin coin = coins.get(i);
 			coin.update(deltaTime);
-			if (coin.state == Coin.COIN_STATE_PULVERIZING && coin.stateTime > Coin.COIN_PULVERIZE_TIME) {
-				coins.remove(coin);
 				len = coins.size();
 
 			}
 		}
-	}
+	
 	private void updateProjectiles (float deltaTime) {
 		int len = projectiles.size();
 		for (int i = 0; i < len; i++) {
@@ -379,11 +417,34 @@ public class World {
 		}
 	}
 
+	private void checkCollisions () {
+		checkPlatformCollisions();
+		//checkDoubleJump();
+		checkSquirrelCollisions();
+		checkItemCollisions();
+		checkCastleCollisions();
+		checkVelocity();
+		checkProjectileCollisions();
+		checkProjectileWorldCollisions();
+		checkProjectilEnemyCollisions();
+		checkProjectilBobCollisions();
+		checkRemovePlatform();
+		checkRemoveProjectile();
+		checkRemoveCoin();
+		checkGameOver();
+		checkRemoveEnemyProjectile();
+		CheckRemoveEnemey();
+	}
+	
+	
 	private void CheckRemoveEnemey() {
 		for (int i = 0; i < enemies.size(); i++){
 			Enemy charlie = enemies.get(i);
-			if (charlie.state == Enemy.ENEMY_STATE_REM && charlie.stateTime - charlie.pulverizetime > Enemy.ENEMY_PULVERIZE_TIME) //FIXME
-				enemies.remove(charlie);
+			if(charlie.life==0 )
+			{
+				explosions.offer(new Explosion(charlie.position.x, charlie.position.y,Enemy.ENEMY_WIDTH,Enemy.ENEMY_HEIGHT));
+				enemies.remove(i);
+			}
 		}
 	}
 
@@ -392,8 +453,10 @@ public class World {
 		if (!projectiles.isEmpty()) {
 			for (int i = 0; i < projectiles.size(); i++) {
 				Projectile projectile = projectiles.get(i);
-				if ( projectile.position.y > bob.position.y+11 ) 
-					projectiles.remove(projectile);
+				if ( projectile.position.y > bob.position.y+11 ){ 
+					projectiles.remove(i);
+					 Gdx.app.debug("projectile:", "remove classica");
+				}
 			}
 		}
 	}
@@ -403,7 +466,7 @@ public class World {
 			for (int i = 0; i < projectenemy.size(); i++) {
 				Projectile projectilenem = projectenemy.get(i);
 				if ( projectilenem.position.y < bob.position.y-5 ) 
-					projectenemy.remove(projectilenem);
+					projectenemy.remove(i);
 			}
 		}
 	}
@@ -436,20 +499,6 @@ public class World {
 			if (bob.position.y > squirrels.get(0).position.y+5  ) squirrels.remove(0);
 		}
 	}
-	private void checkCollisions () {
-		checkPlatformCollisions();
-		//checkDoubleJump();
-		checkSquirrelCollisions();
-		checkItemCollisions();
-		checkCastleCollisions();
-		checkVelocity();
-		checkProjectileCollisions();
-		checkProjectileWorldCollisions();
-		checkProjectilEnemyCollisions();
-		checkProjectilBobCollisions();
-	}
-
-
 
 	private void checkPlatformCollisions () {
 		//if (bob.velocity.y > 0) return;
@@ -457,7 +506,7 @@ public class World {
 		for (int i = 0; i < len; i++) {
 			Platform platform = platforms.get(i);
 			if (bob.position.y > platform.position.y) {
-				if (platform.state != Platform.PLATFORM_STATE_PULVERIZING && OverlapTester.overlapRectangles(bob.bounds, platform.bounds)) {
+				if ( OverlapTester.overlapRectangles(bob.bounds, platform.bounds)) {
 					bob.hitPlatform();
 
 					Gdx.input.vibrate(new long[] { 1, 20,10, 5}, -1); 
@@ -467,8 +516,8 @@ public class World {
 						score -= 300;
 					}
 					else score += 300;
-
-					platform.pulverize();
+					explosions.offer(new Explosion(platform.position.x, platform.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT));
+					platforms.remove(platform);
 					listener.hit();
 					len = platforms.size();
 					break;
@@ -498,7 +547,7 @@ public class World {
 					LifeMore();
 					squirrel.inuse=true;
 					signal2screen=2;
-				} else if(random<= 0.5f) {    
+				} else if(random<= 0.5f && !this.supermissileButton) {    
 					Gdx.app.debug("checkSquirrelCollisions", "nos");
 					/*GameScreen si occupa di controllare il click sul nos x attivarlo*/
 					squirrel.state=Squirrel.NOS_CLISION;
@@ -507,14 +556,14 @@ public class World {
 					//bob.enablenos=1;
 					if ((supermissiles+=10) > 0) this.supermissileButton = true;
 
-				} else if(random<=0.75f && this.bubbleButton == false) {
+				} else if(random<=0.75f && this.bubbleButton == false && bob.enablebubble==false) {
 					Gdx.app.debug("checkSquirrelCollisions", "bolla");
 					squirrel.state=Squirrel.BUBBLE_CLISION;
 					//bob.enablebubble=2;
 					this.bubbleButton = true;
 					squirrel.bubbleuse=1;
 					squirrel.inuse=true;
-				} else if(random<=0.85f) { 
+				} else if(random<=0.85f && !this.activemissile) { 
 					Gdx.app.debug("checkSquirrelCollisions", "missile");
 					if ((missiles+=10) > 0) this.activemissile = true;
 					//GameScreen.attivatraj = true;
@@ -527,7 +576,6 @@ public class World {
 				}   
 				listener.hit(); 
 				squirrels.remove(squirrel);
-				i--;
 				break;
 			}
 		}
@@ -538,7 +586,7 @@ public class World {
 		int len = coins.size();
 		for (int i = 0; i < len; i++) {
 			Coin coin = coins.get(i);
-			if (coin.state != Coin.COIN_STATE_PULVERIZING && OverlapTester.overlapRectangles(bob.bounds, coin.bounds)) {
+			if (OverlapTester.overlapRectangles(bob.bounds, coin.bounds)) {
 				Gdx.input.vibrate(new long[] { 1, 90, 40, 90},-1); 
 				if(bob.enablebubble == false)
 				{   
@@ -551,8 +599,8 @@ public class World {
 				else
 					score += 300;
 				len = coins.size();
-				coin.pulverize();
 				listener.coin();
+				explosions.offer(new Explosion(coin.position.x, coin.position.y,Coin.COIN_WIDTH,Coin.COIN_HEIGHT));
 				coins.remove(coin);
 				break;
 			}
@@ -607,8 +655,7 @@ public class World {
 				{
 					Projectile projectile=projectiles.get(i);
 					Platform platform=platforms.get(j);
-					if (platform.state != Platform.PLATFORM_STATE_PULVERIZING && 
-						OverlapTester.overlapRectangles(platform.bounds, projectile.bounds)) {
+					if (OverlapTester.overlapRectangles(platform.bounds, projectile.bounds)) {
 						bob.hitPlatform();
 						//Turbo();
 						Gdx.input.vibrate(new long[] { 1, 20,10, 5}, -1); 
@@ -616,7 +663,8 @@ public class World {
 						//turbo=turbo+1;
 						//shot=shot+5;
 						projectiles.remove(i);
-						platform.pulverize();
+						explosions.offer(new Explosion(platform.position.x, platform.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT));
+						platforms.remove(platform);
 						//score += 100;
 						;
 						break;
@@ -629,21 +677,19 @@ public class World {
 
 	private void checkProjectileWorldCollisions(){
 		int i = 0, j = 0;
-		if (!projectiles.isEmpty() && !coins.isEmpty()){
-
-			for(i=0;i<projectiles.size();i++)
+		for(i=0;i<projectiles.size();i++)
 			{
 				for(j=0;j<coins.size();j++)
 				{
 					Projectile projectile=projectiles.get(i);
 					Coin coin=coins.get(j);
-					if (coin.state != Coin.COIN_STATE_PULVERIZING && OverlapTester.overlapRectangles(coin.bounds, projectile.bounds)) {
+					if ( OverlapTester.overlapRectangles(coin.bounds, projectile.bounds)) {
 						Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
 						score += 100;
-						coin.pulverize(); 
 						coins.remove(j);
+						explosions.offer(new Explosion(projectile.position.x, projectile.position.y,projectile.width,projectile.height));
 						projectiles.remove(i);
-						i--;
+						
 						/*platforms.remove(j);*/
 						break;
 					}
@@ -651,7 +697,7 @@ public class World {
 				}
 			}
 		}
-	}
+	
 
 	private void checkProjectilEnemyCollisions(){
 		int i = 0;
@@ -664,7 +710,11 @@ public class World {
 					if (OverlapTester.overlapRectangles(charlie.bounds, projectile.bounds)) {
 						Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
 						score += 100;
-						projectiles.remove(i);
+						if((projectile.type==1||projectile.type==2)){
+							explosions.offer(new Explosion(charlie.position.x, charlie.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT));
+							projectiles.remove(projectile);
+						}
+						else if(projectile.type==0)projectiles.remove(i);
 						charlie.life--;
 						/*platforms.remove(j);*/
 						break;
@@ -683,7 +733,8 @@ public class World {
 					Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
 					score -= 100;
 					LifeLess();
-					projectiles.remove(projectilenem);
+					explosions.offer(new Explosion(projectilenem.position.x, projectilenem.position.y,Projectile.WIDTH,Projectile.HEIGHT));
+					projectenemy.remove(projectilenem);
 					/*platforms.remove(j);*/
 					break;
 				}
@@ -692,20 +743,7 @@ public class World {
 	}
 
 
-	private void updateunlockcharacter () 
-	{
-		if(Settings.highscores[0]<20000 && !(print1times>=2))
-		{
-			if(score>20000)
-			{
-				signal2screen=8;
-			}
-		}
-		else if(Settings.highscores[0]<40000 && !(print1times>=3))
-		{
-			if(score>40000)signal2screen=9;
-		}
-	}
+
 
 	private void checkVelocity () {
 		if (bob.velocity.y > bob.MAXVELOCITY && nosinuse==0){

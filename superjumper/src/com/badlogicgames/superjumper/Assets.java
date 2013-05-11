@@ -16,6 +16,10 @@ public class Assets {
 	public static ParticleEffect particleEffect;
 	public static ParticleEffect particleClouds;
 	public static Texture level;
+	public static Texture missile;
+	public static Texture portamissilebn;
+	public static Texture doubleportamissile;
+	public static Texture doubleportamissilebn;
 	public static Texture enemy;
 	public static Texture enemy1;
 	public static Texture star;
@@ -82,6 +86,10 @@ public class Assets {
 	public static Texture welcomepaused;
 	public static Texture resume,quit,ospita,partecipa;
 	public static Texture swipetext,swipe,swipe1,swipe2;
+	public static TextureRegion missileRegion;
+	public static TextureRegion portamissilebnRegion;
+	public static TextureRegion doubleportamissileRegion;
+	public static TextureRegion doubleportamissilebnRegion;
 	public static TextureRegion enemyRegion;
 	public static TextureRegion enemyRegion1;
 	public static TextureRegion starRegion;
@@ -164,6 +172,10 @@ public class Assets {
 		particleClouds.allowCompletion();
 		particleEffect.allowCompletion();
 		//fine particelle effetto fuoco
+		doubleportamissile= loadTexture("data/doubleportamissile.png");
+		doubleportamissilebn = loadTexture("data/doubleportamissilebn.png");
+		portamissilebn = loadTexture("data/portamissilebn.png");
+		missile = loadTexture("data/missile.png");
 		level = loadTexture("data/level.png");
 		enemy = loadTexture("data/enemy.png");
 		enemy1 = loadTexture("data/enemy1.png");
@@ -241,6 +253,10 @@ public class Assets {
 		ready = new TextureRegion(items, 320, 224, 192, 32);		
 		spring = new TextureRegion(items, 128, 0, 32, 32);
 		castle = new TextureRegion(items, 128, 64, 64, 64);
+		doubleportamissileRegion = new TextureRegion(doubleportamissile, 0, 0, 256, 256);
+		doubleportamissilebnRegion = new TextureRegion(doubleportamissilebn, 0, 0, 256, 256);
+		portamissilebnRegion = new TextureRegion(portamissilebn, 0, 0, 256, 256);
+		missileRegion = new TextureRegion(missile, 0, 0, 256, 256);
 		starRegion= new TextureRegion(star, 0, 0, 128, 128);
 		bubbles= new TextureRegion(bubble, 0, 0, 256, 256);
 		nos= new TextureRegion(portanos, 0, 0, 256, 256);
@@ -298,6 +314,10 @@ public class Assets {
 
 
 	private static void SetFilter(){
+		doubleportamissile.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		doubleportamissilebn.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		missile.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		portamissilebn.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		level.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		shuttlemilitar.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		shuttlemilitar1.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -322,7 +342,7 @@ public class Assets {
 		tubo.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		portaproj.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		portalife.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		portanos.setFilter(TextureFilter.Nearest, TextureFilter.Linear);
+		portanos.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		bubblestart.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		backgroundmain4.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		backgroundmain5.setFilter(TextureFilter.Linear, TextureFilter.Linear);

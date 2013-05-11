@@ -34,8 +34,4 @@ public class Coin extends GameObject {
 		stateTime += deltaTime;
 	}
 
-	public void pulverize () {
-		state = COIN_STATE_PULVERIZING;
-		stateTime = 0;
-	}
 }

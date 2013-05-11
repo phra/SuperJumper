@@ -109,7 +109,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 	{
 		if(shot>0){
 			Gdx.input.vibrate(new long[] { 1, 20, 10, 20}, -1); 
-			Projectile projectile = new Projectile(bob.position.x,bob.position.y);
+			Projectile projectile = new Projectile(bob.position.x,bob.position.y,Projectile.WIDTH,Projectile.HEIGHT);
 			projectile.setVelocity(0,15);
 			projectiles.add(projectile);
 			shot=shot-1;}
@@ -298,7 +298,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 						Gdx.input.vibrate(new long[] { 1, 100, 60, 100}, -1); 
 						projectiles.remove(i);
 						i--;
-						platform.pulverize();
+				
 						/*platforms.remove(j);*/
 
 						break;
@@ -347,7 +347,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 						Gdx.input.vibrate(new long[] { 1, 100, 60, 100}, -1); 
 						projectiles.remove(i);
 						i--;
-						platform.pulverize();
+					
 						/*platforms.remove(j);*/
 
 						break;
@@ -370,7 +370,6 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 					Coin coin=coins.get(j);
 					if (coin.state != Coin.COIN_STATE_PULVERIZING && OverlapTester.overlapRectangles(coin.bounds, projectile.bounds)) {
 						Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
-						coin.pulverize(); 
 						coins.remove(j);
 						projectiles.remove(i);
 
@@ -400,7 +399,6 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 					Coin coin=coins.get(j);
 					if (coin.state != Coin.COIN_STATE_PULVERIZING && OverlapTester.overlapRectangles(coin.bounds, projectile.bounds)) {
 						Gdx.input.vibrate(new long[] { 1, 20, 40, 20}, -1); 
-						coin.pulverize(); 
 						coins.remove(j);
 						projectiles.remove(i);
 
@@ -444,7 +442,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 					Gdx.input.vibrate(new long[] { 1, 20,10, 5}, -1); 
 					turbo=turbo+1;
 					shot=shot+5;
-					platform.pulverize();
+					
 					score += 100;
 					listener.jump();
 					len = platforms.size();
@@ -466,7 +464,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 					Gdx.input.vibrate(new long[] { 1, 20,10, 5}, -1); 
 					turbo=turbo+1;
 					shot=shot+5;
-					platform.pulverize();
+				
 					score += 100;
 					listener.jump();
 					len = platforms.size();
@@ -517,7 +515,6 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 				bobMulti.setGravityBob(0, 3);
 				len = coins.size();
 				listener.coin();
-				coin.pulverize();
 				//LifeLess();
 				score -= 300;
 				coins.remove(coin);
@@ -549,7 +546,6 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 				bob.setGravityBob(0, 3);
 				len = coins.size();
 				listener.coin();
-				coin.pulverize();
 				//LifeLess();
 				score -= 300;
 				coins.remove(coin);

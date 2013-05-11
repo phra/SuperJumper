@@ -6,13 +6,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Missile extends Projectile {
+	public static float HEIGHT = 1f;
+	public static float WIDTH = 1f;
 	
 	GameObject target;
 	//LinkedList<Vector2> path;
 	public static final int TYPE = 1;
 	
-	public Missile (float x, float y, GameObject target) {
-		super(x, y);
+	
+	public Missile (float x, float y, float width, float height, GameObject target) {
+		super(x, y, width, height);
 		this.target = target;
 		this.type = TYPE;
 	}

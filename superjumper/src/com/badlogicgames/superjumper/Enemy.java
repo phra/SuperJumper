@@ -8,21 +8,20 @@ public class Enemy extends DynamicGameObject {
 	public static final int ENEMY_STATE_REM = 1;
 	public static final int ENEMY_STATE_HIT = 2;
 	public static final float BOB_MOVE_VELOCITY = 20;
-	public static final float BOB_WIDTH = 2f;
-	public static final float BOB_HEIGHT = 2f;
+	public static final float ENEMY_WIDTH = 2f;
+	public static final float ENEMY_HEIGHT = 2f;
 	public static final float ENEMY_PULVERIZE_TIME = 0.1f * 4;
 	public float killtime;
 	public int life=5;
 	public Vector2 gravity = new Vector2();
 	 public float enemyshotime;
 	int active=0;
-	float pulverizetime;
 	int state;
 	float stateTime;
 	//public static float jumpTime;
 
 	public Enemy (float x, float y) {
-		super(x, y, BOB_WIDTH, BOB_HEIGHT);
+		super(x, y, ENEMY_WIDTH, ENEMY_HEIGHT);
 		state = ENEMY_STATE_HIT ;
 		stateTime = 0;
 	}
@@ -51,23 +50,5 @@ public class Enemy extends DynamicGameObject {
 		}
 		stateTime += deltaTime;
 		//jumpTime += deltaTime;
-	}
-
-
-	public void hitPlatform () {
-		//velocity.y = BOB_JUMP_VELOCITY;
-		//state = BOB_STATE_JUMP;
-		stateTime = 0;
-	}
-
-	public void hitSpring () {
-		//velocity.y = BOB_JUMP_VELOCITY * 1.5f;
-		//state = BOB_STATE_JUMP;
-		stateTime = 0;
-	}
-	public void pulverize () {
-		state = ENEMY_STATE_DIE;
-		pulverizetime=stateTime;
-		velocity.y = 0;
 	}
 }

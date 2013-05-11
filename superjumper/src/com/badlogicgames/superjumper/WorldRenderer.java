@@ -54,7 +54,6 @@ public class WorldRenderer {
 		batch.enableBlending();
 		batch.begin();
 		renderStars();
-		//renderMissile();
 		renderBob();
 		renderPlatforms();
 		renderItems();
@@ -65,10 +64,16 @@ public class WorldRenderer {
 		renderProjectilesenemy();
 		renderButtons();
 		renderBubble();
+		renderExplosions();
 		batch.end();
 	}
 
-
+	private void renderExplosions() {
+		for (Explosion exp : world.explosions) {
+			TextureRegion keyFrame=Assets.brakingPlatform.getKeyFrame( exp.stateTime, Animation.ANIMATION_LOOPING);
+			batch.draw(keyFrame, exp.position.x, exp.position.y, exp.width, exp.height);
+		}
+	}
 
 	private void renderBob () {
 		TextureRegion keyFrame;
@@ -122,11 +127,7 @@ public class WorldRenderer {
 		for (int i = 0; i < len; i++) {
 			Platform platform = world.platforms.get(i);
 			TextureRegion keyFrame ;
-			if (platform.state == Platform.PLATFORM_STATE_PULVERIZING) {
-				keyFrame = Assets.brakingPlatform.getKeyFrame(platform.stateTime, Animation.ANIMATION_LOOPING);
-				batch.draw(keyFrame, platform.position.x - 1, platform.position.y - 0.25f, 4, 4);
-			}
-			else {keyFrame = Assets.coinAnim.getKeyFrame(platform.stateTime, Animation.ANIMATION_LOOPING);
+			{keyFrame = Assets.coinAnim.getKeyFrame(platform.stateTime, Animation.ANIMATION_LOOPING);
 			batch.draw(keyFrame, platform.position.x - 0.75f, platform.position.y - 0.75f, 1.5f, 1.5f);
 			}}
 	}
@@ -154,19 +155,25 @@ public class WorldRenderer {
 		int len = world.projectiles.size();
 		for (int i = 0; i < len; i++) {
 			Projectile projectile = world.projectiles.get(i);
-			TextureRegion keyFrame = Assets.projAnim.getKeyFrame(projectile.stateTime, Animation.ANIMATION_LOOPING);    
-			batch.draw(keyFrame, projectile.position.x -0.07f , projectile.position.y+0.4f, 0.3f,0.6f);
+			TextureRegion keyFrame = Assets.projAnim.getKeyFrame(projectile.stateTime, Animation.ANIMATION_LOOPING);  
+			if(projectile.type==0 && projectile.state!=Missile.MISSILE_STATE_PULVERIZING)
+			{
+				keyFrame = Assets.projAnim.getKeyFrame(projectile.stateTime, Animation.ANIMATION_LOOPING);    
+				batch.draw(keyFrame, projectile.position.x -0.07f , projectile.position.y+0.4f, 0.3f,0.6f);
+			}
+			else if(projectile.type==1 && projectile.state!=Missile.MISSILE_STATE_PULVERIZING)
+			{
+				keyFrame = Assets.missileRegion;    
+				batch.draw(keyFrame, projectile.position.x-0.4f , projectile.position.y+0.2f, 1f,1.4f);
+			}
+			else if(projectile.type==2 && projectile.state!=Missile.MISSILE_STATE_PULVERIZING)
+			{
+				keyFrame = Assets.missileRegion;    
+				batch.draw(keyFrame, projectile.position.x-0.4f , projectile.position.y+0.2f, 1f,1.4f);
+			}
 		}
 	}
 
-	private void renderMissile(){
-		int len = world.rockets.size();
-		for (int i = 0; i < len; i++) {
-			Missile missile = world.rockets.get(i);
-			TextureRegion keyFrame = Assets.projAnim.getKeyFrame(missile.stateTime, Animation.ANIMATION_LOOPING);    
-			batch.draw(keyFrame, missile.position.x -0.07f , missile.position.y+0.4f, 0.3f,0.6f);
-		}
-	}
 
 	private void renderProjectilesenemy(){
 		int len = world.projectenemy.size();
@@ -194,11 +201,15 @@ public class WorldRenderer {
 
 	private void renderButtons() {
 		if (world.activemissile == true ){
-			TextureRegion keyFrame = this.portaproj; // FIXME
+			TextureRegion keyFrame;
+			if (world.enemies.isEmpty())keyFrame = Assets.portamissilebnRegion;
+			else keyFrame = Assets.nosAnim.getKeyFrame(0, Animation.ANIMATION_LOOPING);//must add stateTime
 			batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 2.8f , 1.5f, 1.5f);
 		}
 		if (world.supermissileButton == true ){
-			TextureRegion keyFrame = Assets.nosAnim.getKeyFrame(0, Animation.ANIMATION_LOOPING);
+			TextureRegion keyFrame;
+			if (world.enemies.isEmpty())keyFrame = Assets.doubleportamissilebnRegion;
+			else keyFrame = Assets.doubleportamissileRegion;
 			batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 4.8f , 1.5f, 1.5f);
 		}
 		if (world.bubbleButton == true ){
@@ -228,20 +239,13 @@ public class WorldRenderer {
 		}
 	}
 
-	private void renderEnemy()
-	{
+	private void renderEnemy(){
 		TextureRegion keyFrame;
 		for (Enemy charlie : world.enemies){
-			if (charlie.state == Enemy.ENEMY_STATE_DIE || charlie.state == Enemy.ENEMY_STATE_REM) {
-				keyFrame = Assets.brakingPlatform.getKeyFrame( charlie.stateTime, Animation.ANIMATION_LOOPING);
-				batch.draw(keyFrame, charlie.position.x - 1, charlie.position.y - 0.25f, 4, 4);
-			}
-			else if ( charlie.state != Enemy.ENEMY_STATE_DIE|| charlie.state != Enemy.ENEMY_STATE_REM)
-			{
-				keyFrame = Assets.enemyRegion;
-				batch.draw(keyFrame, charlie.position.x-1.5f , charlie.position.y-0.8f , 2f, 2f);}
+
+			keyFrame = Assets.enemyRegion;
+			batch.draw(keyFrame, charlie.position.x-1.5f , charlie.position.y-0.8f , 2f, 2f);
 		}
-		//else keyFrame=Assets.enemyRegion1;
 	}
 
 

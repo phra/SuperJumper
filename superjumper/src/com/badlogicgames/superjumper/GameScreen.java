@@ -48,10 +48,6 @@ public class GameScreen implements Screen {
 	Rectangle missileBounds;
 	Rectangle nosBounds;
 	Rectangle bubbleBounds;
-	Boolean decremento=false;
-	Boolean decrementonos=false;
-	LevelOption level=new LevelOption();
-	LevelOption levelnos=new LevelOption();
 	int lastScore;
 	float statexplosion=0;
 	String scoreString;
@@ -144,7 +140,7 @@ public class GameScreen implements Screen {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
 					//world.nosActivate();
 					if (--world.supermissiles <= 0) world.supermissileButton = false;
-					if (!world.enemies.isEmpty()) world.projectiles.add(new SuperMissile(world.bob.position.x, world.bob.position.y, world.enemies.peek(),world.projectiles,world.enemies));
+					if (!world.enemies.isEmpty()) world.projectiles.add(new SuperMissile(world.bob.position.x, world.bob.position.y, SuperMissile.WIDTH, SuperMissile.HEIGHT, world.enemies.peek(),world.projectiles,world.enemies));
 
 				}
 				else if (OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) {
@@ -159,7 +155,7 @@ public class GameScreen implements Screen {
 					//attivatraj=true;
 					//this.missileON = true;
 					if (--world.missiles <= 0) world.activemissile = false;
-					if (!world.enemies.isEmpty()) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, world.enemies.peek()));
+					if (!world.enemies.isEmpty()) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, Missile.WIDTH, Missile.HEIGHT, world.enemies.peek()));
 
 				} /*else if (this.missileON) {
 						int i = 0;
@@ -217,20 +213,20 @@ public class GameScreen implements Screen {
 						Gdx.app.debug("fling", "trascino giù");
 						
 						
-						if(!decrementonos){
+						if(!world.decrementonos){
 							world.signal2screen=14;
 							world.freezeON = true;
-						decremento=true;}
-						if(decrementonos)
+							world.decremento=true;}
+						if(world.decrementonos)
 						{
-							decrementonos=false;
+							world.decrementonos=false;
 							world.TurboLess();
 						}
 					} else if (velocityY < 20) {
 						Gdx.app.debug("fling", "trascino su");
-						if(!world.freezeON)decrementonos=true;
+						if(!world.freezeON)world.decrementonos=true;
 						world.freezeON = false;
-						decremento=false;
+						world.decremento=false;
 					}
 					// Ignore the input, because we don't care about up/down swipes.
 				}
@@ -285,33 +281,7 @@ public class GameScreen implements Screen {
 			}
 		}*/
 		//FIXME
-		if(decremento)
-		{
-			level.decremento(deltaTime);
-			if(level.isEmpty)
-				{
-				world.freezeON=false;
-				decremento=false;
-				}
-		}
-		if(!decremento){level.incremento(deltaTime);}
 		
-		//if(world.bob.enablenos==1)
-		{
-			if(decrementonos)
-			{
-				levelnos.decremento(deltaTime);
-				world.turbo=true;
-				world.Turbo();
-				if (rand.nextFloat() < 0.5f) Gdx.input.vibrate(new long[] { 10, 5, 5}, -1); 
-				if(levelnos.isEmpty)
-					{
-					world.TurboLess();
-					decrementonos=false;
-					}
-			}
-			if(!decrementonos){levelnos.incremento(deltaTime);}
-		}
 		ApplicationType appType = Gdx.app.getType();
 		// should work also with Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)
 		if (Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)) {
@@ -322,6 +292,7 @@ public class GameScreen implements Screen {
 			if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT) || Gdx.input.isKeyPressed(Keys.A)) accel = 5f;
 			if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT) || Gdx.input.isKeyPressed(Keys.D)) accel = -5f;
 			if (Gdx.input.isKeyPressed(Keys.SPACE)) world.ShotProjectile();
+			world.update(deltaTime, accel);
 		}
 		if (world.score != lastScore) {
 			lastScore = world.score;
@@ -383,7 +354,7 @@ public class GameScreen implements Screen {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderer.render();
 		guiCam.update();
-		level.update(deltaTime);
+		
 		batcher.setProjectionMatrix(guiCam.combined);
 		batcher.enableBlending();
 		batcher.begin();
@@ -423,14 +394,12 @@ public class GameScreen implements Screen {
 		
 		batcher.draw(Assets.pause, 320 - 49, 480 - 53, 44, 44);
 		{
-			//batcher.draw(Assets.tmprectwhite, 15, 50, 10, 90/level.constant);
-			batcher.draw(Assets.tmprectwhite, 15, 45, 10, 85);
-			batcher.draw(Assets.tmprectwhite, 27, 45, 8, 85);
-			batcher.draw(Assets.tmprectblack, 15, 45, 10, 5*level.constant);
-			batcher.draw(Assets.tmprectblack, 27, 45, 8, 5*levelnos.constant);
+			batcher.draw(Assets.tmprectwhite, 20, 48, 12, 90);
+			batcher.draw(Assets.tmprectwhite, 36.5f, 48, 12, 90);
+			batcher.draw(Assets.tmprectblack, 20, 48, 12, 5.6f*world.level.constant);
+			batcher.draw(Assets.tmprectblack, 36.5f, 48, 12,  5.6f*world.levelnos.constant);
 			}
-		batcher.draw(Assets.level, -35, 480 - 479, 130, 154);
-	
+		batcher.draw(Assets.level, -53, 480 - 479, 190, 170);
 		//Assets.fontsmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		//Assets.fontsmall.scale(3f);explosion text 
 		batcher.draw(Assets.tubo, 0, 225, 250, 280);
@@ -451,7 +420,7 @@ public class GameScreen implements Screen {
 	{ 
 		if (world.signal2screen==1)
 		{
-			stampo("+10 ammo");
+			stampo("+30 ammo");
 		}
 		else if (world.signal2screen==2)
 		{
