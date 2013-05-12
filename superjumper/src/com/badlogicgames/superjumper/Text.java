@@ -1,40 +1,38 @@
 package com.badlogicgames.superjumper;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogicgames.superjumper.Assets;
+import com.badlogicgames.superjumper.DynamicGameObject;
 
 public class Text extends DynamicGameObject {
+	public static final float DURATION = -1f;
 	public String string;
 	public float stateTime;
-	public static final float DURATION = 1000f;
-	public final float duration;
-	private final GameObject obj;
+	public float duration;
 	
 
-	public Text (float x, float y, String string, float duration, GameObject obj) {
-		super(x, y, 0, 0);
+	public Text (float x, float y, String string) {
+		super(x, y, 1, 1);
 		this.string = string;
 		this.stateTime = 0;
-		if (duration > 0) this.duration = duration;
-		else this.duration = DURATION;
-		this.obj = obj;
+		this.duration = DURATION;
 	}
 
 	public void draw(SpriteBatch batch) {
-		Assets.handfontsmall.scale(-0.5f);
 		float width = Assets.handfontsmall.getBounds(string).width; //Get the width of the text we draw using the current font
 		float height = Assets.handfontsmall.getBounds(string).height; //Get the height of the text we draw using the current font
 		Assets.handfontsmall.draw(batch,string,position.x-width/2,position.y-height/2);
 		Gdx.app.debug("drawtext", "position.x = " + position.x + ", position.y = " + position.y + ", width = " + width + ", height = " + height);
-		//Assets.handfontsmall.draw(batch, this.string, this.position.x, this.position.y);
-		Assets.handfontsmall.scale(0.5f);
-
-		
 	}
 
 	public void update(float deltaTime) {
-		stateTime += deltaTime/100;
-		//this.position.x = this.obj.position.x;
-		this.position.y = this.obj.position.y + 50f;
+		this.stateTime += deltaTime;
+	}
+	
+	public void update(float deltaTime, String newtext) {
+		this.update(deltaTime);
+		this.string = newtext;
 	}
 }

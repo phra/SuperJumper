@@ -15,16 +15,17 @@ public class WorldRenderer {
 	private static float[] verts = new float[20];
 	//static int a = 0;
 	World world;
-	OrthographicCamera cam;
+	OrthographicCamera cam, screencam;
 	SpriteBatch batch;
 	TextureRegion background;
 	TextureRegion portaproj; //FIXME
 
 
-	public WorldRenderer (SpriteBatch batch, World world) {
+	public WorldRenderer (SpriteBatch batch, World world, OrthographicCamera screencam) {
 		this.world = world;
 		this.cam = new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
 		this.cam.position.set(FRUSTUM_WIDTH / 2, FRUSTUM_HEIGHT / 2, 0);
+		this.screencam = screencam;
 		this.batch = batch;
 		this.portaproj = new TextureRegion(Assets.portaproj);
 
@@ -65,8 +66,13 @@ public class WorldRenderer {
 		renderButtons();
 		renderBubble();
 		renderExplosions();
+		batch.end();
+		batch.begin();
+		batch.setProjectionMatrix(screencam.combined);
 		renderTexts();
 		batch.end();
+		batch.disableBlending();
+		
 	}
 	
 	private void renderTexts() {

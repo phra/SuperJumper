@@ -57,7 +57,7 @@ public class GameScreen implements Screen {
 		this.game = game;
 		this.buttons = new ArrayList<Button>();
 		state = GAME_READY;
-		guiCam = new OrthographicCamera(320, 480);
+		guiCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		guiCam.position.set(320 / 2, 480 / 2, 0);
 		touchPoint = new Vector3();
 		batcher = new SpriteBatch();
@@ -97,7 +97,7 @@ public class GameScreen implements Screen {
 
 		};
 		world = new World(worldListener);
-		renderer = new WorldRenderer(batcher, world);
+		renderer = new WorldRenderer(batcher, world, guiCam);
 		pauseBounds = new Rectangle(320 - 64, 480 - 64, 64, 64);
 		resumeBounds = new Rectangle(160 - 96, 240, 192, 36);
 		quitBounds = new Rectangle(160 - 96, 240 - 36, 192, 36);
@@ -326,7 +326,7 @@ public class GameScreen implements Screen {
 	private void updateLevelEnd () {
 		if (Gdx.input.justTouched()) {
 			world = new World(worldListener);
-			renderer = new WorldRenderer(batcher, world);
+			renderer = new WorldRenderer(batcher, world, guiCam);
 			world.score = lastScore;
 			state = GAME_READY;
 		}
@@ -340,11 +340,10 @@ public class GameScreen implements Screen {
 	}
 
 	public void draw (float deltaTime) {
-		GLCommon gl = Gdx.gl;
+		GLCommon gl = Gdx.gl20;
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderer.render();
 		guiCam.update();
-		
 		batcher.setProjectionMatrix(guiCam.combined);
 		batcher.enableBlending();
 		batcher.begin();
@@ -402,7 +401,7 @@ public class GameScreen implements Screen {
 		scorelife = world.life+"x ";
 		Assets.handfontsmaller.draw(batcher, scorelife, 282, 480 - 90);
 		batcher.draw(Assets.portalife, 276, 480 - 95, 35, 35);
-		controlLockCharacter();
+		//controlLockCharacter();
 
 	}   
 
