@@ -54,10 +54,11 @@ public class World {
 	private Vector2 gravity = new Vector2(0,15);
 	float enemyshotTime=0;
 	protected boolean activemissile = false;
-	public LinkedList<Enemy> enemies;
+	public final LinkedList<Enemy> enemies;
 	public boolean supermissileButton = false;
 	public boolean bubbleButton = false;
 	public int supermissiles = 0;
+	public final LinkedList<Text> texts;
 	Boolean decremento=false;
 	Boolean decrementonos=false;
 	LevelOption level=new LevelOption();
@@ -84,7 +85,7 @@ public class World {
 		this.state = WORLD_STATE_RUNNING;
 		this.randsquirrel=new Random();
 		this.enemies = new LinkedList<Enemy>();
-
+		this.texts = new LinkedList<Text>();
 	}
 
 	private void generateLevel () {
@@ -227,6 +228,7 @@ public class World {
 		score += (int)bob.velocity.y/10;
 		if (this.freezeON)deltaTime /= 4;
 		level.update(deltaTime);
+		updateTexts(deltaTime);
 		updateBob(deltaTime, accelX);
 		updatePlatforms(deltaTime);
 		updateSquirrels(deltaTime);
@@ -243,7 +245,16 @@ public class World {
 		checkRemoveSquirrel();
 		checkRemoveExplosions();
 	}
-
+	
+	private void updateTexts(float deltaTime) {
+		for (int i = 0; i < this.texts.size(); i++) {
+			Text text = this.texts.get(i);
+			text.update(deltaTime);
+			if (text.stateTime > text.duration) {
+				texts.remove(i);
+			}
+		}
+	}
 
 	private void updateExplosions(float deltaTime) {
 		for (Explosion exp : this.explosions) {
@@ -367,7 +378,6 @@ public class World {
 	}
 
 	private void updatePlatforms (float deltaTime) {
-
 		for ( Platform plat : this.platforms) {
 			if (plat.type == Platform.PLATFORM_TYPE_MOVING && bob.position.y-plat.position.y>-9){
 				Utils.changeGravityTowards(plat, bob);
@@ -381,10 +391,6 @@ public class World {
 			len = platforms.size();
 		}
 	}
-
-
-
-
 
 	private void updateSquirrels (float deltaTime) {
 		for (Squirrel squirrel : this.squirrels) {
@@ -538,7 +544,7 @@ public class World {
 	}
 
 
-	private void checkSquirrelCollisions () {
+	private void checkSquirrelCollisions () { 
 		float random=randsquirrel.nextFloat();
 		for (int i = 0; i < squirrels.size(); i++) {
 			Squirrel squirrel = squirrels.get(i);
@@ -550,14 +556,16 @@ public class World {
 					LifeMore();
 					squirrel.inuse=true;
 					signal2screen=2;
+					this.texts.offer(new Text(bob.position.x,bob.position.y,"vita",0,bob));//FIXME
 				} else if(random<= 0.5f && !this.supermissileButton) {    
-					Gdx.app.debug("checkSquirrelCollisions", "nos");
+					Gdx.app.debug("checkSquirrelCollisions", "supermissile");
 					/*GameScreen si occupa di controllare il click sul nos x attivarlo*/
 					squirrel.state=Squirrel.NOS_CLISION;
 					//squirrel.inuse=true;
 					//squirrel.nosTap=true;
 					//bob.enablenos=1;
 					if ((supermissiles+=10) > 0) this.supermissileButton = true;
+					this.texts.offer(new Text(bob.position.x,bob.position.y,"supermissile",0,bob));//FIXME
 
 				} else if(random<=0.75f && this.bubbleButton == false && bob.enablebubble==false) {
 					Gdx.app.debug("checkSquirrelCollisions", "bolla");
@@ -566,9 +574,11 @@ public class World {
 					this.bubbleButton = true;
 					squirrel.bubbleuse=1;
 					squirrel.inuse=true;
+					this.texts.offer(new Text(bob.position.x,bob.position.y,"bolla",0,bob));//FIXME
 				} else if(random<=0.85f && !this.activemissile) { 
 					Gdx.app.debug("checkSquirrelCollisions", "missile");
 					if ((missiles+=10) > 0) this.activemissile = true;
+					this.texts.offer(new Text(bob.position.x,bob.position.y,"missile",0,bob));//FIXME
 					//GameScreen.attivatraj = true;
 				} else { 
 					Gdx.app.debug("checkSquirrelCollisions", "ammo");
@@ -576,6 +586,7 @@ public class World {
 					shot+=30;
 					squirrel.inuse=true;
 					signal2screen=1;
+					this.texts.offer(new Text(bob.position.x,bob.position.y,"ammo!!!!!!!!!!!!!!",0,bob));//FIXME
 				}   
 				listener.hit(); 
 				squirrels.remove(squirrel);

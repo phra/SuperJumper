@@ -124,13 +124,7 @@ public class GameScreen implements Screen {
 			public boolean tap (float x, float y, int count, int button) {
 				guiCam.unproject(touchPoint.set(x, y, 0));				
 				if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
-					Assets.playSound(Assets.clickSound);
-					Button buttone = new Button(90,230);
-					buttons.add(buttone);
-					Button buttones = new Button(88,180);
-					buttons.add(buttones);
-					state = GAME_PAUSED;
-
+					pause();
 				}
 				if (world.supermissiles > 0 && OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) {
 					//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
@@ -562,7 +556,12 @@ public class GameScreen implements Screen {
 	public void pause () {
 		Settings.addScore(world.score);
 		Settings.save();
-		if (state == GAME_RUNNING) state = GAME_PAUSED;
+		Assets.playSound(Assets.clickSound);
+		Button buttone = new Button(90,230);
+		buttons.add(buttone);
+		Button buttones = new Button(88,180);
+		buttons.add(buttones);
+		state = GAME_PAUSED;
 	}
 
 	@Override

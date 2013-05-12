@@ -65,7 +65,14 @@ public class WorldRenderer {
 		renderButtons();
 		renderBubble();
 		renderExplosions();
+		renderTexts();
 		batch.end();
+	}
+	
+	private void renderTexts() {
+		for (Text text : world.texts) {
+			text.draw(batch);
+		}
 	}
 
 	private void renderExplosions() {
