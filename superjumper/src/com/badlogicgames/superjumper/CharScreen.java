@@ -79,9 +79,9 @@ public class CharScreen implements Screen {
 		this.bob.CHARSCREENUSE=1;
 		this.bobfem.CHARSCREENUSE=1;
 		this.bobmil.CHARSCREENUSE=1;
-		Button button = new Button(150,220);
+		Button button = new Button(150,220,Assets.lock);
 		buttons.add(button);
-		Button buttones = new Button(150,120);
+		Button buttones = new Button(150,120,Assets.locked);
 		buttons.add(buttones);
 
 		gestureDetector = new GestureDetector(20, 0.5f, 2, 0.15f, new GestureListener() {
@@ -246,12 +246,17 @@ public class CharScreen implements Screen {
 		batcher.begin();
 		batcher.draw(Assets.icontext,275,10,45,45);
 		batcher.draw(Assets.icontextback,0,10,45,45);
-		int len = buttons.size();
+		//int len = buttons.size();
+		/*
 		for (int i = 0; i < len; i++) {
 			Button button = buttons.get(i);
 			Texture keyFrame =Assets.lock;
 			if(i==1)keyFrame=Assets.locked;
 			//batcher.draw(keyFrame,button.position.x,button.position.y,145,145);
+		}*/
+
+		for (Button button : buttons) {
+			button.draw(batcher);
 		}
 
 		Assets.fontsmall.draw(batcher, "GO", 285,40);

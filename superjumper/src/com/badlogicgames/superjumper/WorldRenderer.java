@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -28,15 +29,80 @@ public class WorldRenderer {
 		this.screencam = screencam;
 		this.batch = batch;
 		this.portaproj = new TextureRegion(Assets.portaproj);
-
 	}
 
+
 	public void render () {
-		if (world.bob.position.y+5 > cam.position.y) cam.position.y = world.bob.position.y+5;
-		cam.update();
-		batch.setProjectionMatrix(cam.combined);
-		renderBackground();
-		renderObjects();
+		switch (world.state){
+		case CONSTANTS.GAME_RUNNING:
+			batch.enableBlending();
+			cam.position.y = world.bob.position.y+4;
+			cam.update();
+			batch.setProjectionMatrix(cam.combined);
+			renderBackground();
+			batch.begin();
+			renderObjects();
+			batch.end();
+			batch.begin();
+			batch.setProjectionMatrix(screencam.combined);
+			renderUI();
+			batch.end();
+			batch.disableBlending();
+			break;
+
+		case CONSTANTS.GAME_PAUSED:
+			batch.begin();
+			batch.setProjectionMatrix(screencam.combined);
+			batch.draw(Assets.welcomepaused,0,0,UI.SCREENWIDTH,UI.SCREENHEIGHT);
+			batch.enableBlending();
+			for (Button button : world.buttons) {
+				button.draw(batch);
+			}
+			batch.end();
+			break;
+
+		case CONSTANTS.GAME_LEVEL_END:
+			batch.begin();
+			String topText = "your friends ...";
+			String bottomText = "... aren't here!";
+			float topWidth = Assets.font.getBounds(topText).width;
+			float bottomWidth = Assets.font.getBounds(bottomText).width;
+			Assets.handfontsmall.draw(batch, topText, UI.SCREENWIDTH/2 - topWidth / 2, UI.SCREENHEIGHT - 40);
+			Assets.handfontsmall.draw(batch, bottomText, UI.SCREENWIDTH/2 - bottomWidth / 2, 40);
+			batch.end();
+			break;
+
+		case CONSTANTS.GAME_OVER:
+			batch.begin();
+			Assets.handfontsmall.scale(-0.3f);
+			new Text(UI.SCREENWIDTH/2 - 200 / 2,UI.SCREENHEIGHT*2/3,"G A M E  O V E R").draw(batch);
+			world.scoretext.draw(batch);
+			Assets.handfontsmall.scale(0.3f);
+			batch.end();
+			break;
+
+		case CONSTANTS.GAME_READY:
+			batch.begin();
+			new Text(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2,"R E A D Y ?").draw(batch);
+			batch.end();
+			break;
+
+
+		}
+	}
+
+	private void renderUI() {
+		renderTexts();
+		renderButtons();
+		batch.draw(Assets.pause, UI.POSITIONPAUSEX, UI.AMMOPOSITIONY, UI.INDICATORSIZE, UI.INDICATORSIZE);
+		batch.draw(Assets.portaproj, UI.POSITIONPORTAPROJX, UI.POSITIONPORTAPROJY, UI.INDICATORSIZE, UI.INDICATORSIZE);
+		batch.draw(Assets.portalife, UI.POSITIONPORTALIFEX,UI.POSITIONPORTALIFEY, UI.INDICATORSIZE, UI.INDICATORSIZE);
+		batch.draw(Assets.tmprectwhite, 20, 48, 12, 90);
+		batch.draw(Assets.tmprectwhite, 36.5f, 48, 12, 90);
+		batch.draw(Assets.tmprectblack, 20, 48, 12, 5.6f * world.level.constant);
+		batch.draw(Assets.tmprectblack, 36.5f, 48, 12, 5.6f*world.levelnos.constant);
+		batch.draw(Assets.level, UI.LEVELPOSITIONX, UI.LEVELPOSITIONY, 190, 170);
+		batch.draw(Assets.tubo, UI.TUBOPOSITIONX, UI.TUBOPOSITIONY, UI.TUBOWIDTH, UI.TUBOHEIGHT);
 	}
 
 	public void renderBackground () {
@@ -44,16 +110,14 @@ public class WorldRenderer {
 		gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT | GL10.GL_STENCIL_BUFFER_BIT);
 		//Gradient Background 
-		batch.begin();
 		batch.disableBlending();
+		batch.begin();
 		drawGradient(batch, Assets.rect, 0, 0, 10, 110,Color.BLACK,Assets.colore, false);
-		batch.enableBlending();
 		batch.end();
+		batch.enableBlending();
 	}
 
 	public void renderObjects () {
-		batch.enableBlending();
-		batch.begin();
 		renderStars();
 		renderBob();
 		renderPlatforms();
@@ -63,18 +127,10 @@ public class WorldRenderer {
 		renderEnemy();
 		renderProjectiles();
 		renderProjectilesenemy();
-		renderButtons();
 		renderBubble();
 		renderExplosions();
-		batch.end();
-		batch.begin();
-		batch.setProjectionMatrix(screencam.combined);
-		renderTexts();
-		batch.end();
-		batch.disableBlending();
-		
 	}
-	
+
 	private void renderTexts() {
 		for (Text text : world.texts) {
 			text.draw(batch);
@@ -217,17 +273,17 @@ public class WorldRenderer {
 			TextureRegion keyFrame;
 			if (world.enemies.isEmpty())keyFrame = Assets.portamissilebnRegion;
 			else keyFrame = Assets.nosAnim.getKeyFrame(0, Animation.ANIMATION_LOOPING);//must add stateTime
-			batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 2.8f , 1.5f, 1.5f);
+			batch.draw(keyFrame, UI.MISSILEPOSITIONX, UI.MISSILEPOSITIONY, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		}
 		if (world.supermissileButton == true ){
 			TextureRegion keyFrame;
 			if (world.enemies.isEmpty())keyFrame = Assets.doubleportamissilebnRegion;
 			else keyFrame = Assets.doubleportamissileRegion;
-			batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 4.8f , 1.5f, 1.5f);
+			batch.draw(keyFrame, UI.SUPERMISSILEPOSITIONX, UI.SUPERMISSILEPOSITIONY, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		}
 		if (world.bubbleButton == true ){
 			TextureRegion keyFrame = Assets.bubbleAnim.getKeyFrame(0, Animation.ANIMATION_LOOPING);
-			batch.draw(keyFrame,cam.position.x + 3.4f, cam.position.y - 6.8f , 1.5f, 1.5f);
+			batch.draw(keyFrame, UI.BUBBLEPOSITIONX, UI.BUBBLEPOSITIONX, UI.INDICATORSIZE, UI.INDICATORSIZE);
 
 		}
 	}

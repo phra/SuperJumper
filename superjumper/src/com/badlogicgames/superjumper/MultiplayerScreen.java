@@ -49,9 +49,9 @@ public class MultiplayerScreen implements Screen {
 		ServerBounds = new Rectangle(100, 260, 300, 20);
 		touchPoint = new Vector3();
 		batcher = new SpriteBatch();
-		Button button = new Button(90,230);
+		Button button = new Button(90,230,Assets.resume);
 		buttons.add(button);
-		Button buttones = new Button(90,180);
+		Button buttones = new Button(90,180,Assets.quit);
 		buttons.add(buttones);
 	
 	}

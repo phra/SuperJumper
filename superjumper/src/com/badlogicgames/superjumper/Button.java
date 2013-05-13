@@ -16,37 +16,28 @@
 
 package com.badlogicgames.superjumper;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Button extends DynamicGameObject {
-	public static float BUTTON_WIDTH = 1.7f;
-	public static float BUTTON_HEIGHT = 1.7f;
-	public static float x1=320;
-	public static float y1=190;
-	public float x2=0;
-	public float y2=0;
-	float stateTime;
-	int state;
+	//public float stateTime;
+	public Texture texture;
 	public Vector2 gravity = new Vector2();
 
-	public Button (float x, float y) {
-		super(x1, y1, BUTTON_WIDTH, BUTTON_HEIGHT);
-		x2=x;
-		y2=y;
+	public Button (float x, float y, Texture texture) {
+		super(x, y, UI.BUTTONWIDTH, UI.BUTTONHEIGHT);
+		this.texture = texture;
 	}
-	public void update (float deltaTime) {
-		velocity.x = (x2 - position.x)*15;
-		velocity.y = (y2 - position.y)*15;
-		velocity.add(gravity.x * deltaTime, gravity.y * deltaTime);
-		position.add(velocity.x * deltaTime, velocity.y * deltaTime);
-		bounds.x = position.x - bounds.width / 2;
-		bounds.y = position.y - bounds.height / 2;
-		stateTime += deltaTime;
 
+	public void update(float deltaTime) {
+		//this.stateTime += deltaTime;
 	}
- public void checkposition(){
-	 if(position.x<160 && position.y<240)
-gravity.x=0;
-	 
- }
+
+	public void draw(SpriteBatch batch) {
+		//Gdx.app.debug("DRAWBUTTON", "this.position.x = " + this.position.x + ", this.position.y = " + this.position.y);
+		batch.draw(texture,this.position.x,this.position.y,UI.BUTTONWIDTH, UI.BUTTONHEIGHT);
+	}
+
 }

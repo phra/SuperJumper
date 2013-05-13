@@ -147,10 +147,10 @@ public class GameScreenMulti implements Screen {
 			lastScore = world.score;
 			scoreString = "SCORE: " + lastScore;
 		}
-		if (world.state == World.WORLD_STATE_NEXT_LEVEL) {
+		if (world.state == World.GAME_LEVEL_END) {
 			state = GAME_LEVEL_END;
 		}
-		if (world.state == World.WORLD_STATE_GAME_OVER) {
+		if (world.state == World.GAME_OVER) {
 			state = GAME_OVER;
 			if (lastScore >= Settings.highscores[4])
 
