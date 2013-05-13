@@ -53,7 +53,7 @@ public class WorldRenderer {
 		case CONSTANTS.GAME_PAUSED:
 			batch.begin();
 			batch.setProjectionMatrix(screencam.combined);
-			batch.draw(Assets.welcomepaused,0,0,UI.SCREENWIDTH,UI.SCREENHEIGHT);
+			batch.draw(Assets.welcomepaused,0,0,UI.SCREENWIDTH*1.6f,UI.SCREENHEIGHT*1.2f);
 			batch.enableBlending();
 			for (Button button : world.buttons) {
 				button.draw(batch);
@@ -94,7 +94,7 @@ public class WorldRenderer {
 	private void renderUI() {
 		renderTexts();
 		renderButtons();
-		batch.draw(Assets.pause, UI.POSITIONPAUSEX, UI.AMMOPOSITIONY, UI.INDICATORSIZE, UI.INDICATORSIZE);
+		batch.draw(Assets.pause,UI.POSITIONPAUSEX - UI.INDICATORSIZE/2 , UI.POSITIONPAUSEY  - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		batch.draw(Assets.portaproj, UI.POSITIONPORTAPROJX, UI.POSITIONPORTAPROJY, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		batch.draw(Assets.portalife, UI.POSITIONPORTALIFEX,UI.POSITIONPORTALIFEY, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		batch.draw(Assets.tmprectwhite, 20, 48, 12, 90);
@@ -273,17 +273,17 @@ public class WorldRenderer {
 			TextureRegion keyFrame;
 			if (world.enemies.isEmpty())keyFrame = Assets.portamissilebnRegion;
 			else keyFrame = Assets.nosAnim.getKeyFrame(0, Animation.ANIMATION_LOOPING);//must add stateTime
-			batch.draw(keyFrame, UI.MISSILEPOSITIONX, UI.MISSILEPOSITIONY, UI.INDICATORSIZE, UI.INDICATORSIZE);
+			batch.draw(keyFrame, UI.MISSILEPOSITIONX - UI.INDICATORSIZE/2, UI.MISSILEPOSITIONY - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		}
 		if (world.supermissileButton == true ){
 			TextureRegion keyFrame;
 			if (world.enemies.isEmpty())keyFrame = Assets.doubleportamissilebnRegion;
 			else keyFrame = Assets.doubleportamissileRegion;
-			batch.draw(keyFrame, UI.SUPERMISSILEPOSITIONX, UI.SUPERMISSILEPOSITIONY, UI.INDICATORSIZE, UI.INDICATORSIZE);
+			batch.draw(keyFrame,UI.SUPERMISSILEPOSITIONX - UI.INDICATORSIZE/2, UI.SUPERMISSILEPOSITIONY - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		}
 		if (world.bubbleButton == true ){
 			TextureRegion keyFrame = Assets.bubbleAnim.getKeyFrame(0, Animation.ANIMATION_LOOPING);
-			batch.draw(keyFrame, UI.BUBBLEPOSITIONX, UI.BUBBLEPOSITIONX, UI.INDICATORSIZE, UI.INDICATORSIZE);
+			batch.draw(keyFrame, UI.BUBBLEPOSITIONX - UI.INDICATORSIZE/2, UI.BUBBLEPOSITIONY - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 
 		}
 	}

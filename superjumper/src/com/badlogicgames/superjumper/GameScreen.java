@@ -95,7 +95,7 @@ public class GameScreen implements Screen, CONSTANTS {
 		world.buttons.add(new Button(UI.BUTTONRESUMEPOSITIONX ,UI.BUTTONRESUMEPOSITIONY,Assets.resume));
 		world.buttons.add(new Button(UI.BUTTONQUITPOSITIONX,UI.BUTTONQUITPOSITIONY,Assets.quit));
 		renderer = new WorldRenderer(batcher, world, guiCam);
-		pauseBounds = new Rectangle(UI.POSITIONPAUSEX - UI.INDICATORSIZE/2, UI.POSITIONPAUSEY - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
+		pauseBounds = new Rectangle(UI.POSITIONPAUSEX - UI.INDICATORSIZE/2 , UI.POSITIONPAUSEY  - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		resumeBounds = new Rectangle(UI.BUTTONRESUMEPOSITIONX - UI.BUTTONWIDTH/2, UI.BUTTONRESUMEPOSITIONY - UI.BUTTONHEIGHT/2, UI.BUTTONWIDTH, UI.BUTTONHEIGHT);
 		quitBounds = new Rectangle(UI.BUTTONQUITPOSITIONX - UI.BUTTONWIDTH/2 , UI.BUTTONQUITPOSITIONY - UI.BUTTONHEIGHT/2, UI.BUTTONWIDTH, UI.BUTTONHEIGHT);
 		missileBounds = new Rectangle(UI.MISSILEPOSITIONX - UI.INDICATORSIZE/2, UI.MISSILEPOSITIONY - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
@@ -167,7 +167,7 @@ public class GameScreen implements Screen, CONSTANTS {
 							Assets.playSound(Assets.clickSound);
 							if (b.texture == Assets.resume){
 								Gdx.app.debug("TAP", "RESUME");
-								state = GAME_RUNNING;
+								world.state = GAME_RUNNING;
 							} else if (b.texture == Assets.quit){
 								Gdx.app.debug("TAP", "QUIT");
 								game.setScreen(new MainMenuScreen(game));
