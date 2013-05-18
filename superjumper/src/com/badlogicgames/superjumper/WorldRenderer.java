@@ -195,29 +195,14 @@ public class WorldRenderer {
 	}
 
 	private void renderPlatforms () {
+		int i = 0;
+		//batch.disableBlending();
 		for (Platform platform : world.platforms) {
-			switch (platform.rendertype) {
-			case 0:
-				//batch.draw(Assets.meteoragrigiaRegion, platform.position.x - 0.75f, platform.position.y - 0.75f, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT);
-				batch.draw(Assets.meteoragrigiaRegion,platform.position.x - 0.75f,platform.position.y,Platform.PLATFORM_WIDTH/2,Platform.PLATFORM_HEIGHT/2, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT, 1, 1, -platform.rotation);
-				break;
-			case 1:
-				//batch.draw(Assets.meteorabluRegion, platform.position.x - 0.75f, platform.position.y - 0.75f, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT);
-				batch.draw(Assets.meteorabluRegion,platform.position.x - 0.75f,platform.position.y,Platform.PLATFORM_WIDTH/2,Platform.PLATFORM_HEIGHT/2, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT, 1, 1, platform.rotation);
-				break;
-			case 2:
-				//batch.draw(Assets.meteorarosaRegion, platform.position.x - 0.75f, platform.position.y - 0.75f, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT);
-				batch.draw(Assets.meteorarosaRegion,platform.position.x - 0.75f,platform.position.y,Platform.PLATFORM_WIDTH/2,Platform.PLATFORM_HEIGHT/2, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT, 1, 1, -platform.rotation);
-				break;
-			case 3:
-				//batch.draw(Assets.meteoragiallaRegion, platform.position.x - 0.75f, platform.position.y - 0.75f, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT);
-				batch.draw(Assets.meteoragiallaRegion,platform.position.x - 0.75f,platform.position.y,Platform.PLATFORM_WIDTH/2,Platform.PLATFORM_HEIGHT/2, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT, 1, 1, platform.rotation);
-				break;
-			}
+			platform.draw(batch);
+			//Gdx.app.debug("RENDERPLATFORMS", "platform.rendertype = " + platform.rendertype + ", i = " + i++);
 		}
+		//batch.enableBlending();
 	}
-
-
 
 	private void renderItems () {
 		for (Spring spring : world.springs) {

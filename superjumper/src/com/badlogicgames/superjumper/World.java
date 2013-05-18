@@ -103,7 +103,7 @@ public class World implements UI, CONSTANTS {
 		float maxJumpHeight = this.PLATFORMS_DISTANCE;
 		float minJumpHeight = this.STARS_DISTANCE;
 		while (y < WORLD_HEIGHT - WORLD_WIDTH / 2) {
-			int type = y>WORLD_HEIGHT/3 ? Platform.PLATFORM_TYPE_MOVING : Platform.PLATFORM_TYPE_STATIC;
+			int type = y>WORLD_HEIGHT/3 && rand.nextFloat() > 0.5f ? Platform.PLATFORM_TYPE_MOVING : Platform.PLATFORM_TYPE_STATIC;
 			float x = rand.nextFloat() > 0.5f ? rand.nextFloat() *k : WORLD_WIDTH - rand.nextFloat() *k/2;
 			//star generate
 			int type_star = Star.STAR_TYPE_STATIC;//star
