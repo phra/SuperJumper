@@ -45,15 +45,13 @@ public class GameScreen implements Screen, CONSTANTS {
 	String scoreString;
 	private Random rand =  new Random(); //FIXME
 	private boolean missileON = false;
-	/*public static boolean attivatraj=false;
-	public LinkedList<Vector2> traiettoria;
-	private boolean prectouch = false;*/
+
 
 	public GameScreen (final Game game) {
 		this.game = game;
 		state = GAME_READY;
-		guiCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		guiCam.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+		guiCam = new OrthographicCamera(UI.SCREENWIDTH, UI.SCREENHEIGHT);
+		guiCam.position.set(UI.HALFSCREENWIDTH, UI.HALFSCREENHEIGHT, 0);
 		touchPoint = new Vector3();
 		batcher = new SpriteBatch();
 		worldListener = new WorldListener() {
@@ -92,8 +90,6 @@ public class GameScreen implements Screen, CONSTANTS {
 
 		};
 		world = new World(worldListener);
-		world.buttons.add(new Button(UI.BUTTONRESUMEPOSITIONX ,UI.BUTTONRESUMEPOSITIONY,Assets.resume));
-		world.buttons.add(new Button(UI.BUTTONQUITPOSITIONX,UI.BUTTONQUITPOSITIONY,Assets.quit));
 		renderer = new WorldRenderer(batcher, world, guiCam);
 		pauseBounds = new Rectangle(UI.POSITIONPAUSEX - UI.INDICATORSIZE/2 , UI.POSITIONPAUSEY  - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		resumeBounds = new Rectangle(UI.BUTTONRESUMEPOSITIONX - UI.BUTTONWIDTH/2, UI.BUTTONRESUMEPOSITIONY - UI.BUTTONHEIGHT/2, UI.BUTTONWIDTH, UI.BUTTONHEIGHT);
@@ -121,7 +117,7 @@ public class GameScreen implements Screen, CONSTANTS {
 			@Override
 			public boolean tap (float x, float y, int count, int button) {
 				guiCam.unproject(touchPoint.set(x, y, 0));
-				Gdx.app.debug("TAP", "touchPoint.x = " + touchPoint.x + "touchPoint.y = " + touchPoint.y);
+				Gdx.app.debug("TAP", "touchPoint.x = " + touchPoint.x + "touchPoint.y = " + touchPoint.y + ", worldstate = " + world.state);
 				switch (world.state) {
 
 				case CONSTANTS.GAME_RUNNING:
@@ -151,6 +147,12 @@ public class GameScreen implements Screen, CONSTANTS {
 					break;
 
 				case CONSTANTS.GAME_OVER:
+					if (world.score > Settings.highscores[4]){
+						world.scoretext.update(0, "NEW HIGHSCORE: " + world.score);
+						Settings.addScore(world.score);
+						Settings.save();
+					}
+					world.state = CONSTANTS.GAME_RUNNING;
 					game.setScreen(new MainMenuScreen(game));
 					break;
 
@@ -169,7 +171,7 @@ public class GameScreen implements Screen, CONSTANTS {
 								Gdx.app.debug("TAP", "RESUME");
 								world.state = GAME_RUNNING;
 							} else if (b.texture == Assets.quit){
-								Gdx.app.debug("TAP", "QUIT");
+								world.state = CONSTANTS.GAME_RUNNING;
 								game.setScreen(new MainMenuScreen(game));
 							}
 						}
@@ -179,6 +181,7 @@ public class GameScreen implements Screen, CONSTANTS {
 				case CONSTANTS.GAME_READY:
 					state = GAME_RUNNING;
 					break;
+				
 
 				}
 				return true;
@@ -216,11 +219,10 @@ public class GameScreen implements Screen, CONSTANTS {
 						}	
 					} else {
 						if(velocityY > 20) {
-							Gdx.app.debug("fling", "trascino giù");
+							Gdx.app.debug("fling", "trascino giu");
 
 
 							if(!world.decrementonos){
-								//world.signal2screen=14;
 								world.texts.offer(new FloatingText("BULLET TIME!",0.5f));
 								world.freezeON = true;
 								world.decremento=true;}
@@ -231,10 +233,12 @@ public class GameScreen implements Screen, CONSTANTS {
 							}
 						} else if (velocityY < 20) {
 							Gdx.app.debug("fling", "trascino su");
-							if(!world.freezeON)world.decrementonos=true;
+							if(!world.freezeON){
+								world.decrementonos=true;
+								world.texts.offer(new FloatingText("NOS!",2f));
+							}
 							world.freezeON = false;
 							world.decremento=false;
-							world.texts.offer(new FloatingText("NOS!",2f));
 						}
 						// Ignore the input, because we don't care about up/down swipes.
 					}
@@ -256,6 +260,9 @@ public class GameScreen implements Screen, CONSTANTS {
 			break;
 
 		case GAME_RUNNING:
+			if(!world.buttons.isEmpty())
+			for (int i=0;i<world.buttons.size();i++) {
+			world.buttons.remove(i);}
 			ApplicationType appType = Gdx.app.getType();
 			//if (appType == ApplicationType.Android || appType == ApplicationType.iOS) {
 			if (Gdx.input.isPeripheralAvailable(Peripheral.Accelerometer)) {
@@ -270,6 +277,8 @@ public class GameScreen implements Screen, CONSTANTS {
 			break;
 
 		case GAME_PAUSED:
+			for(int i=0;i<world.buttons.size();i++)
+				world.buttons.get(i).update(deltaTime);
 			break;
 
 		case GAME_LEVEL_END:
@@ -298,7 +307,9 @@ public class GameScreen implements Screen, CONSTANTS {
 
 	@Override
 	public void show () {
-	}
+		Assets.RectBlack();
+		Assets.RectWhite();
+}
 
 	@Override
 	public void hide () {
@@ -308,6 +319,8 @@ public class GameScreen implements Screen, CONSTANTS {
 
 	@Override
 	public void pause () {
+		world.buttons.add(new Button(UI.BUTTONRESUMEPOSITIONX ,UI.BUTTONRESUMEPOSITIONY,Assets.resume));
+		world.buttons.add(new Button(UI.BUTTONQUITPOSITIONX,UI.BUTTONQUITPOSITIONY,Assets.quit));
 		Assets.playSound(Assets.clickSound);
 		world.state = CONSTANTS.GAME_PAUSED;
 	}

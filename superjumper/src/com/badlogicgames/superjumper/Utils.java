@@ -84,6 +84,10 @@ public abstract class Utils {
 		//dyn.velocity.y = y - dyn.position.y;
 	}
 	
+	 private void setCircularPosition(DynamicGameObject obj, DynamicGameObject dst, float raggio, float stateTime){
+       obj.position.x = (float) (dst.position.x + raggio*Math.cos(stateTime));
+       obj.position.y = (float) (dst.position.y + raggio*Math.sin(stateTime));
+ }
 	
 	
 	public static double distance(GameObject a, GameObject b){

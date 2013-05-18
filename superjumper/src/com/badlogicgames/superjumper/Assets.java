@@ -15,6 +15,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Assets {
 	public static ParticleEffect particleEffect;
 	public static ParticleEffect particleClouds;
+	public static Texture meteorablu;
+	public static Texture meteoragialla;
+	public static Texture meteorarosa;
 	public static Texture level;
 	public static Texture missile;
 	public static Texture portamissilebn;
@@ -86,6 +89,10 @@ public class Assets {
 	public static Texture welcomepaused;
 	public static Texture resume,quit,ospita,partecipa;
 	public static Texture swipetext,swipe,swipe1,swipe2;
+	public static TextureRegion meteoragrigiaRegion;
+	public static TextureRegion meteorabluRegion;
+	public static TextureRegion meteoragiallaRegion;
+	public static TextureRegion meteorarosaRegion;
 	public static TextureRegion missileRegion;
 	public static TextureRegion portamissilebnRegion;
 	public static TextureRegion doubleportamissileRegion;
@@ -176,6 +183,9 @@ public class Assets {
 		doubleportamissilebn = loadTexture("data/doubleportamissilebn.png");
 		portamissilebn = loadTexture("data/portamissilebn.png");
 		missile = loadTexture("data/missile.png");
+		meteorablu = loadTexture("data/metblu.png");
+		meteoragialla = loadTexture("data/metgialla.png");
+		meteorarosa = loadTexture("data/metrosa.png");
 		level = loadTexture("data/level.png");
 		enemy = loadTexture("data/enemy.png");
 		enemy1 = loadTexture("data/enemy1.png");
@@ -253,6 +263,10 @@ public class Assets {
 		ready = new TextureRegion(items, 320, 224, 192, 32);		
 		spring = new TextureRegion(items, 128, 0, 32, 32);
 		castle = new TextureRegion(items, 128, 64, 64, 64);
+		meteoragrigiaRegion=new TextureRegion(coin1, 0, 0, 128, 128);
+		meteorabluRegion = new TextureRegion(meteorablu, 0, 0, 256, 256);
+		meteoragiallaRegion = new TextureRegion(meteoragialla, 0, 0, 256, 256);
+		meteorarosaRegion = new TextureRegion(meteorarosa, 0, 0, 256, 256);
 		doubleportamissileRegion = new TextureRegion(doubleportamissile, 0, 0, 256, 256);
 		doubleportamissilebnRegion = new TextureRegion(doubleportamissilebn, 0, 0, 256, 256);
 		portamissilebnRegion = new TextureRegion(portamissilebn, 0, 0, 256, 256);

@@ -22,11 +22,13 @@ public class Text extends DynamicGameObject {
 
 	public void draw(SpriteBatch batch) {
 		Assets.handfontsmall.scale(UI.TEXTSCALE);
+		//Assets.handfontsmall.setScale(UI.TEXTSCALEX,UI.TEXTSCALEY);
 		float width = Assets.handfontsmall.getBounds(string).width; //Get the width of the text we draw using the current font
 		float height = Assets.handfontsmall.getBounds(string).height; //Get the height of the text we draw using the current font
 		Assets.handfontsmall.draw(batch,string,position.x-width/2,position.y-height/2);
 		//Gdx.app.debug("drawtext", "position.x = " + position.x + ", position.y = " + position.y + ", width = " + width + ", height = " + height);
 		Assets.handfontsmall.scale(-UI.TEXTSCALE);
+		//Assets.handfontsmall.setScale(-UI.TEXTSCALEX,-UI.TEXTSCALEY);
 	}
 
 	public void update(float deltaTime) {

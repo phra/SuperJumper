@@ -53,12 +53,14 @@ public class WorldRenderer {
 		case CONSTANTS.GAME_PAUSED:
 			batch.begin();
 			batch.setProjectionMatrix(screencam.combined);
-			batch.draw(Assets.welcomepaused,0,0,UI.SCREENWIDTH*1.6f,UI.SCREENHEIGHT*1.2f);
+			batch.draw(Assets.welcomepaused,0,0,UI.SCREENPOSITIONX,UI.SCREENPOSITIONY);
 			batch.enableBlending();
 			for (Button button : world.buttons) {
 				button.draw(batch);
 			}
 			batch.end();
+			break;
+		case CONSTANTS.MAIN_MENU:
 			break;
 
 		case CONSTANTS.GAME_LEVEL_END:
@@ -74,8 +76,9 @@ public class WorldRenderer {
 
 		case CONSTANTS.GAME_OVER:
 			batch.begin();
+			batch.enableBlending();
 			Assets.handfontsmall.scale(-0.3f);
-			new Text(UI.SCREENWIDTH/2 - 200 / 2,UI.SCREENHEIGHT*2/3,"G A M E  O V E R").draw(batch);
+			new Text(UI.SCREENWIDTH/2 ,UI.SCREENHEIGHT*2/3,"G A M E  O V E R").draw(batch);
 			world.scoretext.draw(batch);
 			Assets.handfontsmall.scale(0.3f);
 			batch.end();
@@ -97,11 +100,11 @@ public class WorldRenderer {
 		batch.draw(Assets.pause,UI.POSITIONPAUSEX - UI.INDICATORSIZE/2 , UI.POSITIONPAUSEY  - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		batch.draw(Assets.portaproj, UI.POSITIONPORTAPROJX, UI.POSITIONPORTAPROJY, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		batch.draw(Assets.portalife, UI.POSITIONPORTALIFEX,UI.POSITIONPORTALIFEY, UI.INDICATORSIZE, UI.INDICATORSIZE);
-		batch.draw(Assets.tmprectwhite, 20, 48, 12, 90);
-		batch.draw(Assets.tmprectwhite, 36.5f, 48, 12, 90);
-		batch.draw(Assets.tmprectblack, 20, 48, 12, 5.6f * world.level.constant);
-		batch.draw(Assets.tmprectblack, 36.5f, 48, 12, 5.6f*world.levelnos.constant);
-		batch.draw(Assets.level, UI.LEVELPOSITIONX, UI.LEVELPOSITIONY, 190, 170);
+		batch.draw(Assets.tmprectwhite, UI.BARPOSITIONX,UI.BARPOSITIONY, UI.BARSIZEX, UI.BARSIZEY);
+		batch.draw(Assets.tmprectwhite,UI.SECONDBARPOSITIONX, UI.BARPOSITIONY,  UI.BARSIZEX,  UI.BARSIZEY);
+		batch.draw(Assets.tmprectblack,  UI.BARPOSITIONX , UI.BARPOSITIONY, UI.BARSIZEX, UI.BARCONSTANT * world.level.constant);
+		batch.draw(Assets.tmprectblack, UI.SECONDBARPOSITIONX, UI.BARPOSITIONY,  UI.BARSIZEX,  UI.BARCONSTANT*world.levelnos.constant);
+		batch.draw(Assets.level, UI.LEVELPOSITIONX, UI.LEVELPOSITIONY, UI.LEVELSIZEX, UI.LEVELSIZEY);
 		batch.draw(Assets.tubo, UI.TUBOPOSITIONX, UI.TUBOPOSITIONY, UI.TUBOWIDTH, UI.TUBOHEIGHT);
 	}
 
@@ -112,7 +115,7 @@ public class WorldRenderer {
 		//Gradient Background 
 		batch.disableBlending();
 		batch.begin();
-		drawGradient(batch, Assets.rect, 0, 0, 10, 110,Color.BLACK,Assets.colore, false);
+		drawGradient(batch, Assets.rect, 0, -2, 10, 110,Color.BLACK,Assets.colore, false);
 		batch.end();
 		batch.enableBlending();
 	}
@@ -150,7 +153,7 @@ public class WorldRenderer {
 		//render world terra
 		//Color c = new Color(batch.getColor()); 
 		//batch.setColor(0,1,0,1);
-		batch.draw(Assets.backgroundRegion1, 0, -1, FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
+		batch.draw(Assets.backgroundRegion1, 0, -3, FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
 		//batch.setColor(c);
 		switch (world.bob.state) {
 		case Bob.BOB_STATE_FALL:
@@ -192,62 +195,64 @@ public class WorldRenderer {
 	}
 
 	private void renderPlatforms () {
-		int len = world.platforms.size();
-		for (int i = 0; i < len; i++) {
-			Platform platform = world.platforms.get(i);
-			TextureRegion keyFrame ;
-			{keyFrame = Assets.coinAnim.getKeyFrame(platform.stateTime, Animation.ANIMATION_LOOPING);
-			batch.draw(keyFrame, platform.position.x - 0.75f, platform.position.y - 0.75f, 1.5f, 1.5f);
-			}}
+		for (Platform platform : world.platforms) {
+			switch (platform.rendertype) {
+			case 0:
+				//batch.draw(Assets.meteoragrigiaRegion, platform.position.x - 0.75f, platform.position.y - 0.75f, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT);
+				batch.draw(Assets.meteoragrigiaRegion,platform.position.x - 0.75f,platform.position.y,Platform.PLATFORM_WIDTH/2,Platform.PLATFORM_HEIGHT/2, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT, 1, 1, -platform.rotation);
+				break;
+			case 1:
+				//batch.draw(Assets.meteorabluRegion, platform.position.x - 0.75f, platform.position.y - 0.75f, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT);
+				batch.draw(Assets.meteorabluRegion,platform.position.x - 0.75f,platform.position.y,Platform.PLATFORM_WIDTH/2,Platform.PLATFORM_HEIGHT/2, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT, 1, 1, platform.rotation);
+				break;
+			case 2:
+				//batch.draw(Assets.meteorarosaRegion, platform.position.x - 0.75f, platform.position.y - 0.75f, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT);
+				batch.draw(Assets.meteorarosaRegion,platform.position.x - 0.75f,platform.position.y,Platform.PLATFORM_WIDTH/2,Platform.PLATFORM_HEIGHT/2, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT, 1, 1, -platform.rotation);
+				break;
+			case 3:
+				//batch.draw(Assets.meteoragiallaRegion, platform.position.x - 0.75f, platform.position.y - 0.75f, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT);
+				batch.draw(Assets.meteoragiallaRegion,platform.position.x - 0.75f,platform.position.y,Platform.PLATFORM_WIDTH/2,Platform.PLATFORM_HEIGHT/2, Platform.PLATFORM_WIDTH, Platform.PLATFORM_HEIGHT, 1, 1, platform.rotation);
+				break;
+			}
+		}
 	}
 
 
 
 	private void renderItems () {
-		int len = world.springs.size();
-		for (int i = 0; i < len; i++) {
-			Spring spring = world.springs.get(i);
-			batch.draw(Assets.spring, spring.position.x - 0.5f, spring.position.y - 0.5f, 1, 1);
+		for (Spring spring : world.springs) {
+			spring.draw(batch,Assets.coinAnim.getKeyFrame(0, Animation.ANIMATION_LOOPING));
 		}
-
-		len = world.coins.size();
-		for (int i = 0; i < len; i++) {
-			Coin coin = world.coins.get(i);
+		for (Coin coin : world.coins) {
 			TextureRegion keyFrame = Assets.platform.getKeyFrame(coin.stateTime, Animation.ANIMATION_LOOPING);
-			if (coin.state == Coin.COIN_STATE_PULVERIZING) {
-			}
 			batch.draw(keyFrame, coin.position.x - 1, coin.position.y - 0.25f, 2.5f, 2.5f);
 		}
 	}
 
+
 	private void renderProjectiles(){
-		int len = world.projectiles.size();
-		for (int i = 0; i < len; i++) {
-			Projectile projectile = world.projectiles.get(i);
-			TextureRegion keyFrame = Assets.projAnim.getKeyFrame(projectile.stateTime, Animation.ANIMATION_LOOPING);  
-			if(projectile.type==0 && projectile.state!=Projectile.MISSILE_STATE_PULVERIZING)
-			{
-				keyFrame = Assets.projAnim.getKeyFrame(projectile.stateTime, Animation.ANIMATION_LOOPING);    
+		TextureRegion keyFrame;
+		for (Projectile projectile : world.projectiles) {
+			//TextureRegion keyFrame = Assets.projAnim.getKeyFrame(projectile.stateTime, Animation.ANIMATION_LOOPING);
+			switch (projectile.type) {
+			case Projectile.TYPE:
+				keyFrame = Assets.projAnim.getKeyFrame(projectile.stateTime, Animation.ANIMATION_LOOPING);
 				batch.draw(keyFrame, projectile.position.x -0.07f , projectile.position.y+0.4f, 0.3f,0.6f);
-			}
-			else if(projectile.type==1 && projectile.state!=Projectile.MISSILE_STATE_PULVERIZING)
-			{
-				keyFrame = Assets.missileRegion;    
+				break;
+			case Missile.TYPE:
+				keyFrame = Assets.missileRegion;
 				batch.draw(keyFrame, projectile.position.x-0.4f , projectile.position.y+0.2f, 1f,1.4f);
-			}
-			else if(projectile.type==2 && projectile.state!=Projectile.MISSILE_STATE_PULVERIZING)
-			{
-				keyFrame = Assets.missileRegion;    
+				break;
+			case SuperMissile.TYPE:
+				keyFrame = Assets.missileRegion;
 				batch.draw(keyFrame, projectile.position.x-0.4f , projectile.position.y+0.2f, 1f,1.4f);
+				break;
 			}
 		}
 	}
 
-
 	private void renderProjectilesenemy(){
-		int len = world.projectenemy.size();
-		for (int i = 0; i < len; i++) {
-			Projectile projectenemy = world.projectenemy.get(i);
+		for (Projectile projectenemy : world.projectenemy) {
 			TextureRegion keyFrame = Assets.projAnim.getKeyFrame(projectenemy.stateTime, Animation.ANIMATION_LOOPING);  
 			batch.draw(keyFrame,projectenemy.position.x -0.07f ,projectenemy.position.y+0.4f,0, 0, 0.3f, 0.6f, 1, 1, 180);
 			//batch.draw(keyFrame, projectenemy.position.x -0.07f , projectenemy.position.y+0.4f, 0.3f,0.6f);

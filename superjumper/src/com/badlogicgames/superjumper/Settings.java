@@ -23,8 +23,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
-public class Settings {
+public abstract class Settings {
 	public static boolean soundEnabled = true;
 	public final static int[] highscores = new int[] {100, 80, 50, 30, 10};
 	public final static String file = ".superjumper";
@@ -38,12 +39,18 @@ public class Settings {
 			for (int i = 0; i < 5; i++) {
 				highscores[i] = Integer.parseInt(in.readLine());
 			}
-		} catch (Throwable e) {
+		} catch (IOException e) {
+			Gdx.app.debug("LOAD", "I/O exception");
 			// :( It's ok we have defaults
-		} finally {
+		} catch (GdxRuntimeException e){
+			Gdx.app.debug("LOAD", "GdxRuntimeException");
+		}
+
+		finally {
 			try {
 				if (in != null) in.close();
 			} catch (IOException e) {
+				Gdx.app.debug("LOAD", "I/O exception");
 			}
 		}
 	}
@@ -59,26 +66,30 @@ public class Settings {
 				out.write("\n");
 			}
 
-		} catch (Throwable e) {
+		} catch (IOException e) {
+			Gdx.app.debug("SAVE", "I/O exception");
+		} catch (GdxRuntimeException e){
+			Gdx.app.debug("SAVE", "GdxRuntimeException");
 		} finally {
 			try {
 				if (out != null) out.close();
 			} catch (IOException e) {
+				Gdx.app.debug("SAVE", "I/O exception");
 			}
 		}
 	}
-	
-	
+
+
 	public static void saveFloat (float i) {
 		BufferedWriter out = null;
 		try {
 			out = new BufferedWriter(new OutputStreamWriter(Gdx.files.external(file).write(false)));
-			
-				out.write(Float.toString(i));
-				out.write("\n");
-			
 
-		} catch (Throwable e) {
+			out.write(Float.toString(i));
+			out.write("\n");
+
+
+		} catch (IOException e) {
 		} finally {
 			try {
 				if (out != null) out.close();
@@ -86,17 +97,17 @@ public class Settings {
 			}
 		}
 	}
-	
-	
+
+
 
 	public static float readFloat () {
 		BufferedReader in = null;
 		float h = 0 ;
 		try {
 			in = new BufferedReader(new InputStreamReader(Gdx.files.external(file).read()));
-			
-				h = Float.parseFloat(in.readLine());
-			
+
+			h = Float.parseFloat(in.readLine());
+
 		} catch (Throwable e) {
 			// :( It's ok we have defaults
 		} finally {
@@ -107,13 +118,30 @@ public class Settings {
 		}
 		return h;
 	}
-
+	
+	/*
 	public static void addScore (int score) {
 		for (int i = 0; i < 5; i++) {
 			if (highscores[i] < score) {
 				for (int j = 4; j > i; j--)
 					highscores[j] = highscores[j - 1];
 				highscores[i] = score;
+				break;
+			}
+		}
+	}*/
+	
+	public static void addScore(int score) {
+		if (score <= highscores[4]) return;
+		for (int i = 0; i < 5; i++) {
+			if (score > highscores[i]) {
+				int temp1 = highscores[i];
+				highscores[i++] = score;
+				for (; i < 5; i++) {
+					int temp2 = highscores[i];
+					highscores[i] = temp1;
+					temp1 = temp2;
+				}
 				break;
 			}
 		}

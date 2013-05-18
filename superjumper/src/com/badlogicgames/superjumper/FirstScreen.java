@@ -42,9 +42,9 @@ public class FirstScreen implements Screen {
 	public FirstScreen (Game game) {
 		this.game = game;
 
-		guiCam = new OrthographicCamera(320, 480);
-		guiCam.position.set(320 / 2, 480 / 2, 0);
-		clickBounds = new Rectangle(0, 0, 320, 480);
+		guiCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		guiCam.position.set(Gdx.graphics.getWidth()/ 2, Gdx.graphics.getHeight() /2, 0);
+		clickBounds = new Rectangle(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
 		touchPoint = new Vector3();
 		batcher = new SpriteBatch();
 		//helpImage = Assets.loadTexture("data/help1.png");
@@ -67,23 +67,24 @@ public class FirstScreen implements Screen {
 		GLCommon gl = Gdx.gl;
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		guiCam.update();
-
 		batcher.setProjectionMatrix(guiCam.combined);
 		batcher.disableBlending();
 		batcher.begin();
-		batcher.draw(Assets.welcome, 0, 0, 512,512);
+		batcher.draw(Assets.welcome, 0, 0, UI.SCREENPOSITIONX,UI.SCREENPOSITIONY);
 		//MainMenuScreen.drawGradient(batcher, Assets.rect, 0, 0, 320, 480,Color.BLACK,Assets.colore, false);
 		batcher.end();
-
 		batcher.enableBlending();
 		batcher.begin();
-		Assets.handfontsmall.scale(-0.25f);
+		Assets.handfontsmall.scale(-UI.FIRSTSCREENTEXTSCALE);
 		Assets.handfontsmall.getRegion().getTexture().setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.MipMapLinearNearest);
-		Assets.handfontsmall.draw(batcher, "W E L C O M E",160 - 98, 280);
-		Assets.handfontsmall.draw(batcher, "T O",160-20, 230);
-		Assets.handfontsmall.draw(batcher, "SUPER JUMPER",160 - 98, 180);
+		//Assets.handfontsmall.draw(batcher, "W E L C O M E",160 - 98, 280);
+		//Assets.handfontsmall.draw(batcher, "T O",160-20, 230);
+		//Assets.handfontsmall.draw(batcher, "SUPER JUMPER",160 - 98, 180);
+		new Text(UI.HALFSCREENWIDTH,UI.FIRSTEXT, "Welcome").draw(batcher);
+		new Text(UI.HALFSCREENWIDTH,UI.SECONDTEXT, "To").draw(batcher);
+		new Text(UI.HALFSCREENWIDTH,UI.THIRDTEXT, "Game").draw(batcher);
 		Assets.handfontsmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		Assets.handfontsmall.scale(0.25f);
+		Assets.handfontsmall.scale(UI.FIRSTSCREENTEXTSCALE);
 		//batcher.draw(Assets.icontextback, 320, 0, -54, 54);
 		batcher.end();
 
