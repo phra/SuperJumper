@@ -301,9 +301,14 @@ public class WorldRenderer {
 	private void renderEnemy(){
 		TextureRegion keyFrame;
 		for (Enemy charlie : world.enemies){
-
+		switch(charlie.type){
+		case 0:
 			keyFrame = Assets.enemyRegion;
 			batch.draw(keyFrame, charlie.position.x-1.5f , charlie.position.y-0.8f , 2f, 2f);
+		case 1:
+			keyFrame= Assets.enemyRegion1;
+			batch.draw(keyFrame, charlie.position.x-1.5f , charlie.position.y-0.8f , 2f, 2f);
+			}
 		}
 	}
 

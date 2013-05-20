@@ -76,7 +76,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 			Platform platform = new Platform(type, x, y);
 			platforms.add(platform);
 			if (rand.nextFloat() > 0.9f && type != Platform.PLATFORM_TYPE_MOVING) {
-				Spring spring = new Spring(platform.position.x, platform.position.y + Platform.PLATFORM_HEIGHT / 2 + Spring.SPRING_HEIGHT / 2);
+				Spring spring = new Spring(platform.position.x, platform.position.y + Platform.PLATFORM_HEIGHT / 2 + UI.SPRING_HEIGHT / 2);
 				springs.add(spring);
 			}
 			if (y > WORLD_HEIGHT / 3 && rand.nextFloat() > 0.8f) {

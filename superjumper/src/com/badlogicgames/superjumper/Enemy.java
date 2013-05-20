@@ -1,5 +1,8 @@
 package com.badlogicgames.superjumper;
 
+import java.util.Random;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends DynamicGameObject {
@@ -10,6 +13,8 @@ public class Enemy extends DynamicGameObject {
 	public static final float ENEMY_WIDTH = 2f;
 	public static final float ENEMY_HEIGHT = 2f;
 	public static final float ENEMY_PULVERIZE_TIME = 0.1f * 4;
+	public static final int NTYPE = 2;
+	Random rand=new Random();
 	public float killtime;
 	public int life=5;
 	public Vector2 gravity = new Vector2();
@@ -17,10 +22,12 @@ public class Enemy extends DynamicGameObject {
 	int active=0;
 	int state;
 	float stateTime;
+	int type;
 	//public static float jumpTime;
 
 	public Enemy (float x, float y) {
 		super(x, y, ENEMY_WIDTH, ENEMY_HEIGHT);
+		this.type = (int)(rand.nextFloat() * NTYPE);
 		state = ENEMY_STATE_HIT ;
 		stateTime = 0;
 	}
