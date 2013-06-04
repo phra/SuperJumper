@@ -159,7 +159,7 @@ public class World implements UI, CONSTANTS {
 		return gravity;
 	}
 
-	private void LifeLess(){
+	public void LifeLess(){
 		if (--life > 0) {
 			if (life == 1) this.texts.offer(new FloatingText("WARNING!", 0));
 		} else state = CONSTANTS.GAME_OVER;
