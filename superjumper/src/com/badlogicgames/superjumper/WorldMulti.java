@@ -39,7 +39,6 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 	public int turbo=1;
 	private Vector2 gravity = new Vector2(0,15);
 	protected static FullDuplexBuffer buffer = new FullDuplexBuffer();
-	public static String enemy = "";
 	private float precdelta = 0, precaccelx = 0;
 
 	public WorldMulti (WorldListener listener, int seed) {
@@ -96,25 +95,22 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 		castle = new Castle(WORLD_WIDTH / 2, y);
 	}
 
-	public void setGravity(float x, float y){
+	public void setGravity(float x, float y) {
 		this.gravity.x = x;
 		this.gravity.y = y;
 		bob.setGravityBob(x, y);
 		bobMulti.setGravityBob(x,y);
 	}
 	
- 
-
-	public void ShotProjectile()
-	{
+	public void ShotProjectile() {
 		if(shot>0){
 			Gdx.input.vibrate(new long[] { 1, 20, 10, 20}, -1); 
 			Projectile projectile = new Projectile(bob.position.x,bob.position.y,Projectile.WIDTH,Projectile.HEIGHT);
 			projectile.setVelocity(0,15);
 			projectiles.add(projectile);
 			shot=shot-1;}
-
 	}
+	
 	public Vector2 getGravity(){
 		return gravity;
 	}
@@ -134,7 +130,6 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 			switch (pkt.getType()) {
 			case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
 				PaccoUpdateBobMulti pktbob;
-
 				try {
 					pktbob = new PaccoUpdateBobMulti(pkt);
 				} catch (ProtocolException e) {
@@ -204,8 +199,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 		}
 	}
 
-	private void updateCoins (float deltaTime) 
-	{
+	private void updateCoins (float deltaTime) {
 		int len = coins.size();
 		for (int i = 0; i < len; i++) {
 			Coin coin = coins.get(i);
@@ -213,10 +207,10 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
 			if (coin.state == Coin.COIN_STATE_PULVERIZING && coin.stateTime > Coin.COIN_PULVERIZE_TIME) {
 				coins.remove(coin);
 				len = coins.size();
-
 			}
 		}
 	}
+	
 	private void updateProjectiles (float deltaTime) {
 		int len = projectiles.size();
 		for (int i = 0; i < len; i++) {

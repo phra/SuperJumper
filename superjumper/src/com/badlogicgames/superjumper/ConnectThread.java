@@ -48,7 +48,7 @@ public class ConnectThread extends Thread {
 			}
 			Gdx.app.debug("PHTEST", "CONNECTTHREAD():ricevuto pkt welcome");
 			try {
-				WorldMulti.enemy = new PaccoWelcome(p).getNick();
+				MultiWorld.enemy = new PaccoWelcome(p).getNick();
 			} catch (ProtocolException e1) {
 				Gdx.app.debug("PHTEST", "ERRORE PROTOCOLLO WELCOME");
 				this.close();
@@ -63,8 +63,6 @@ public class ConnectThread extends Thread {
 				return;
 			}
 			//FIXME set seed
-
-
 			Gdx.app.debug("PHTEST", "CONNECTTHREAD(): ricevuto packet start");
 			sem.release();
 			new SendThread().start();
@@ -85,11 +83,14 @@ public class ConnectThread extends Thread {
 
 		} catch (UnknownHostException e) {
 			MultiplayerScreen.str = "UNKNOWN HOST EXCEPTION";
+			Gdx.app.debug("CONNECTTHREAD()", "ERROR UnknownHostException");
 			sem.release();
 		} catch (IOException e) {
 			MultiplayerScreen.str = "IO EXCEPTION";
+			Gdx.app.debug("CONNECTTHREAD()", "ERROR IOException");
 			sem.release();
 		}
+		
 	}
 
 	void close(){

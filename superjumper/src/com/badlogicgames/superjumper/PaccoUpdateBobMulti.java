@@ -36,13 +36,6 @@ public class PaccoUpdateBobMulti extends Pacco implements PROTOCOL_CONSTANTS {
 		} catch (IOException e) {
 			throw new ProtocolException("ERRORE NEL PROTOCOLLO.");
 		}
-		try {
-			ds.close();
-			bas.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public float getDeltaTime() {

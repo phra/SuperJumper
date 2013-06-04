@@ -25,7 +25,7 @@ import com.badlogicgames.superjumper.World.WorldListener;
 public class GameScreen implements Screen, CONSTANTS {
 
 	GestureDetector gestureDetector ;
-	FingerControl control=new FingerControl();
+	FingerControl control = new FingerControl();
 	Game game;
 	int state;
 	OrthographicCamera guiCam;
@@ -54,42 +54,7 @@ public class GameScreen implements Screen, CONSTANTS {
 		guiCam.position.set(UI.HALFSCREENWIDTH, UI.HALFSCREENHEIGHT, 0);
 		touchPoint = new Vector3();
 		batcher = new SpriteBatch();
-		worldListener = new WorldListener() {
-			@Override
-			public void jump () {
-				Assets.playSound(Assets.jumpSound);
-			}
-
-			@Override
-			public void highJump () {
-				Assets.playSound(Assets.highJumpSound);
-			}
-
-			@Override
-			public void hit () {
-				Assets.playSound(Assets.hitSound);
-			}
-
-			@Override
-			public void coin () {
-				Assets.playSound(Assets.coinSound);
-			}
-
-			@Override
-			public void life () {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void projectile () {
-				// TODO Auto-generated method stub
-
-			}
-
-
-		};
-		world = new World(worldListener);
+		world = new World();
 		renderer = new WorldRenderer(batcher, world, guiCam);
 		pauseBounds = new Rectangle(UI.POSITIONPAUSEX - UI.INDICATORSIZE/2 , UI.POSITIONPAUSEY  - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		resumeBounds = new Rectangle(UI.BUTTONRESUMEPOSITIONX - UI.BUTTONWIDTH/2, UI.BUTTONRESUMEPOSITIONY - UI.BUTTONHEIGHT/2, UI.BUTTONWIDTH, UI.BUTTONHEIGHT);
@@ -97,8 +62,6 @@ public class GameScreen implements Screen, CONSTANTS {
 		missileBounds = new Rectangle(UI.MISSILEPOSITIONX - UI.INDICATORSIZE/2, UI.MISSILEPOSITIONY - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		nosBounds = new Rectangle(UI.SUPERMISSILEPOSITIONX - UI.INDICATORSIZE/2, UI.SUPERMISSILEPOSITIONY - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
 		bubbleBounds = new Rectangle(UI.BUBBLEPOSITIONX - UI.INDICATORSIZE/2, UI.BUBBLEPOSITIONY - UI.INDICATORSIZE/2, UI.INDICATORSIZE, UI.INDICATORSIZE);
-
-		//lastScore = 0;
 		scoreString = "SCORE: 0";
 		gestureDetector = new GestureDetector(20, 0.5f, 2, 0.15f, new GestureListener() {
 
@@ -157,7 +120,7 @@ public class GameScreen implements Screen, CONSTANTS {
 					break;
 
 				case CONSTANTS.GAME_LEVEL_END:
-					world = new World(worldListener);
+					world = new World();
 					renderer = new WorldRenderer(batcher, world, guiCam);
 					world.state = GAME_READY;
 					break;
@@ -211,10 +174,10 @@ public class GameScreen implements Screen, CONSTANTS {
 				//Gdx.app.debug("x"+velocityX, "y"+velocityY);
 				if (world.state == CONSTANTS.GAME_RUNNING) {
 					if(Math.abs(velocityX)>Math.abs(velocityY)){
-						if(velocityX > 0) {
+						if(velocityX > 20) {
 							Gdx.app.debug("fling", "trascino sx");
 
-						} else {
+						} else if (velocityX < -20) {
 							Gdx.app.debug("fling", "trascino dx");
 						}	
 					} else {
@@ -231,7 +194,7 @@ public class GameScreen implements Screen, CONSTANTS {
 								world.decrementonos=false;
 								world.TurboLess();
 							}
-						} else if (velocityY < 20) {
+						} else if (velocityY < -20) {
 							Gdx.app.debug("fling", "trascino su");
 							if(!world.freezeON){
 								world.decrementonos=true;

@@ -32,9 +32,8 @@ public class World implements UI, CONSTANTS {
 	public final LinkedList<Coin> coins;
 	public final List<Button> buttons;
 	public Castle castle;
-	public final WorldListener listener;
 	public final Random rand;
-	Random randgenerate = new Random(5000L);
+	public Random randgenerate = new Random();
 	public float heightSoFar;
 	public int score;
 	public int state;
@@ -65,7 +64,7 @@ public class World implements UI, CONSTANTS {
 	public Text lifetext = new Text(LIFEPOSITIONX,LIFEPOSITIONY,"0x");
 
 
-	public World (WorldListener listener) {
+	public World () {
 		this.bob = new Bob(4, 2);
 		//this.charlie = new Enemy(5,200);
 		this.platforms = new LinkedList<Platform>();
@@ -76,7 +75,6 @@ public class World implements UI, CONSTANTS {
 		this.coins = new LinkedList<Coin>();
 		this.projectenemy=new ArrayList<Projectile>();
 		this.rockets=new ArrayList<Missile>();
-		this.listener = listener;
 		this.rand = new Random();
 		this.generateLevel();
 		this.setGravity(0, 3);
@@ -92,86 +90,33 @@ public class World implements UI, CONSTANTS {
 		this.springs.offer(new Spring(randgenerate.nextFloat() * WORLD_WIDTH, 18));
 		this.squirrels.offer(new Squirrel(randgenerate.nextFloat() * WORLD_WIDTH, 20 + randgenerate.nextFloat() * 10));
 		this.coins.offer(new Coin(WORLD_WIDTH*randgenerate.nextFloat(), 10));
-
 	}
 
-	private void generateLevel () {
-		Random rand = new Random(5000L);
-		final float k = SCREENWIDTH / 2;
-		float y = Platform.PLATFORM_HEIGHT / 2;
-		//float maxJumpHeight = Bob.BOB_JUMP_VELOCITY * Bob.BOB_JUMP_VELOCITY / (2 * this.gravity.y);
-		float maxJumpHeight = this.PLATFORMS_DISTANCE;
-		float minJumpHeight = this.STARS_DISTANCE;
-		//while (y < WORLD_HEIGHT) {
-		//int type = y>WORLD_HEIGHT/3 && rand.nextFloat() > 0.5f ? Platform.PLATFORM_TYPE_MOVING : Platform.PLATFORM_TYPE_STATIC;
-		//float x = rand.nextFloat() > 0.5f ? rand.nextFloat() *k : WORLD_WIDTH - rand.nextFloat() *k/2;
-		//star generate
-		//int type_star = Star.STAR_TYPE_STATIC;//star
-		//float y_star = rand.nextFloat() *100;//star
-		//float x_star = rand.nextFloat() *10;//star
-		//Star star = new Star(type_star, x_star, y_star);//star
-		//stars.add(star);
-		//stars.add(star);
-		//end star generate
-		//Platform platform = new Platform(type, x, y*2);
-		//platforms.add(platform);
-
-
-
-		/*if (rand.nextFloat() > 0.2f && type != Platform.PLATFORM_TYPE_MOVING) {
-				Spring spring = new Spring(rand.nextFloat() * WORLD_WIDTH, y + Platform.PLATFORM_HEIGHT / 2 + UI.SPRING_HEIGHT / 2);
-				springs.add(spring);
-				//	if (y > WORLD_HEIGHT / 3 && rand.nextFloat() > 0.8f) {
-				squirrels.offer(new Squirrel(rand.nextFloat() * WORLD_WIDTH, y*3 + Squirrel.SQUIRREL_HEIGHT + rand.nextFloat() * k));
-				//}
-			}*/
-
-
-		/*if (rand.nextFloat() > 0.5f) {
-				Coin coin = new Coin(platform.position.x + (platform.position.x < WORLD_WIDTH /2 ? 5*rand.nextFloat() : -k*rand.nextFloat()), 
-					platform.position.y + (rand.nextFloat() > 0.5f ? k*rand.nextFloat() : -k*rand.nextFloat()));
-				coins.add(coin);
-			}*/
-		//y += (maxJumpHeight - 0.5f);
-		//y -= rand.nextFloat() * (maxJumpHeight / 3);
-		/*
-			if (y > WORLD_HEIGHT / 2) {
-				float x1 = rand.nextFloat() * WORLD_WIDTH;
-				Coin coin = new Coin(x1 + (x1 < WORLD_WIDTH /2 ? k*rand.nextFloat() : -k*rand.nextFloat()), 
-					y + (rand.nextFloat() > 0.5f ? k*rand.nextFloat() : -k*rand.nextFloat()));
-				coins.offer(coin);
-			}*/
-		//}
-
-
-
+	protected void generateLevel () {
 		castle = new Castle(WORLD_WIDTH / 2, WORLD_HEIGHT - 10);
 	}
 
 	private void generateCoins() {
 		if (bob.position.y > WORLD_HEIGHT / 2 && coins.size() < 3) {
 			final int k = 10;
-			float x1 = rand.nextFloat() * WORLD_WIDTH;
+			float x1 = randgenerate.nextFloat() * WORLD_WIDTH;
 			if (coins.isEmpty() || !coins.isEmpty() && coins.getLast().position.y < bob.position.y + k) 
-				coins.offer( new Coin(x1 + (x1 < WORLD_WIDTH /2 ? k*rand.nextFloat() : -k*rand.nextFloat()), bob.position.y + (rand.nextFloat() > 0.5f ? k*rand.nextFloat() : -k*rand.nextFloat())));
+				coins.offer( new Coin(x1 + (x1 < WORLD_WIDTH /2 ? k*randgenerate.nextFloat() : -k*randgenerate.nextFloat()), bob.position.y + (randgenerate.nextFloat() > 0.5f ? k*randgenerate.nextFloat() : -k*randgenerate.nextFloat())));
 		}
 	}
-
 
 	private void generateSprings() {
 		final int k = 15;
 		if (springs.isEmpty() || !this.springs.isEmpty() && springs.size() < 5 && this.springs.getLast().position.y < bob.position.y + k*2)
-			springs.offer(new Spring(rand.nextFloat() * WORLD_WIDTH, bob.position.y + k));
+			springs.offer(new Spring(randgenerate.nextFloat() * WORLD_WIDTH, bob.position.y + k));
 	}
 
 	private void generateSquirrels() {
 		final int k = 15;
 		//Gdx.app.debug("generatesquirrel", "squirrel.size = " + squirrels.size());
 		if (squirrels.isEmpty() || !this.squirrels.isEmpty() && squirrels.size() < 5 && squirrels.getLast().position.y < bob.position.y + k)
-			squirrels.offer(new Squirrel(rand.nextFloat() * WORLD_WIDTH, bob.position.y+20 + rand.nextFloat() * k));
-
+			squirrels.offer(new Squirrel(randgenerate.nextFloat() * WORLD_WIDTH, bob.position.y+20 + randgenerate.nextFloat() * k));
 	}
-
 
 
 	public void editPosition(float deltaTime){
@@ -249,7 +194,7 @@ public class World implements UI, CONSTANTS {
 
 	private void generateStars(){
 		//star generate
-		if (stars.size() < 128) {
+		if (stars.size() < 512) {
 			int type_star = rand.nextFloat()>0.3?Star.STAR_TYPE_STATIC:Star.STAR_TYPE_MOVING;//star light
 			float y_star = rand.nextFloat() *10;//star
 			float x_star = rand.nextFloat() *10;//star
@@ -298,8 +243,8 @@ public class World implements UI, CONSTANTS {
 			updateStar(deltaTime);
 			updateProjectiles(deltaTime);
 			updateExplosions(deltaTime);
-			updateProjectilenemys(deltaTime);//deltaTime*4 se si vuole mantenere la velocita del proiettile nemico anche durante il freezeing
-			updateEnemy(deltaTime,bob);//deltaTime*4 se si vuole mantenere la velocita del nemico anche durante il freezeing
+			updateProjectilenemys(deltaTime);
+			updateEnemy(deltaTime,bob);
 			updateunlockcharacter();
 			checkCollisions();
 			checkVelocity();
@@ -352,7 +297,6 @@ public class World implements UI, CONSTANTS {
 	}
 
 	private void updateBob (float deltaTime, float accelX) {
-		//if (bob.state != Bob.BOB_STATE_HIT && bob.position.y <= 0.5f) bob.hitPlatform();
 		if (bob.state != Bob.BOB_STATE_HIT) bob.velocity.x = -accelX / 3f * Bob.BOB_MOVE_VELOCITY;
 		if(bob.stateTime-bob.bubbletime>3f){
 			bob.bubbletime=0;
@@ -447,35 +391,34 @@ public class World implements UI, CONSTANTS {
 		}
 	}
 
-
-
 	private void updateStar(float deltaTime){
-		if (stars.size() > 1 && bob.position.y > stars.peek().position.y+5) {
+		/*if (stars.size() > 1 && bob.position.y > stars.peek().position.y+5) {
 			stars.remove(0);
-		}
+		}*/
 		for (int i = 0; i < stars.size(); i++) {
-			//Gdx.app.debug("updatestars", "i = " + i);
-			stars.get(i).update(deltaTime);
+			Star star=stars.get(i);
+			star.update(deltaTime);
+			if (star.position.y < bob.position.y-5){ 
+				stars.remove(i--);}
 		}
 	}
 
 	private void updatePlatforms (float deltaTime) {
-		if (platforms.size() > 1 && bob.position.y > platforms.get(0).position.y+5) 
-			platforms.remove(0);
+		/*if (platforms.size() > 1 && bob.position.y > platforms.get(0).position.y+5) 
+			platforms.remove(0);*/
 		for (int i = 0; i < platforms.size(); i++) {
 			Platform plat = platforms.get(i);
 			if (plat.type == Platform.PLATFORM_TYPE_MOVING && bob.position.y-plat.position.y>-9){
 				Utils.changeGravityTowards(plat, bob);
 			}
 			plat.update(deltaTime);
-			//if (plat.position.y < bob.position.y - 10)
-			//platforms.remove(i--);
+			if (plat.position.y < bob.position.y-5){ 
+				platforms.remove(i--);
+			}
 		}
 	}
-
 	private void updateSquirrels (float deltaTime) {
-		//if (!squirrels.isEmpty()) Gdx.app.debug("updatesquirrel", "bob.position.y > squirrels.peek().position.y+5" + bob.position.y + ":" + squirrels.peek().position.y+5);
-		if (squirrels.size() > 1 && bob.position.y > squirrels.peek().position.y+5) 
+		if (squirrels.size() > 1 && squirrels.peek().position.y < bob.position.y - 5 ) 
 			squirrels.remove(0);
 		for (Squirrel squirrel : this.squirrels) {
 			squirrel.update(deltaTime);
@@ -492,18 +435,21 @@ public class World implements UI, CONSTANTS {
 	}
 
 	private void updateProjectiles (float deltaTime) {
-		int len = projectiles.size();
-		for (int i = 0; i < len; i++) {
+		for (int i = 0; i < projectiles.size(); i++) {
 			Projectile projectile = projectiles.get(i);
 			projectile.update(deltaTime);
+			if (projectile.position.y > bob.position.y+11){ 
+				projectiles.remove(i--);
+				}
 		}
 	}
 
 	private void updateProjectilenemys(float deltaTime) {
-		int len = projectenemy.size();
-		for (int i = 0; i < len; i++) {
+		for (int i = 0; i < projectenemy.size(); i++) {
 			Projectile projectenemys = projectenemy.get(i);
 			projectenemys.update(deltaTime);
+			if ( projectenemys.position.y < bob.position.y-5) 
+				projectenemy.remove(i--);
 		}
 	}
 
@@ -517,9 +463,7 @@ public class World implements UI, CONSTANTS {
 		checkProjectileWorldCollisions();
 		checkProjectilEnemyCollisions();
 		checkProjectilBobCollisions();
-		checkRemoveProjectile();
 		checkGameOver();
-		checkRemoveEnemyProjectile();
 		CheckRemoveEnemey();
 	}
 
@@ -531,23 +475,6 @@ public class World implements UI, CONSTANTS {
 				updateScoreEnemyDied(charlie);
 				enemies.remove(i--);
 			}
-		}
-	}
-
-	private void checkRemoveProjectile(){
-		for (int i = 0; i < projectiles.size(); i++) {
-			Projectile projectile = projectiles.get(i);
-			if (projectile.position.y > bob.position.y+11){ 
-				projectiles.remove(i--);
-			}
-		}
-	}
-
-	private void checkRemoveEnemyProjectile(){
-		for (int i = 0; i < projectenemy.size(); i++) {
-			Projectile projectilenem = projectenemy.get(i);
-			if ( projectilenem.position.y < bob.position.y-5) 
-				projectenemy.remove(i--);
 		}
 	}
 
@@ -566,7 +493,7 @@ public class World implements UI, CONSTANTS {
 					}
 					explosions.offer(new Explosion(platform.position.x-Platform.PLATFORM_WIDTH/2, platform.position.y-Platform.PLATFORM_HEIGHT/2,Platform.PLATFORM_WIDTH*2,Platform.PLATFORM_HEIGHT*2,0));
 					platforms.remove(i--);
-					listener.hit();
+					Assets.playSound(Assets.hitSound);
 					break;
 				}
 			}
@@ -577,7 +504,7 @@ public class World implements UI, CONSTANTS {
 		if(Bob.BOB_DOUBLE_JUMP){
 			Bob.BOB_DOUBLE_JUMP=false;
 			bob.hitPlatform();
-			listener.hit();
+			Assets.playSound(Assets.hitSound);
 		}
 	}
 
@@ -624,7 +551,7 @@ public class World implements UI, CONSTANTS {
 					squirrel.inuse=true;
 					this.texts.offer(new FloatingText("ammo!",0));//FIXME
 				}   
-				listener.hit(); 
+				Assets.playSound(Assets.hitSound);
 				squirrels.remove(i--);
 				break;
 			}
@@ -644,7 +571,7 @@ public class World implements UI, CONSTANTS {
 					nosinuse=0;
 					score -= 300;
 				} //else score += 300;
-				listener.coin();
+				Assets.playSound(Assets.coinSound);
 				explosions.offer(new Explosion(coin.position.x, coin.position.y,Coin.COIN_WIDTH,Coin.COIN_HEIGHT,0));
 				coins.remove(i--);
 				break;
@@ -653,7 +580,7 @@ public class World implements UI, CONSTANTS {
 		for (int i = 0; i < springs.size(); i++) {
 			Spring spring = springs.get(i);
 			if (OverlapTester.overlapRectangles(bob.bounds, spring.bounds)) {
-				explosions.offer(new Explosion(spring.position.x, spring.position.y ,UI.SPRING_WIDTH*2, UI.SPRING_HEIGHT*2, 1));
+				explosions.offer(new Explosion(spring.position.x-0.75f, spring.position.y-0.75f ,UI.SPRING_WIDTH*2, UI.SPRING_HEIGHT*2, 1));
 				springs.remove(i--);
 				break;
 			}

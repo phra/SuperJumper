@@ -89,8 +89,6 @@ public class WorldRenderer {
 			new Text(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2,"R E A D Y ?").draw(batch);
 			batch.end();
 			break;
-
-
 		}
 	}
 

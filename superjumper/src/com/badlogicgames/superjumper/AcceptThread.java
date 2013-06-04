@@ -49,7 +49,7 @@ public class AcceptThread extends Thread {
 
 			Gdx.app.debug("PHTEST", "CONNECTTHREAD():ricevuto pkt welcome");
 			try {
-				WorldMulti.enemy = new PaccoWelcome(p).getNick();
+				MultiWorld.enemy = new PaccoWelcome(p).getNick();
 			} catch (ProtocolException e1) {
 				Gdx.app.debug("PHTEST", "ERRORE PROTOCOLLO WELCOME");
 				this.close();

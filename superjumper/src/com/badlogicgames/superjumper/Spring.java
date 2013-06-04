@@ -34,7 +34,7 @@ public class Spring extends DynamicGameObject {
 	}
 	
 	public void draw(SpriteBatch batch,TextureRegion variable) {
-		batch.draw(variable ,position.x, position.y, UI.SPRING_WIDTH/2, UI.SPRING_HEIGHT/2, UI.SPRING_WIDTH, UI.SPRING_HEIGHT, 1, 1, stateTime*20);
+		batch.draw(variable ,position.x-0.7f, position.y-0.7f, UI.SPRING_WIDTH/2, UI.SPRING_HEIGHT/2, UI.SPRING_WIDTH, UI.SPRING_HEIGHT, 1, 1, stateTime*20);
 	}
 	
 	/*public void update(float deltaTime,DynamicGameObject dst) {

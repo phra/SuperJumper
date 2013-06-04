@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class MultiplayerScreen implements Screen {
+	public static final int PORT = 10000;
+	public static final String IPTOCONNECT = "192.168.1.130";
 	Game game;
 	public final List<Button> buttons;
 	OrthographicCamera guiCam;
@@ -53,7 +55,6 @@ public class MultiplayerScreen implements Screen {
 		buttons.add(button);
 		Button buttones = new Button(90,180,Assets.quit);
 		buttons.add(buttones);
-	
 	}
 
 	public void update (float deltaTime) {
@@ -69,14 +70,12 @@ public class MultiplayerScreen implements Screen {
 				Assets.playSound(Assets.clickSound);
 				game.setScreen(new MainMenuScreen(game));
 				return;
-			}
-			else if (OverlapTester.pointInRectangle(ClientBounds, touchPoint.x, touchPoint.y)) {
+			} else if (OverlapTester.pointInRectangle(ClientBounds, touchPoint.x, touchPoint.y)) {
 				Semaphore sem = new Semaphore(0,true);
 				Assets.playSound(Assets.clickSound);
 				str = "CONNECTING";
-				if (WorldMulti.buffer.selfTest()) Gdx.app.debug("PHTEST", "BUFFER OK");
-				else Gdx.app.debug("PHTEST", "BUFFER KO");
-				ConnectThread thr = new ConnectThread("192.168.0.2",10000,WorldMulti.buffer,sem);
+				Gdx.app.debug("PHTEST", "BUFFER STATUS = " + MultiWorld.buffer.selfTest());
+				ConnectThread thr = new ConnectThread(IPTOCONNECT,PORT,MultiWorld.buffer,sem);
 				thr.start();
 				Gdx.app.debug("PHTEST", "started connect thread");
 				try {
@@ -86,17 +85,15 @@ public class MultiplayerScreen implements Screen {
 					return;
 				}
 				str = "CONNECTED";
-				game.setScreen(new GameScreenMulti(game,seed));
-
-			}
-			else if (OverlapTester.pointInRectangle(ServerBounds, touchPoint.x, touchPoint.y)) {
+				game.setScreen(new MultiGameScreen(game,seed));
+			} else if (OverlapTester.pointInRectangle(ServerBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
 				str = "ACCEPTING";
 				Semaphore sem = new Semaphore(0,true);
-				if (WorldMulti.buffer.selfTest()) Gdx.app.debug("PHTEST", "BUFFER OK");
+				if (MultiWorld.buffer.selfTest()) Gdx.app.debug("PHTEST", "BUFFER OK");
 				else Gdx.app.debug("PHTEST", "BUFFER KO");
 				Gdx.app.debug("PHTEST", "starto accept thread");
-				AcceptThread thr = new AcceptThread(10000,WorldMulti.buffer,sem);
+				AcceptThread thr = new AcceptThread(PORT,MultiWorld.buffer,sem);
 				thr.start();
 				Gdx.app.debug("PHTEST", "started accept thread");
 				try {
@@ -106,7 +103,7 @@ public class MultiplayerScreen implements Screen {
 					return;
 				}
 				str = "CONNECTED";
-				game.setScreen(new GameScreenMulti(game,seed));
+				game.setScreen(new MultiGameScreen(game,seed));
 
 			}
 		}
@@ -134,7 +131,7 @@ public class MultiplayerScreen implements Screen {
 			Texture keyFrame =Assets.ospita;
 			if(i==1)keyFrame=Assets.partecipa;
 			batcher.draw(keyFrame,button.position.x,button.position.y,145,145);
-			}
+		}
 
 		batcher.end();
 	}
