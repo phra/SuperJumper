@@ -151,7 +151,7 @@ public class WorldMulti implements PROTOCOL_CONSTANTS {
         }*/
 
 		//updateBobMulti(deltaTime,accelX * 1.2f);
-		buffer.putPaccoOutNOBLOCK(new PaccoUpdateBobMulti(deltaTime, accelX));
+		buffer.putPaccoOutNOBLOCK(new PaccoUpdateBobMulti(deltaTime, accelX,0));
 		updateBob(deltaTime, accelX);
 		updatePlatforms(deltaTime);
 		updateSquirrels(deltaTime);

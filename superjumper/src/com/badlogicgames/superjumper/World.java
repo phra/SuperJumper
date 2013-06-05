@@ -40,7 +40,7 @@ public class World implements UI, CONSTANTS {
 	public int shot=10;
 	public int nosinuse=0;
 	public boolean turbo=true;
-	public int life=1;
+	public int life=100;
 	public float freeze=100;
 	public int missiles = 0;
 	public int print1times=0;

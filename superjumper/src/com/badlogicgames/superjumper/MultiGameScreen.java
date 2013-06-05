@@ -21,7 +21,7 @@ public class MultiGameScreen extends GameScreen {
 	public MultiGameScreen (final Game game, int seed) {
 		super(game);
 		this.world = new MultiWorld(seed);
-		this.renderer = new WorldRenderer(batcher, world, guiCam);
+		this.renderer = new MultiWorldRenderer(batcher, (MultiWorld)world, guiCam);
 		
 		gestureDetector = new GestureDetector(20, 0.5f, 2, 0.15f, new GestureListener() {
 

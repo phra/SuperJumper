@@ -3,6 +3,7 @@
  */
 package com.badlogicgames.superjumper;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,13 +30,21 @@ public class MultiWorldRenderer extends WorldRenderer {
 		super.render();
 		switch (world.state){
 		case CONSTANTS.GAME_RUNNING:
+			batch.begin();
+			batch.enableBlending();
+			batch.setProjectionMatrix(cam.combined);
 			renderBobMulti();
 			renderProjectiles();
+			batch.disableBlending();
+			batch.end();
 		}
 	}
 
 	private void renderBobMulti(){
-		TextureRegion keyFrame = Assets.bobFall.getKeyFrame(world.bobMulti.stateTime, Animation.ANIMATION_LOOPING);
+		//Gdx.app.debug("RENDERMULTIBOB", "world.bobMulti.position.x = " + world.bobMulti.position.x + " world.bobMulti.position.y = " + world.bobMulti.position.y);
+		//Gdx.app.debug("RENDERBOB", "world.bob.position.x = " + world.bob.position.x + " world.bob.position.y = " + world.bob.position.y);
+		TextureRegion keyFrame = Assets.shutmilitAnim.getKeyFrame(world.bobMulti.stateTime, Animation.ANIMATION_LOOPING);
+//		batch.draw(Assets.meteorabluRegion, world.bob.position.x -0.65f, world.bob.position.y -1f, 1.3f, 2f);
 		batch.draw(keyFrame, world.bobMulti.position.x -0.65f, world.bobMulti.position.y -1f, 1.3f, 2f);
 	}
 	

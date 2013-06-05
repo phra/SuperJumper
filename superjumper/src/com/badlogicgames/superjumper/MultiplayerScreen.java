@@ -22,7 +22,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class MultiplayerScreen implements Screen {
 	public static final int PORT = 10000;
-	public static final String IPTOCONNECT = "192.168.1.130";
+	public static final String IPTOCONNECT = "192.168.1.133";
 	Game game;
 	public final List<Button> buttons;
 	OrthographicCamera guiCam;
@@ -167,8 +167,6 @@ public class MultiplayerScreen implements Screen {
 	}
 
 	public void test() {
-
-
 		Socket smtpSocket = null;  
 		DataOutputStream os = null;
 		DataInputStream is = null;

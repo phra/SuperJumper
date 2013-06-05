@@ -66,13 +66,32 @@ public abstract class Utils {
 		}
 		return baos.toByteArray();
 	}
-	
+
+	public static byte[] serializeManyFloat(float... numbers) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream w = new DataOutputStream(baos);
+		for (float n : numbers) {
+			try {
+				w.writeFloat(n);
+			} catch (IOException e) {
+				return null;
+			} 
+		}
+		try {
+			w.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return baos.toByteArray();
+	}
+	//FIXME
 	public static LinkedList<Float> deserializeManyFloat(byte[] buf){
 		ByteArrayInputStream stream = new ByteArrayInputStream(buf);
 		DataInputStream dis = new DataInputStream(stream);
 		LinkedList<Float> list = new LinkedList<Float>();
 		try {
-			while (list.add(dis.readFloat()));
+			while (list.offer(dis.readFloat()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();

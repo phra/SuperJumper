@@ -12,15 +12,16 @@ import java.io.IOException;
 
 public class PaccoUpdateBobMulti extends Pacco implements PROTOCOL_CONSTANTS {
 
-	private float deltaTime, accelX;
+	private float deltaTime, accelX, accelY;
 
-	public PaccoUpdateBobMulti (float deltaTime, float accelX) {
+	public PaccoUpdateBobMulti (float deltaTime, float accelX, float accelY) {
 		super(PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI);
-		byte[] payload = Utils.serialize2Float(deltaTime, accelX);
+		byte[] payload = Utils.serializeManyFloat(deltaTime, accelX, accelY);
 		this.setSize(payload.length);
 		this.setData(payload);
 		this.deltaTime = deltaTime;
 		this.accelX = accelX;
+		this.accelY = accelY;
 	}
 
 	public PaccoUpdateBobMulti (Pacco pkt) throws ProtocolException {
@@ -33,6 +34,7 @@ public class PaccoUpdateBobMulti extends Pacco implements PROTOCOL_CONSTANTS {
 		try {
 			this.deltaTime = ds.readFloat();
 			this.accelX = ds.readFloat();
+			this.accelY = ds.readFloat();
 		} catch (IOException e) {
 			throw new ProtocolException("ERRORE NEL PROTOCOLLO.");
 		}
@@ -44,6 +46,10 @@ public class PaccoUpdateBobMulti extends Pacco implements PROTOCOL_CONSTANTS {
 
 	public float getAccelX(){
 		return accelX;
+	}
+	
+	public float getAccelY(){
+		return accelY;
 	}
 
 }
