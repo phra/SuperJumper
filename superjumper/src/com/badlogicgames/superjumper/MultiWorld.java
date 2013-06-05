@@ -36,7 +36,8 @@ public class MultiWorld extends World {
 		case CONSTANTS.GAME_RUNNING:
 			Pacco pkt;
 			boolean flag = true;
-			while ((pkt = buffer.takePaccoInNOBLOCK()) != null) {
+			//while ((pkt = buffer.takePaccoInNOBLOCK()) != null) {
+			if ((pkt = buffer.takePaccoInNOBLOCK()) != null) {
 				switch (pkt.getType()) {
 				case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
 					PaccoUpdateBobMulti pktbob;

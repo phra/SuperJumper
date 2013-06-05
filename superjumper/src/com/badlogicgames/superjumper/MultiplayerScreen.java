@@ -85,6 +85,7 @@ public class MultiplayerScreen implements Screen {
 					return;
 				}
 				str = "CONNECTED";
+				Gdx.app.debug("PHTEST", "connected");
 				game.setScreen(new MultiGameScreen(game,seed));
 			} else if (OverlapTester.pointInRectangle(ServerBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
