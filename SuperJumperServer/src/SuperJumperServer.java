@@ -9,11 +9,10 @@ import java.util.Hashtable;
  */
 public class SuperJumperServer implements PROTOCOL_CONSTANTS {
 
+	public static final int PORT = 10000;
 	protected static final Hashtable<Integer,User> users = new Hashtable<Integer,User>();
 	private static int ID = 0;
 	private static Object mutexID = new Object(); 
-	private static final int PORT = 10000;
-	private static ServerSocket ssock;
 
 	/**
 	 * @param args
@@ -24,7 +23,7 @@ public class SuperJumperServer implements PROTOCOL_CONSTANTS {
 		//CountDownLatch latch = new CountDownLatch(1);
 		System.out.println("serversocket()");
 		try {
-			ssock = new ServerSocket(PORT);
+			ServerSocket ssock = new ServerSocket(PORT);
 			System.out.println("server started on " + PORT);
 			try {
 				while (true) {

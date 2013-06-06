@@ -6,7 +6,6 @@ import java.util.concurrent.CountDownLatch;
 public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 	private Socket sock1, sock2;
 	private BTsocket btsock1, btsock2;
-	public int OK = 0;
 	private FullDuplexBuffer buffer;
 	private CountDownLatch latch = new CountDownLatch(4);
 
@@ -59,8 +58,6 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 		int id1 = SuperJumperServer.getID(), id2 = SuperJumperServer.getID();
 		SuperJumperServer.users.put(id1,new User(pkt3.getNick(),id1));
 		SuperJumperServer.users.put(id2,new User(pkt4.getNick(),id2));
-
-		OK = 2;
 		send1 = new Send1Thread();
 		recv1 = new Recv1Thread();
 		send2 = new Send2Thread();
