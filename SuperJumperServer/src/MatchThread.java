@@ -4,8 +4,8 @@ import java.util.concurrent.CountDownLatch;
 
 
 public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
-	Socket sock1, sock2;
-	BTsocket btsock1, btsock2;
+	private Socket sock1, sock2;
+	private BTsocket btsock1, btsock2;
 	public int OK = 0;
 	private FullDuplexBuffer buffer;
 	private CountDownLatch latch = new CountDownLatch(4);
