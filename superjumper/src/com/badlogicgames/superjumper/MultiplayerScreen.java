@@ -82,6 +82,7 @@ public class MultiplayerScreen implements Screen {
 					sem.acquire();
 				} catch (InterruptedException e) {
 					str = "ERROR.";
+					Gdx.app.debug("PHTEST", str);
 					return;
 				}
 				str = "CONNECTED";
@@ -101,6 +102,7 @@ public class MultiplayerScreen implements Screen {
 					sem.acquire();
 				} catch (InterruptedException e) {
 					str = "ERROR.";
+					Gdx.app.debug("PHTEST", str);
 					return;
 				}
 				str = "CONNECTED";

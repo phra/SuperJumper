@@ -22,7 +22,7 @@ public class MultiGameScreen extends GameScreen {
 		super(game);
 		this.world = new MultiWorld(seed);
 		this.renderer = new MultiWorldRenderer(batcher, (MultiWorld)world, guiCam);
-		
+
 		gestureDetector = new GestureDetector(20, 0.5f, 2, 0.15f, new GestureListener() {
 
 			@Override
@@ -67,7 +67,7 @@ public class MultiGameScreen extends GameScreen {
 					}  else {
 						world.ShotProjectile();
 						MultiWorld.buffer.putPaccoOutNOBLOCK(new PaccoProiettile(world.bob.position.x,world.bob.position.y));
-						
+
 					}
 					break;
 
@@ -106,7 +106,7 @@ public class MultiGameScreen extends GameScreen {
 				case CONSTANTS.GAME_READY:
 					state = GAME_RUNNING;
 					break;
-				
+
 
 				}
 				return true;
@@ -170,9 +170,6 @@ public class MultiGameScreen extends GameScreen {
 				}
 				return true;
 			}
-		});
-		
-		
+		});		
 	}
-
 }

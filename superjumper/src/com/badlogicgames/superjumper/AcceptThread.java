@@ -115,7 +115,9 @@ public class AcceptThread extends Thread {
 					Pacco pkt = buf.takePaccoOutBLOCK();
 					btsock.writePkt(pkt);
 					if (pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END) break;
-				} catch (InterruptedException e) { }
+				} catch (InterruptedException e) { 
+					Gdx.app.error("SendThread", "INTERRUPTEDEXCEPTION");
+				}
 			}
 		}
 

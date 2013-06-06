@@ -50,7 +50,7 @@ public class MultiWorld extends World {
 					this.precdelta = pktbob.getDeltaTime();
 					this.precaccelx = pktbob.getAccelX();
 					this.precaccely = pktbob.getAccelY();
-				//Gdx.app.debug("pkt component", "precdelta= "+ this.precdelta + "accelx= "+ this.precaccelx +" accely= "+this.precaccely);
+					//Gdx.app.debug("pkt component", "precdelta= "+ this.precdelta + "accelx= "+ this.precaccelx +" accely= "+this.precaccely);
 					updateBobMulti(this.precdelta,this.precaccelx,this.precaccely);
 					flag = false;
 					break;
@@ -111,7 +111,7 @@ public class MultiWorld extends World {
 						explosions.offer(new Explosion(bobMulti.position.x, bobMulti.position.y,Platform.PLATFORM_WIDTH,Platform.PLATFORM_HEIGHT,0));
 						projectiles.remove(projectile);
 					}
-					else if(projectile.type==0)projectiles.remove(projectile);
+					else if (projectile.type==0) projectiles.remove(projectile);
 					break;
 				}
 			}
@@ -119,12 +119,11 @@ public class MultiWorld extends World {
 		}
 	}
 
-
 	private void updateBobMulti (float deltaTime, float accelX, float accelY) {
 //		bobMulti.position.add(((-accelX / 10) * Bob.BOB_MOVE_VELOCITY)* deltaTime, accelY * deltaTime);
 		bobMulti.position.x=accelX ;
-			bobMulti.position.y=accelY ;
-			Gdx.app.debug("updatebobmulti","deltatime="+deltaTime+"accX="+accelX+"accY="+accelY);
+		bobMulti.position.y=accelY ;
+		Gdx.app.debug("updatebobmulti","deltatime="+deltaTime+"accX="+accelX+"accY="+accelY);
 		Gdx.app.debug("updatebobomulti", "bobMulti.position.y = " + bobMulti.position.y + " bob.position.y = " + bob.position.y);
 
 	}

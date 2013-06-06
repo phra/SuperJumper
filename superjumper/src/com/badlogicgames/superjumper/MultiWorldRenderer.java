@@ -47,7 +47,7 @@ public class MultiWorldRenderer extends WorldRenderer {
 //		batch.draw(Assets.meteorabluRegion, world.bob.position.x -0.65f, world.bob.position.y -1f, 1.3f, 2f);
 		batch.draw(keyFrame, world.bobMulti.position.x -0.65f, world.bobMulti.position.y -1f, 1.3f, 2f);
 	}
-	
+
 	private void renderProjectiles(){
 		TextureRegion keyFrame;
 		for (Projectile projectile : world.projEnemy) {
