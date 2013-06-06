@@ -9,14 +9,13 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 	public int OK = 0;
 	private FullDuplexBuffer buffer;
 	private CountDownLatch latch = new CountDownLatch(4);
-	private CountDownLatch latchParent;
 
-	public MatchThread(Socket sock1, Socket sock2, CountDownLatch latchParent) {
+	public MatchThread(Socket sock1, Socket sock2) {
 		super();
 		System.out.println("MatchThread()");
 		this.sock1 = sock1;
 		this.sock2 = sock2;
-		this.latchParent = latchParent;
+		//this.latchParent = latchParent;
 		this.buffer = new FullDuplexBuffer();
 		try {
 			this.btsock1 = new BTsocket(sock1.getInputStream(),sock1.getOutputStream());
@@ -92,7 +91,6 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		latchParent.countDown();
 	}
 
 	private class Send1Thread extends Thread {
@@ -121,10 +119,11 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 					case PROTOCOL_CONSTANTS.PACKET_END:
 						System.out.println("Send2Thread: send pacco END.");
 						break;
+					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
+						break;
 					default:
 						System.out.println("Send2Thread: send pacco " + tmp.getType());
 						break;
-					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
 					}
 					if (tmp.getType() == PROTOCOL_CONSTANTS.PACKET_END){
 						latch.countDown();
@@ -164,10 +163,11 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 					case PROTOCOL_CONSTANTS.PACKET_END:
 						System.out.println("Recv1Thread: ricevuto pacco END, termino thread");
 						break;
+					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
+						break;
 					default:
 						System.out.println("Recv1Thread: ricevuto pacco " + pkt.getType());
 						break;
-					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
 					} else System.out.println("Recv1Thread: readPkt return nulls");
 				if (pkt == null) {
 					System.out.println("Recv1Thread: finish");
@@ -217,10 +217,11 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 					case PROTOCOL_CONSTANTS.PACKET_END:
 						System.out.println("Send2Thread: send pacco END.");
 						break;
+					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
+						break;
 					default:
 						System.out.println("Send2Thread: send pacco " + tmp.getType());
 						break;
-					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
 					}
 					if (tmp.getType() == PROTOCOL_CONSTANTS.PACKET_END){
 						latch.countDown();
@@ -261,10 +262,11 @@ public class MatchThread extends Thread implements PROTOCOL_CONSTANTS {
 					case PROTOCOL_CONSTANTS.PACKET_END:
 						System.out.println("Recv2Thread: ricevuto pacco END, termino thread");
 						break;
+					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
+						break;
 					default:
 						System.out.println("Recv2Thread: ricevuto pacco " + pkt.getType());
 						break;
-					case PROTOCOL_CONSTANTS.PACKET_TYPE_BOB_MULTI:
 					} else System.out.println("Recv2Thread: readPkt return nulls");
 				if (pkt == null) {
 					System.out.println("Recv2Thread: finish");

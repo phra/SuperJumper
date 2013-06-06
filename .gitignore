@@ -30,5 +30,5 @@ proguard/
 
 # extra
 *.db
-SuperJumperServer/.classpath
+*.classpath
 
