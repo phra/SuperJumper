@@ -27,7 +27,9 @@ public class SuperJumperServer implements PROTOCOL_CONSTANTS {
 			System.out.println("server started on " + PORT);
 			try {
 				while (true) {
+                    //System.out.println("#process = " + Process.GetCurrentProcess().Threads.Count);
 					sock1 = ssock.accept();
+					System.out.println("new client sock= "+sock1);
 					if (sock1 != null) System.out.println("prima accept ok");
 					System.out.println("first client");
 					System.out.flush();

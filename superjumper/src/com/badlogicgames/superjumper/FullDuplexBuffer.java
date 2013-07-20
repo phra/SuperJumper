@@ -89,4 +89,10 @@ public class FullDuplexBuffer {
 		}
 		return true;
 	}
+	
+	protected void clear(){
+		QueueOut.clear();
+		QueueIn.clear();
+	}
+	
 }

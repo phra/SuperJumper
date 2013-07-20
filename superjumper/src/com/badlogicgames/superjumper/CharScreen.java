@@ -36,6 +36,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class CharScreen implements Screen {
 	Game game;
+	Spring ruota;
 	float velX, velY;
 	boolean flinging = false;
 	float initialScale = 1;
@@ -54,7 +55,7 @@ public class CharScreen implements Screen {
 	public  int choose=0;
 	public  int swipedeactive=0;
 	private	float stateTime=0;
-	public static float punteggio=0;
+	public static float punteggio=Settings.firstScore();
 	public static float centrox=320/2-40;
 	public static float centroy=480/2-60;
 	public static float finex=300;
@@ -65,6 +66,7 @@ public class CharScreen implements Screen {
 
 	public CharScreen (Game game) {
 		this.game = game;
+		this.ruota=new Spring(-160,-50);
 		this.bob = new Bob(centrox,centroy);
 		this.bobfem = new Bob(iniziox-100,inizioy);
 		this.bobmil = new Bob(iniziox-150,inizioy);
@@ -167,9 +169,9 @@ public class CharScreen implements Screen {
 		if (Gdx.input.justTouched()) {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
-			if (OverlapTester.pointInRectangle(nextBounds, touchPoint.x, touchPoint.y) && state==0 && punteggio>20000 
+			if (OverlapTester.pointInRectangle(nextBounds, touchPoint.x, touchPoint.y) && state==0 && Settings.firstScore()>20000 
 				|| (OverlapTester.pointInRectangle(nextBounds, touchPoint.x, touchPoint.y) && state==1)||
-				(OverlapTester.pointInRectangle(nextBounds, touchPoint.x, touchPoint.y) && state==2 && punteggio>40000 )) {
+				(OverlapTester.pointInRectangle(nextBounds, touchPoint.x, touchPoint.y) && state==2 && Settings.firstScore()>70000 )) {
 				Assets.playSound(Assets.clickSound);
 				game.setScreen(new GameScreen(game));
 				return;
@@ -186,6 +188,7 @@ public class CharScreen implements Screen {
 				return;
 			}*/
 		}
+		ruota.update(deltaTime);
 		bob.update(deltaTime);
 		bobfem.update(deltaTime);
 		bobmil.update(deltaTime);
@@ -235,11 +238,14 @@ public class CharScreen implements Screen {
 		batcher.setProjectionMatrix(guiCam.combined);
 		batcher.disableBlending();
 		batcher.begin();
-		batcher.draw(Assets.choose,0,0,512,512);
+		batcher.draw(Assets.welcome, 0, 0, 512,512);
+		
 		//MainMenuScreen.drawGradient(batcher, Assets.rect, 0, 0, 320, 480,Color.BLACK,Color.BLUE, false);
 		batcher.end();
 		batcher.enableBlending();
 		batcher.begin();
+		ruota.draw(batcher, Assets.ruotaRegion,512+128,512+128);
+		batcher.draw(Assets.choose,0,0,512,512);
 		batcher.draw(Assets.icontext,275,10,45,45);
 		batcher.draw(Assets.icontextback,0,10,45,45);
 		//int len = buttons.size();
@@ -267,17 +273,17 @@ public class CharScreen implements Screen {
 		batcher.draw(Assets.backgroundRegion,bob.position.x ,bob.position.y ,130,130);
 		batcher.draw(Assets.backgroundRegion10,bobfem.position.x ,bobfem.position.y ,130,130);
 		batcher.draw(Assets.backgroundRegion11,bobmil.position.x-20 ,bobmil.position.y ,170,170);
-		if(punteggio<20000 && state==0)
+		if(Settings.firstScore()<20000 && state==0)
 		{
 			batcher.draw(Assets.lock,bobfem.position.x-10 ,bobfem.position.y+30 ,100,100);
 			batcher.draw(Assets.locked,bobfem.position.x-45,bobfem.position.y-70 ,170,150);
 			Assets.fontsmall.draw(batcher, "need 20000 scores", guiCam.position.x-90,guiCam.position.y-150);
 		}
-		if(punteggio<40000 && state==2)
+		if(Settings.firstScore()<70000 && state==2)
 		{
 			batcher.draw(Assets.lock,bobmil.position.x+26 ,bobmil.position.y+30 ,85,100);
 			batcher.draw(Assets.locked,bobmil.position.x-18,bobmil.position.y-70 ,170,150);
-			Assets.fontsmall.draw(batcher, "need 40000 scores", guiCam.position.x-90,guiCam.position.y-150);
+			Assets.fontsmall.draw(batcher, "need 70000 scores", guiCam.position.x-90,guiCam.position.y-150);
 		}
 
 		//batcher.draw(Assets.backgroundRegion,bob.position.x ,bob.position.y ,25, 35, 120, 150, 1, 1, 180);

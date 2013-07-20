@@ -3,6 +3,7 @@
 	<name>superjumper-html</name>
 	<comment></comment>
 	<projects>
+		<project>superjumper</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

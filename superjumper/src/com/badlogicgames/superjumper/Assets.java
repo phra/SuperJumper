@@ -15,6 +15,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Assets {
 	public static ParticleEffect particleEffect;
 	public static ParticleEffect particleClouds;
+	public static Texture mondofuc;
+	public static Texture starRotate;
+	public static Texture patterngreen;
+	public static Texture patternfucs;
+	public static Texture mondoluna;
+	public static Texture mondoros;
+	public static Texture mondoterra;
 	public static Texture meteorablu;
 	public static Texture meteoragialla;
 	public static Texture meteorarosa;
@@ -84,12 +91,21 @@ public class Assets {
 	public static Texture lock,locked;
 	public static Texture welcome;
 	public static Texture choose;
+	public static Texture ruota;
 	public static Texture welcomemulti;
 	public static Texture welcomehigh;
 	public static Texture welcomepaused;
 	public static Texture resume,quit,ospita,partecipa;
 	public static Texture swipetext,swipe,swipe1,swipe2;
+	public static TextureRegion starRotateRegion;
+	public static TextureRegion patterngreenRegion;
+	public static TextureRegion patternfucsRegion;
+	public static TextureRegion mondofucRegion;
+	public static TextureRegion mondolunaRegion;
+	public static TextureRegion mondorosRegion;
+	public static TextureRegion mondoterraRegion;
 	public static TextureRegion meteoragrigiaRegion;
+	public static TextureRegion ruotaRegion;
 	public static TextureRegion meteorabluRegion;
 	public static TextureRegion meteoragiallaRegion;
 	public static TextureRegion meteorarosaRegion;
@@ -158,6 +174,14 @@ public class Assets {
 	public static Sound hitSound;
 	public static Sound coinSound;
 	public static Sound clickSound;
+	public static Sound soundBubble;
+	public static Sound soundBulletime;
+	public static Sound soundNos;
+	public static Sound soundShot;
+	public static Sound soundExplosion;
+	public static Sound soundExplosion1;
+	public static Sound soundClick;
+	public static Sound soundRocket;
 	public static Music music;
 	public static Color colore;
 
@@ -179,9 +203,12 @@ public class Assets {
 		particleClouds.allowCompletion();
 		particleEffect.allowCompletion();
 		//fine particelle effetto fuoco
+		starRotate = loadTexture("data/star.png");
 		doubleportamissile= loadTexture("data/doubleportamissile.png");
 		doubleportamissilebn = loadTexture("data/doubleportamissilebn.png");
 		portamissilebn = loadTexture("data/portamissilebn.png");
+		patternfucs = loadTexture("data/pattfucs.png");
+		patterngreen = loadTexture("data/pattgreen.png");
 		missile = loadTexture("data/missile.png");
 		meteorablu = loadTexture("data/metblu.png");
 		meteoragialla = loadTexture("data/metgialla.png");
@@ -198,6 +225,10 @@ public class Assets {
 		nos2 = loadTexture("data/portanos3.png");
 		star1 = loadTexture("data/particle1.png");
 		star2 = loadTexture("data/particle2.png");
+		mondofuc = loadTexture("data/mondofuc.png");
+		mondoluna = loadTexture("data/mondoluna.png");
+		mondoros= loadTexture("data/mondoros.png");
+		mondoterra = loadTexture("data/mondoterra.png");
 		nuvole = loadTexture("data/cloud.png");
 		nuvole1 = loadTexture("data/cloud1.png");
 		nuvole2 = loadTexture("data/cloud2.png");
@@ -243,6 +274,7 @@ public class Assets {
 		lock=loadTexture("data/lock.png");
 		locked=loadTexture("data/locked.png");
 		welcome=loadTexture("data/welcome.png");
+		ruota=loadTexture("data/ruota.png");
 		choose=loadTexture("data/choosen.png");
 		welcomemulti=loadTexture("data/multi.png");
 		welcomehigh=loadTexture("data/high.png");
@@ -263,6 +295,13 @@ public class Assets {
 		ready = new TextureRegion(items, 320, 224, 192, 32);		
 		spring = new TextureRegion(items, 128, 0, 32, 32);
 		castle = new TextureRegion(items, 128, 64, 64, 64);
+		starRotateRegion = new TextureRegion(starRotate,0,0,128,128);
+		patterngreenRegion=new TextureRegion(patterngreen, 0, 0, 256, 256);
+		patternfucsRegion=new TextureRegion(patternfucs, 0, 0, 256, 256);
+		mondofucRegion=new TextureRegion(mondofuc, 0, 0, 256, 256);
+		mondolunaRegion=new TextureRegion(mondoluna, 0, 0, 256, 256);
+		mondorosRegion=new TextureRegion(mondoros, 0, 0, 256, 256);
+		mondoterraRegion=new TextureRegion(mondoterra, 0, 0, 256, 256);
 		meteoragrigiaRegion=new TextureRegion(coin1, 0, 0, 128, 128);
 		meteorabluRegion = new TextureRegion(meteorablu, 0, 0, 256, 256);
 		meteoragiallaRegion = new TextureRegion(meteoragialla, 0, 0, 256, 256);
@@ -274,6 +313,7 @@ public class Assets {
 		starRegion= new TextureRegion(star, 0, 0, 128, 128);
 		bubbles= new TextureRegion(bubble, 0, 0, 256, 256);
 		nos= new TextureRegion(portanos, 0, 0, 256, 256);
+		ruotaRegion= new TextureRegion(ruota, 0, 0, 512, 512);
 		enemyRegion = new TextureRegion(enemy, 0, 0, 512, 512);
 		enemyRegion1 = new TextureRegion(enemy1, 0, 0, 512, 512);
 		bubblesstart= new TextureRegion(bubblestart, 0, 0, 256, 256);
@@ -324,10 +364,22 @@ public class Assets {
 		hitSound = Gdx.audio.newSound(Gdx.files.internal("data/hit.wav"));
 		coinSound = Gdx.audio.newSound(Gdx.files.internal("data/coin.wav"));
 		clickSound = Gdx.audio.newSound(Gdx.files.internal("data/click.wav"));
+	
+		soundBubble = Gdx.audio.newSound(Gdx.files.internal("data/bubble.wav"));
+		soundBulletime = Gdx.audio.newSound(Gdx.files.internal("data/bulletime.wav"));
+		soundNos = Gdx.audio.newSound(Gdx.files.internal("data/nos.wav"));
+		soundShot = Gdx.audio.newSound(Gdx.files.internal("data/shot.wav"));
+		soundExplosion = Gdx.audio.newSound(Gdx.files.internal("data/explosion.wav"));
+		soundExplosion1 = Gdx.audio.newSound(Gdx.files.internal("data/explosion1.wav"));
+		soundClick = Gdx.audio.newSound(Gdx.files.internal("data/click.wav"));
+		soundRocket = Gdx.audio.newSound(Gdx.files.internal("data/missile.wav"));
 	}
 
 
 	private static void SetFilter(){
+		patternfucs.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		patterngreen.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		ruota.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		doubleportamissile.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		doubleportamissilebn.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		missile.setFilter(TextureFilter.Linear, TextureFilter.Linear);

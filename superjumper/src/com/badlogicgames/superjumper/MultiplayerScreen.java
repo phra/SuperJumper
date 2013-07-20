@@ -22,7 +22,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class MultiplayerScreen implements Screen {
 	public static final int PORT = 10000;
-	public static final String IPTOCONNECT = "192.168.1.133";
+	public static final String IPTOCONNECT = "indiecode.no-ip.org";
 	Game game;
 	public final List<Button> buttons;
 	OrthographicCamera guiCam;
@@ -51,9 +51,10 @@ public class MultiplayerScreen implements Screen {
 		ServerBounds = new Rectangle(100, 260, 300, 20);
 		touchPoint = new Vector3();
 		batcher = new SpriteBatch();
-		Button button = new Button(90,230,Assets.resume);
+		Assets.playSound(Assets.soundRocket);
+		Button button = new Button(90 ,230 , UI.SCREENWIDTH/2,UI.SCREENHEIGHT ,Assets.resume);
 		buttons.add(button);
-		Button buttones = new Button(90,180,Assets.quit);
+		Button buttones = new Button(90 ,180 , 0,0,Assets.quit);
 		buttons.add(buttones);
 	}
 
@@ -87,6 +88,7 @@ public class MultiplayerScreen implements Screen {
 				}
 				str = "CONNECTED";
 				Gdx.app.debug("PHTEST", "connected");
+				
 				game.setScreen(new MultiGameScreen(game,seed));
 			} else if (OverlapTester.pointInRectangle(ServerBounds, touchPoint.x, touchPoint.y)) {
 				Assets.playSound(Assets.clickSound);
@@ -105,6 +107,8 @@ public class MultiplayerScreen implements Screen {
 					Gdx.app.debug("PHTEST", str);
 					return;
 				}
+				
+				
 				str = "CONNECTED";
 				game.setScreen(new MultiGameScreen(game,seed));
 

@@ -27,6 +27,10 @@ public class PaccoProiettile extends Pacco {
 		this.y = y;
 	}
 	
+	public PaccoProiettile(Pacco pkt) {
+		this(Utils.deserializeManyFloat(pkt.getData()).get(0),Utils.deserializeManyFloat(pkt.getData()).get(1));
+	}
+	
 	public LinkedList<Float> deserialize() {
 		LinkedList<Float> list =  Utils.deserializeManyFloat(this.payload);
 		this.x = list.removeFirst();

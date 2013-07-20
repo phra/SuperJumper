@@ -146,4 +146,9 @@ public abstract class Settings {
 			}
 		}
 	}
+	
+public static int firstScore(){
+	int maxscore=highscores[0];
+	return maxscore;
+}
 }

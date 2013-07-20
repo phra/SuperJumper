@@ -14,9 +14,15 @@ public interface UI {//WILL CONTROL TEXT RESIZE
 	public static final float HALFSCREENWIDTH = SCREENWIDTH/2;
 	public static final float HALFSCREENHEIGHT = SCREENHEIGHT/2;
 	//FIRST SCREEN LAYOUT TEXT
-	public static final float FIRSTEXT=SCREENHEIGHT*0.60f;
-	public static final float SECONDTEXT=SCREENHEIGHT*0.52f;
-	public static final float THIRDTEXT=SCREENHEIGHT*0.44f;
+	public static final float FIRSTEXTY=SCREENHEIGHT*0.60f;
+	public static final float FIRSTEXTX=UI.HALFSCREENWIDTH*0.6f;
+	public static final float SECONDTEXTX=UI.HALFSCREENWIDTH*0.99f;
+	public static final float SECONDTEXTY=SCREENHEIGHT*0.52f;
+	public static final float THIRDTEXTX=UI.HALFSCREENWIDTH*0.75f;
+	public static final float THIRDTEXTY=SCREENHEIGHT*0.44f;
+	public static final float RUOTASIZE=SCREENHEIGHT*1.22f;
+	public static final float RUOTAPOSITIONX=-SCREENHEIGHT*0.3f;//FIXME *0.32f
+	public static final float RUOTAPOSITIONY=-SCREENHEIGHT*0.11f;
 	public static final float FIRSTSCREENTEXTSCALE = (-SCREENWIDTH *0.0008f)*2f;
 	//BUTTON
 	public static final float BUTTONRESUMEPOSITIONX = SCREENWIDTH*0.35f;
@@ -67,6 +73,6 @@ public interface UI {//WILL CONTROL TEXT RESIZE
 	public static final float BARSIZEY = SCREENHEIGHT*0.093f;
 	public static final float BARCONSTANT = SCREENHEIGHT*0.0062f;
 
-	public static final float SPRING_WIDTH = 1.5f;
-	public static final float SPRING_HEIGHT = 1.5f;
+	public static final float SPRING_WIDTH = 1.8f;
+	public static final float SPRING_HEIGHT = 1.8f;
 }

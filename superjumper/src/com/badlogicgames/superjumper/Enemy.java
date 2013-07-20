@@ -44,6 +44,13 @@ public class Enemy extends DynamicGameObject {
 		bounds.x = position.x - bounds.width/2;
 		bounds.y = position.y - bounds.height/2;
 		if(active==1){ //FIXME
+			
+			
+			Utils.changeGravityTowards(this, bob.position.x, bob.position.y+20);
+			/*if(position.y - bob.position.y < 5)velocity.y += 0.1f;
+		else if (position.y - bob.position.y > 0) velocity.y -= 0.1f;
+		if(position.x - bob.position.x < -2)velocity.x += 0.1f;
+		else if (position.x - bob.position.x > 2)velocity.x -= 0.1f;
 			if(position.y-bob.position.y<10)velocity.y+=0.5f;
 			if(position.y-bob.position.y>8.5f)velocity.y-=0.5f;
 			if(position.x-bob.position.x<1f)velocity.x+=0.5f;
@@ -53,7 +60,7 @@ public class Enemy extends DynamicGameObject {
 			if(position.x>10)velocity.x-=1;
 			if(position.x<0)velocity.x+=1;
 			if(bob.position.x==position.x)velocity.x=-5;
-		}
+	*/	}
 		stateTime += deltaTime;
 		//jumpTime += deltaTime;
 	}

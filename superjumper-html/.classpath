@@ -4,13 +4,13 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/superjumper"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/superjumper/libs/gdx.jar" sourcepath="/superjumper/libs/gdx-sources.jar"/>
-	<classpathentry kind="lib" path="/superjumper/libs/gdx-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gdx.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/gdx-sources.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt.jar" sourcepath="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gdx-backend-gwt-sources.jar"/>
-	<classpathentry kind="lib" path="/superjumper/libs/bodyeditor-loader.jar" sourcepath="/superjumper/libs/bodyeditor-loader-sources.jar"/>
-	<classpathentry kind="lib" path="/superjumper/libs/bodyeditor-loader-sources.jar"/>
-	<classpathentry kind="lib" path="/superjumper/libs/tween-engine-api.jar" sourcepath="/superjumper/libs/tween-engine-api-sources.jar"/>
-	<classpathentry kind="lib" path="/superjumper/libs/tween-engine-api-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/bodyeditor-loader.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/bodyeditor-loader-sources.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/tween-engine-api.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/tween-engine-api-sources.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

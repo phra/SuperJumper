@@ -29,6 +29,19 @@ public class MultiWorldRenderer extends WorldRenderer {
 	public void render () {
 		super.render();
 		switch (world.state){
+		
+		case CONSTANTS.GAME_OVER:
+			batch.begin();
+			batch.enableBlending();
+			Assets.handfontsmall.scale(1.1f);
+			if(!world.win)gameOver.update(0,"LOSE (" + (int)world.myTime +" secondi)");
+			else gameOver.update(0,"WIN (" + (int)world.myTime + " secondi)");
+			gameOver.draw(batch);
+			System.out.println(gameOver.string);
+			Assets.handfontsmall.scale(-1.1f);
+			batch.disableBlending();
+			batch.end();
+			break;
 		case CONSTANTS.GAME_RUNNING:
 			batch.begin();
 			batch.enableBlending();
@@ -45,7 +58,7 @@ public class MultiWorldRenderer extends WorldRenderer {
 		//Gdx.app.debug("RENDERBOB", "world.bob.position.x = " + world.bob.position.x + " world.bob.position.y = " + world.bob.position.y);
 		TextureRegion keyFrame = Assets.shutmilitAnim.getKeyFrame(world.bobMulti.stateTime, Animation.ANIMATION_LOOPING);
 //		batch.draw(Assets.meteorabluRegion, world.bob.position.x -0.65f, world.bob.position.y -1f, 1.3f, 2f);
-		batch.draw(keyFrame, world.bobMulti.position.x -0.65f, world.bobMulti.position.y -1f, 1.3f, 2f);
+		batch.draw(keyFrame, world.bobMulti.position.x -1.55f, world.bobMulti.position.y -2.3f, 3f, 3.2f);
 	}
 
 	private void renderProjectiles(){

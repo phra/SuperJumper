@@ -67,12 +67,14 @@ public class ConnectThread extends Thread {
 
 			while (true){
 				Pacco pkt = btsock.readPkt();
-				if (pkt == null || pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END){
+				if (pkt == null ){
 					break;
 				}
 				try {
 					buf.putPaccoInBLOCK(pkt);
 				} catch (InterruptedException e) { }
+				
+				if( pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END)break;
 			}
 			/*
             Pacco pkt = btsock.readPkt();
@@ -113,7 +115,10 @@ public class ConnectThread extends Thread {
 				try {
 					Pacco pkt = buf.takePaccoOutBLOCK();
 					btsock.writePkt(pkt);
-					if (pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END) break;
+					if (pkt.getType() == PROTOCOL_CONSTANTS.PACKET_END){
+						btsock.close();
+						return;
+					}
 				} catch (InterruptedException e) {
 					Gdx.app.error("SendThread", "INTERRUPTEDEXCEPTION");
 				}

@@ -14,7 +14,6 @@ import com.badlogic.gdx.math.Vector2;
  *
  */
 public class MultiGameScreen extends GameScreen {
-
 	/**
 	 * @param game
 	 */
@@ -45,7 +44,8 @@ public class MultiGameScreen extends GameScreen {
 
 				case CONSTANTS.GAME_RUNNING:
 					if (OverlapTester.pointInRectangle(pauseBounds, touchPoint.x, touchPoint.y)) {
-						pause();
+					/*	pause();*/
+						break;
 					}
 					if (world.supermissiles > 0 && OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) {
 						//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
@@ -67,6 +67,8 @@ public class MultiGameScreen extends GameScreen {
 					}  else {
 						world.ShotProjectile();
 						MultiWorld.buffer.putPaccoOutNOBLOCK(new PaccoProiettile(world.bob.position.x,world.bob.position.y));
+						Gdx.app.debug("MultiGameScreenTap", "world.bob.position.x= "+world.bob.position.x+" world.bob.position.y"+world.bob.position.y);
+						
 
 					}
 					break;
@@ -170,6 +172,17 @@ public class MultiGameScreen extends GameScreen {
 				}
 				return true;
 			}
-		});		
+		});
+		Gdx.input.setInputProcessor(gestureDetector);		
+	}
+	@Override 
+	public void pause () {
+	MultiWorld.buffer.putPaccoOutNOBLOCK(new PaccoEnd());
+	game.setScreen(new MainMenuScreen(game));
+	}
+	@Override
+	public void dispose () {
+		Assets.load();
+	
 	}
 }

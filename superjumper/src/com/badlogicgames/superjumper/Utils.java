@@ -232,6 +232,12 @@ public abstract class Utils {
 		dyn.velocity.x = target.position.x - dyn.position.x;
 		dyn.velocity.y = target.position.y - dyn.position.y;
 	}
+	
+	public static void changeGravityTowards(DynamicGameObject dyn,float x, float y){
+		dyn.velocity.x = x - dyn.position.x;
+		dyn.velocity.y = y - dyn.position.y;
+	}
+
 
 	public static double changeRotationTowards(DynamicGameObject dyn, double x, double y){
 //float diffx = dyn.position.x - x;

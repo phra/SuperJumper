@@ -16,6 +16,8 @@
 
 package com.badlogicgames.superjumper;
 
+import java.util.LinkedList;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -31,7 +33,8 @@ import com.badlogic.gdx.math.Vector3;
 
 public class FirstScreen implements Screen {
 	Game game;
-
+	Spring ruota;
+	LinkedList<Text> testo;
 	OrthographicCamera guiCam;
 	SpriteBatch batcher;
 	Rectangle clickBounds;
@@ -41,18 +44,25 @@ public class FirstScreen implements Screen {
 
 	public FirstScreen (Game game) {
 		this.game = game;
-
-		guiCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		guiCam.position.set(Gdx.graphics.getWidth()/ 2, Gdx.graphics.getHeight() /2, 0);
-		clickBounds = new Rectangle(0, 0, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
+		this.testo=new LinkedList<Text>();
+		Assets.playSound(Assets.soundRocket);
+		guiCam = new OrthographicCamera(UI.SCREENWIDTH,UI.SCREENHEIGHT);
+		guiCam.position.set(UI.HALFSCREENWIDTH, UI.HALFSCREENHEIGHT, 0);
+		this.ruota=new Spring(UI.RUOTAPOSITIONX,UI.RUOTAPOSITIONY);
+		this.testo.offer(new Text(UI.FIRSTEXTX, UI.FIRSTEXTY, UI.SCREENWIDTH/2,UI.SCREENHEIGHT, "Welcome"));
+		this.testo.offer(new Text(UI.SECONDTEXTX,UI.SECONDTEXTY,UI.SCREENWIDTH,UI.SCREENHEIGHT/2, "To"));
+		this.testo.offer(new Text(UI.THIRDTEXTX,UI.THIRDTEXTY,UI.SCREENWIDTH/2,0,"Game"));
+		clickBounds = new Rectangle(0, 0, UI.SCREENWIDTH, UI.SCREENHEIGHT);
 		touchPoint = new Vector3();
 		batcher = new SpriteBatch();
-		//helpImage = Assets.loadTexture("data/help1.png");
-		//helpRegion = new TextureRegion(helpImage, 0, 0, 320, 480);
 	}
 
 	public void update (float deltaTime) {
-		if (Gdx.input.justTouched()) {
+		ruota.update(deltaTime);
+		for(int i=0;i<testo.size();i++){
+			testo.get(i).updateAnim(deltaTime);
+		}
+			if (Gdx.input.justTouched()) {
 			guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 
 			if (OverlapTester.pointInRectangle(clickBounds, touchPoint.x, touchPoint.y)) {
@@ -71,23 +81,17 @@ public class FirstScreen implements Screen {
 		batcher.disableBlending();
 		batcher.begin();
 		batcher.draw(Assets.welcome, 0, 0, UI.SCREENPOSITIONX,UI.SCREENPOSITIONY);
-		//MainMenuScreen.drawGradient(batcher, Assets.rect, 0, 0, 320, 480,Color.BLACK,Assets.colore, false);
 		batcher.end();
 		batcher.enableBlending();
 		batcher.begin();
+		ruota.draw(batcher, Assets.ruotaRegion,UI.RUOTASIZE,UI.RUOTASIZE);
 		Assets.handfontsmall.scale(-UI.FIRSTSCREENTEXTSCALE);
 		Assets.handfontsmall.getRegion().getTexture().setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.MipMapLinearNearest);
-		//Assets.handfontsmall.draw(batcher, "W E L C O M E",160 - 98, 280);
-		//Assets.handfontsmall.draw(batcher, "T O",160-20, 230);
-		//Assets.handfontsmall.draw(batcher, "SUPER JUMPER",160 - 98, 180);
-		new Text(UI.HALFSCREENWIDTH,UI.FIRSTEXT, "Welcome").draw(batcher);
-		new Text(UI.HALFSCREENWIDTH,UI.SECONDTEXT, "To").draw(batcher);
-		new Text(UI.HALFSCREENWIDTH,UI.THIRDTEXT, "Game").draw(batcher);
+		for(int i=0;i<testo.size();i++)
+		testo.get(i).drawAnim(batcher);
 		Assets.handfontsmall.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		Assets.handfontsmall.scale(UI.FIRSTSCREENTEXTSCALE);
-		//batcher.draw(Assets.icontextback, 320, 0, -54, 54);
 		batcher.end();
-
 		gl.glDisable(GL10.GL_BLEND);
 	}
 

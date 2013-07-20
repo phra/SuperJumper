@@ -88,19 +88,20 @@ public class GameScreen implements Screen, CONSTANTS {
 						pause();
 					}
 					if (world.supermissiles > 0 && OverlapTester.pointInRectangle(nosBounds, touchPoint.x, touchPoint.y)) {
-						//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando su");
+						Assets.playSound(Assets.soundRocket);
 						if (--world.supermissiles <= 0) world.supermissileButton = false;
 						if (!world.enemies.isEmpty()) world.projectiles.add(new SuperMissile(world.bob.position.x, world.bob.position.y, SuperMissile.WIDTH, SuperMissile.HEIGHT, world.enemies.peek(),world.projectiles,world.enemies));
 
 					}
 					else if (world.bubbleButton == true && OverlapTester.pointInRectangle(bubbleBounds, touchPoint.x, touchPoint.y)) {
-						//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
+						Assets.playSound(Assets.soundBubble);
 						world.bob.enablebubble = true;
 						world.bubbleButton = false;
 						world.bob.bubbletime = world.bob.stateTime;
 					}
 					else if (world.missiles > 0 && OverlapTester.pointInRectangle(missileBounds, touchPoint.x, touchPoint.y)) {
 						//Gdx.app.debug("UPDATEGRAVITY", "sto cliccando giu");
+						Assets.playSound(Assets.soundRocket);
 						if (--world.missiles <= 0) world.activemissile = false;
 						if (!world.enemies.isEmpty()) world.projectiles.add(new Missile(world.bob.position.x, world.bob.position.y, Missile.WIDTH, Missile.HEIGHT, world.enemies.peek()));
 
@@ -115,7 +116,7 @@ public class GameScreen implements Screen, CONSTANTS {
 						Settings.addScore(world.score);
 						Settings.save();
 					}
-					world.state = CONSTANTS.GAME_RUNNING;
+					Gdx.input.setInputProcessor(null);
 					game.setScreen(new MainMenuScreen(game));
 					break;
 
@@ -128,8 +129,9 @@ public class GameScreen implements Screen, CONSTANTS {
 				case CONSTANTS.GAME_PAUSED:
 					guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 					for (Button b : world.buttons) {
+						Assets.playSound(Assets.soundRocket);
 						if (OverlapTester.pointInRectangle(b.bounds, touchPoint.x, touchPoint.y)) {
-							Assets.playSound(Assets.clickSound);
+//							Assets.playSound(Assets.soundClick);
 							if (b.texture == Assets.resume){
 								Gdx.app.debug("TAP", "RESUME");
 								world.state = GAME_RUNNING;
@@ -142,7 +144,6 @@ public class GameScreen implements Screen, CONSTANTS {
 					break;
 
 				case CONSTANTS.GAME_READY:
-					state = GAME_RUNNING;
 					break;
 				
 
@@ -183,8 +184,7 @@ public class GameScreen implements Screen, CONSTANTS {
 					} else {
 						if(velocityY > 20) {
 							Gdx.app.debug("fling", "trascino giu");
-
-
+							Assets.playSound(Assets.soundBulletime);
 							if(!world.decrementonos){
 								world.texts.offer(new FloatingText("BULLET TIME!",0.5f));
 								world.freezeON = true;
@@ -198,8 +198,9 @@ public class GameScreen implements Screen, CONSTANTS {
 							Gdx.app.debug("fling", "trascino su");
 							if(!world.freezeON){
 								world.decrementonos=true;
+								Assets.playSound(Assets.soundRocket);
 								world.texts.offer(new FloatingText("NOS!",2f));
-							}
+								}
 							world.freezeON = false;
 							world.decremento=false;
 						}
@@ -213,13 +214,11 @@ public class GameScreen implements Screen, CONSTANTS {
 	}
 
 	public void update (float deltaTime) {
-		guiCam.update();
+//		if (deltaTime > 0.1f) deltaTime = 0.1f;
 		switch (world.state) {
 
 		case GAME_READY:
-			if (Gdx.input.justTouched()) {
-
-			}
+			world.update(deltaTime, Gdx.input.getAccelerometerX());
 			break;
 
 		case GAME_RUNNING:
@@ -256,6 +255,7 @@ public class GameScreen implements Screen, CONSTANTS {
 		GLCommon gl = Gdx.gl;
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		renderer.render();
+		guiCam.update();
 	}
 
 	@Override
@@ -272,6 +272,8 @@ public class GameScreen implements Screen, CONSTANTS {
 	public void show () {
 		Assets.RectBlack();
 		Assets.RectWhite();
+		Assets.load();
+		render(0);
 }
 
 	@Override
@@ -282,8 +284,8 @@ public class GameScreen implements Screen, CONSTANTS {
 
 	@Override
 	public void pause () {
-		world.buttons.add(new Button(UI.BUTTONRESUMEPOSITIONX ,UI.BUTTONRESUMEPOSITIONY,Assets.resume));
-		world.buttons.add(new Button(UI.BUTTONQUITPOSITIONX,UI.BUTTONQUITPOSITIONY,Assets.quit));
+		world.buttons.add(new Button(UI.BUTTONRESUMEPOSITIONX ,UI.BUTTONRESUMEPOSITIONY ,UI.SCREENWIDTH,UI.SCREENHEIGHT/2-50 ,Assets.resume));
+		world.buttons.add(new Button(UI.BUTTONQUITPOSITIONX,UI.BUTTONQUITPOSITIONY ,UI.SCREENWIDTH,UI.SCREENHEIGHT/2-50 ,Assets.quit));
 		Assets.playSound(Assets.clickSound);
 		world.state = CONSTANTS.GAME_PAUSED;
 	}

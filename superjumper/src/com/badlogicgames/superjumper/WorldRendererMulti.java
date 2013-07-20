@@ -80,10 +80,7 @@ public class WorldRendererMulti {
 		for (int i = 0; i < len; i++) {
 			Platform platform = world.platforms.get(i);
 			TextureRegion keyFrame ;
-			if (platform.state == Platform.PLATFORM_STATE_PULVERIZING) {
-				keyFrame = Assets.brakingPlatform.getKeyFrame(platform.stateTime, Animation.ANIMATION_NONLOOPING);
-			}
-			else keyFrame = Assets.platform.getKeyFrame(platform.stateTime, Animation.ANIMATION_LOOPING);
+			 keyFrame = Assets.platform.getKeyFrame(platform.stateTime, Animation.ANIMATION_LOOPING);
 			batch.draw(keyFrame, platform.position.x - 1, platform.position.y - 0.25f, 2, 0.5f);
 		}
 	}

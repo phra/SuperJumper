@@ -101,9 +101,10 @@ public class MainMenuScreen implements Screen {
 		int type_star = Star.STAR_TYPE_STATIC;//star
 		float y_star = rand.nextFloat() *480;//star
 		float x_star = rand.nextFloat() *320;//star
+		if(stars.size()<1000){
 		Star star = new Star(type_star, x_star, y_star);//star
 		stars.add(star);//star
-		
+		}
 
 	}
 

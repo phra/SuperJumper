@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class WorldRenderer {
-
+	public Text gameOver = new Text(UI.SCREENWIDTH/2 ,UI.SCREENHEIGHT*2/3,"G A M E  O V E R");;
 	static final float FRUSTUM_WIDTH = 10;
 	static final float FRUSTUM_HEIGHT = 15;
 	private static float[] verts = new float[20];
@@ -33,14 +33,30 @@ public class WorldRenderer {
 
 
 	public void render () {
+		batch.enableBlending();
+		cam.position.y = world.bob.position.y+4;
+		cam.update();
+		batch.setProjectionMatrix(cam.combined);
+		renderBackground();
+		batch.begin();
+		world.shakera.update(cam);
+		renderObjects();
+		batch.end();
+		batch.begin();
+		batch.setProjectionMatrix(screencam.combined);
+		renderUI();
+		batch.end();
+		batch.disableBlending();
 		switch (world.state){
-		case CONSTANTS.GAME_RUNNING:
+
+		/*case CONSTANTS.GAME_RUNNING :
 			batch.enableBlending();
 			cam.position.y = world.bob.position.y+4;
 			cam.update();
 			batch.setProjectionMatrix(cam.combined);
 			renderBackground();
 			batch.begin();
+			world.shakera.update(cam);
 			renderObjects();
 			batch.end();
 			batch.begin();
@@ -48,46 +64,58 @@ public class WorldRenderer {
 			renderUI();
 			batch.end();
 			batch.disableBlending();
-			break;
-
+			break;*/
+		
 		case CONSTANTS.GAME_PAUSED:
 			batch.begin();
 			batch.setProjectionMatrix(screencam.combined);
 			batch.draw(Assets.welcomepaused,0,0,UI.SCREENPOSITIONX,UI.SCREENPOSITIONY);
 			batch.enableBlending();
 			for (Button button : world.buttons) {
-				button.draw(batch);
-			}
+				button.draw(batch);}
 			batch.end();
 			break;
+			
 		case CONSTANTS.MAIN_MENU:
 			break;
 
 		case CONSTANTS.GAME_LEVEL_END:
 			batch.begin();
-			String topText = "your friends ...";
-			String bottomText = "... aren't here!";
+			batch.enableBlending();
+			String topText = "not enough planets destroy";
+			String bottomText = "... Tap to Continue!";
 			float topWidth = Assets.font.getBounds(topText).width;
 			float bottomWidth = Assets.font.getBounds(bottomText).width;
-			Assets.handfontsmall.draw(batch, topText, UI.SCREENWIDTH/2 - topWidth / 2, UI.SCREENHEIGHT - 40);
-			Assets.handfontsmall.draw(batch, bottomText, UI.SCREENWIDTH/2 - bottomWidth / 2, 40);
+			Assets.handfontsmall.draw(batch, topText, UI.SCREENWIDTH/2 - topWidth / 2, UI.SCREENHEIGHT - UI.SCREENHEIGHT/3);
+			Assets.handfontsmall.draw(batch, bottomText, UI.SCREENWIDTH/2 - bottomWidth / 2, UI.SCREENHEIGHT - UI.SCREENHEIGHT/2);
+			batch.disableBlending();
 			batch.end();
 			break;
 
 		case CONSTANTS.GAME_OVER:
 			batch.begin();
 			batch.enableBlending();
-			Assets.handfontsmall.scale(-0.3f);
-			new Text(UI.SCREENWIDTH/2 ,UI.SCREENHEIGHT*2/3,"G A M E  O V E R").draw(batch);
-			world.scoretext.draw(batch);
-			Assets.handfontsmall.scale(0.3f);
+			Assets.handfontsmall.scale(1.1f);
+			gameOver.draw(batch);
+			Assets.handfontsmall.scale(-1.1f);
+			batch.disableBlending();
 			batch.end();
 			break;
 
 		case CONSTANTS.GAME_READY:
+			
 			batch.begin();
-			new Text(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2,"R E A D Y ?").draw(batch);
+			batch.enableBlending();
+			batch.setProjectionMatrix(screencam.combined);
+			renderUI();
+			if(!world.semaforo.isEmpty()){
+				Assets.handfontsmall.scale(1.7f);
+				world.semaforo.getFirst().draw(batch);
+				Assets.handfontsmall.scale(-1.7f);
+				}
+			batch.disableBlending();
 			batch.end();
+			
 			break;
 		}
 	}
@@ -113,12 +141,14 @@ public class WorldRenderer {
 		//Gradient Background 
 		batch.disableBlending();
 		batch.begin();
-		drawGradient(batch, Assets.rect, 0, -2, 10, 110,Color.BLACK,Assets.colore, false);
+		drawGradient(batch, Assets.rect, 0, -2, 10, 100,Color.BLACK,Assets.colore, false);
 		batch.end();
 		batch.enableBlending();
 	}
 
 	public void renderObjects () {
+	
+		renderGalaxies ();
 		renderStars();
 		renderBob();
 		renderPlatforms();
@@ -204,7 +234,7 @@ public class WorldRenderer {
 
 	private void renderItems () {
 		for (Spring spring : world.springs) {
-			spring.draw(batch,Assets.coinAnim.getKeyFrame(0, Animation.ANIMATION_LOOPING));
+			spring.draw(batch);
 		}
 		for (Coin coin : world.coins) {
 			TextureRegion keyFrame = Assets.platform.getKeyFrame(coin.stateTime, Animation.ANIMATION_LOOPING);
@@ -296,16 +326,43 @@ public class WorldRenderer {
 		}
 	}
 
+	private void renderGalaxies () {
+		int len = world.galaxies.size();
+		for (int i = 0; i < len; i++) {
+			Galaxy galaxy = world.galaxies.get(i);
+			TextureRegion keyFrame = Assets.star1Region;
+			if (galaxy.type == Galaxy.GALAXY_TYPE_MOVING ) {
+				switch(galaxy.choose){
+				case 0:
+					keyFrame = Assets.patternfucsRegion;
+					batch.draw(keyFrame,galaxy.position.x , galaxy.position.y ,galaxy.size/2,galaxy.size/2, galaxy.size, galaxy.size, 1, 1, galaxy.choose*2);
+					//batch.draw(keyFrame, galaxy.position.x , galaxy.position.y , galaxy.size,  galaxy.size);
+				case 1:
+					keyFrame = Assets.patterngreenRegion;
+					batch.draw(keyFrame,galaxy.position.x , galaxy.position.y ,galaxy.size/2,galaxy.size/2, galaxy.size, galaxy.size, 1, 1, galaxy.choose*3);
+				}}
+			else if(galaxy.type == Galaxy.GALAXY_TYPE_STATIC ){
+				switch(galaxy.choose){
+				case 0:
+					keyFrame = Assets.patternfucsRegion;
+					batch.draw(keyFrame,galaxy.position.x , galaxy.position.y ,galaxy.size/2,galaxy.size/2, galaxy.size, galaxy.size, 1, 1, galaxy.choose);
+				case 1:
+					keyFrame = Assets.patterngreenRegion;
+					batch.draw(keyFrame,galaxy.position.x , galaxy.position.y ,galaxy.size/2,galaxy.size/2, galaxy.size, galaxy.size, 1, 1, galaxy.choose*-4);
+				}
+			}
+		}}
+
 	private void renderEnemy(){
 		TextureRegion keyFrame;
 		for (Enemy charlie : world.enemies){
-		switch(charlie.type){
-		case 0:
-			keyFrame = Assets.enemyRegion;
-			batch.draw(keyFrame, charlie.position.x-1.5f , charlie.position.y-0.8f , 2f, 2f);
-		case 1:
-			keyFrame= Assets.enemyRegion1;
-			batch.draw(keyFrame, charlie.position.x-1.5f , charlie.position.y-0.8f , 2f, 2f);
+			switch(charlie.type){
+			case 0:
+				keyFrame = Assets.enemyRegion;
+				batch.draw(keyFrame, charlie.position.x-1.5f , charlie.position.y-0.8f , 2f, 2f);
+			case 1:
+				keyFrame= Assets.enemyRegion1;
+				batch.draw(keyFrame, charlie.position.x-1.5f , charlie.position.y-0.8f , 2f, 2f);
 			}
 		}
 	}
